@@ -1,5 +1,6 @@
 package com.jdoor.server;
 
+import com.jdoor.server.commands.CommandControllerThread;
 import com.jdoor.server.mouse.MouseController;
 import com.jdoor.server.screen.ScreenCaptureThread;
 
@@ -67,8 +68,15 @@ public class ServerThread extends Thread {
                         running = false;
                         break;
 
+                    case 'C':
+                        CommandControllerThread cct = new CommandControllerThread(clientOutput, command);
+                        cct.start();
+                        break;
+
                     default:
                         System.out.println("Errore comando non riconosicuto: " + command);
+                        clientOutput.write("Unknown command: " + command + "\n");
+                        clientOutput.flush();
                         break;
                 }
             }
