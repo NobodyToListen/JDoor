@@ -29,6 +29,7 @@ public class Server {
             // Aggiungere classe.
             screenCaptureThread.addClient(st);
         }
+        screenCaptureThread.stopRunning();
 
         ss.close();
     }
