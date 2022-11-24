@@ -56,7 +56,7 @@ public class ScreenCaptureThread extends Thread {
         byte[] buffer;
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         try {
-            ImageIO.write(image, "jpg", byteArrayOutputStream);
+            ImageIO.write(image, "png", byteArrayOutputStream);
         } catch (IOException ioe) {
             ioe.printStackTrace();
         }
