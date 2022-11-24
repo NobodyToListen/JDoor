@@ -5,7 +5,7 @@ import java.awt.event.InputEvent;
 
 public class MouseController {
     private static MouseController currentInstance;
-    private Robot robot;
+    private final Robot robot;
 
     private MouseController() throws AWTException {
         currentInstance = new MouseController();

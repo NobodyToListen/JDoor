@@ -3,9 +3,7 @@ package com.jdoor.server;
 import com.jdoor.server.mouse.MouseController;
 import com.jdoor.server.screen.ScreenCaptureThread;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -14,11 +12,11 @@ import java.net.Socket;
 
 public class ServerThread extends Thread {
     private Socket clientSocket;
-    private DatagramSocket datagramSocket;
-    private InetAddress clientAddress;
+    private final DatagramSocket datagramSocket;
+    private final InetAddress clientAddress;
 
-    private BufferedReader clientInput;
-    private BufferedWriter clientOutput;
+    private final BufferedReader clientInput;
+    private final BufferedWriter clientOutput;
 
     private boolean running;
 
@@ -65,6 +63,10 @@ public class ServerThread extends Thread {
                         MouseController.getInstance().clickMouse(command);
                         break;
 
+                    case 'S':
+                        running = false;
+                        break;
+
                     default:
                         System.out.println("Errore comando non riconosicuto: " + command);
                         break;
@@ -73,9 +75,7 @@ public class ServerThread extends Thread {
 
             clientSocket.close();
             clientSocket = null; // Indica che il client socket è stato chiuso.
-        } catch (IOException e) {
-            System.out.println("Error while closing socket: " + e.getMessage());
-        } catch (AWTException e) {
+        } catch (IOException | AWTException e) {
             System.out.println("Error while closing socket: " + e.getMessage());
         }
     }
