@@ -1,8 +1,10 @@
 package com.jdoor.server;
 
+import com.jdoor.server.mouse.MouseController;
 import com.jdoor.server.screen.ScreenCaptureThread;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.DatagramPacket;
@@ -18,6 +20,8 @@ public class ServerThread extends Thread {
     private BufferedReader clientInput;
     private BufferedWriter clientOutput;
 
+    private boolean running;
+
     public ServerThread(Socket socket) throws IOException {
         clientSocket = socket;
 
@@ -26,6 +30,8 @@ public class ServerThread extends Thread {
 
         datagramSocket = new DatagramSocket();
         clientAddress = clientSocket.getInetAddress();
+
+        running = true;
     }
 
     // Metodo per mandare la schermata.
@@ -50,9 +56,26 @@ public class ServerThread extends Thread {
         try {
             clientOutput.write(ScreenCaptureThread.SCREEN_SIZE);
             clientOutput.flush();
+
+            while (running) {
+                String command = clientInput.readLine();
+
+                switch (command.charAt(0)) {
+                    case 'M':
+                        MouseController.getInstance().clickMouse(command);
+                        break;
+
+                    default:
+                        System.out.println("Errore comando non riconosicuto: " + command);
+                        break;
+                }
+            }
+
             clientSocket.close();
             clientSocket = null; // Indica che il client socket è stato chiuso.
         } catch (IOException e) {
+            System.out.println("Error while closing socket: " + e.getMessage());
+        } catch (AWTException e) {
             System.out.println("Error while closing socket: " + e.getMessage());
         }
     }
