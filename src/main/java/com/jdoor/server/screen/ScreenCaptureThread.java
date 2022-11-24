@@ -18,10 +18,10 @@ public class ScreenCaptureThread extends Thread {
 
     public static String SCREEN_SIZE;
 
-    private Robot robot;
-    private Rectangle screenRectangle;
+    private final Robot robot;
+    private final Rectangle screenRectangle;
 
-    private ArrayList<ServerThread> threads;
+    private final ArrayList<ServerThread> threads;
 
     private boolean running;
 
