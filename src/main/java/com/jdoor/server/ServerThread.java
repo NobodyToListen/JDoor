@@ -53,7 +53,7 @@ public class ServerThread extends Thread {
     @Override
     public void run() {
         try {
-            clientOutput.write(ScreenCaptureThread.SCREEN_SIZE);
+            clientOutput.write(ScreenCaptureThread.SCREEN_SIZE + "\n");
             clientOutput.flush();
 
             while (running) {

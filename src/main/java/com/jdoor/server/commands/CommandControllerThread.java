@@ -29,7 +29,7 @@ public class CommandControllerThread extends Thread {
         }
 
         try {
-            bw.write(builder.toString() + "\n");
+            bw.write(builder.toString());
             bw.flush();
         } catch (IOException e) {
             e.printStackTrace();
