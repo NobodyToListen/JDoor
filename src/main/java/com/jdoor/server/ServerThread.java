@@ -1,5 +1,7 @@
 package com.jdoor.server;
 
+import com.jdoor.server.screen.ScreenCaptureThread;
+
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
@@ -46,6 +48,8 @@ public class ServerThread extends Thread {
     @Override
     public void run() {
         try {
+            clientOutput.write(ScreenCaptureThread.SCREEN_SIZE);
+            clientOutput.flush();
             clientSocket.close();
             clientSocket = null; // Indica che il client socket è stato chiuso.
         } catch (IOException e) {

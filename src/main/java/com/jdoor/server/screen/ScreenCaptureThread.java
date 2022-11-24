@@ -16,6 +16,8 @@ import java.util.ArrayList;
 public class ScreenCaptureThread extends Thread {
     private static ScreenCaptureThread currentInstance;
 
+    public static String SCREEN_SIZE;
+
     private Robot robot;
     private Rectangle screenRectangle;
 
@@ -29,6 +31,8 @@ public class ScreenCaptureThread extends Thread {
         screenRectangle = new Rectangle(screenSize);
 
         threads = new ArrayList<>();
+
+        SCREEN_SIZE = screenSize.width + "x" + screenSize.height;
 
         running = true;
     }
