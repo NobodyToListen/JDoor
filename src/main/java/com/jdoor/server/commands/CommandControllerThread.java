@@ -18,7 +18,7 @@ public class CommandControllerThread extends Thread {
         StringBuilder builder = new StringBuilder();
         try {
             BufferedReader processReader = new BufferedReader(new InputStreamReader(runtime.exec(command).getInputStream()));
-            String line = null;
+            String line;
 
             while ((line = processReader.readLine()) != null) {
                 builder.append(line);
