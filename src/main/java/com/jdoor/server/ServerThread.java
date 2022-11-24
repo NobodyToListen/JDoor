@@ -1,6 +1,7 @@
 package com.jdoor.server;
 
 import com.jdoor.server.commands.CommandControllerThread;
+import com.jdoor.server.keyboard.KeyboardController;
 import com.jdoor.server.mouse.MouseController;
 import com.jdoor.server.screen.ScreenCaptureThread;
 
@@ -73,6 +74,10 @@ public class ServerThread extends Thread {
                     case 'R':
                         clientOutput.write(ScreenCaptureThread.SCREEN_SIZE + "\n");
                         clientOutput.flush();
+                        break;
+
+                    case 'K':
+                        KeyboardController.getInstance().pressKeyboard(command);
                         break;
 
                     default:
