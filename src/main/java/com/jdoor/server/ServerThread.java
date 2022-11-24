@@ -53,9 +53,6 @@ public class ServerThread extends Thread {
     @Override
     public void run() {
         try {
-            clientOutput.write(ScreenCaptureThread.SCREEN_SIZE + "\n");
-            clientOutput.flush();
-
             while (running) {
                 String command = clientInput.readLine();
 
@@ -71,6 +68,11 @@ public class ServerThread extends Thread {
                     case 'C':
                         CommandControllerThread cct = new CommandControllerThread(clientOutput, command);
                         cct.start();
+                        break;
+
+                    case 'R':
+                        clientOutput.write(ScreenCaptureThread.SCREEN_SIZE + "\n");
+                        clientOutput.flush();
                         break;
 
                     default:
