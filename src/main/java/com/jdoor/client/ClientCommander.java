@@ -26,10 +26,11 @@ public class ClientCommander extends Thread {
     }
 
     public void closeConnection() throws IOException {
-        streamView.interrupt();
+        streamView.setConnected(false);
         commandsWriter.close();
         resultReader.close();
         socketCommands.close();
+        this.interrupt();
     }
 
     public void sendMousePosition(int mouseX, int mouseY, char button) throws IOException {
@@ -63,7 +64,7 @@ public class ClientCommander extends Thread {
                         try {
                             closeConnection();
                         } catch (IOException e) {
-                            cFrame.getOutputArea().append("Error:" + e.getMessage() + "\n");
+                            System.out.println("Error:" + e.getMessage() + "\n");
                         }
                     }
 
@@ -71,7 +72,7 @@ public class ClientCommander extends Thread {
             }
         };
         while(socketCommands.isConnected()) {
-            if((streamView.getScreenHeight() == 0 && streamView.getScreenWidth() == 0) || streamView == null) {
+            if(streamView.getScreenHeight() == 0 && streamView.getScreenWidth() == 0) {
                 try {
                     commandsWriter.write("R\n");
                     commandsWriter.flush();
@@ -79,14 +80,16 @@ public class ClientCommander extends Thread {
                     streamView.setScreenDimension(resultReader.readLine());
                     streamView.start();
                     errorChecker.start();
+                    System.out.println("Schermo ricevuto con successo\n");
                 } catch (Exception e) {
                     streamView.setScreenDimension(0,0);
+                    System.out.println("problemi nella ricezione delle dimensioni dello schermo\n");
                 }
             } else {
                 try {
                     cFrame.getOutputArea().append(resultReader.readLine() + "\n");
                 } catch (IOException e) {
-                    cFrame.getOutputArea().append("Error:" + e.getMessage() + "\n");
+                    System.out.println("Error:" + e.getMessage() + "\n");
                 }
             }
         }

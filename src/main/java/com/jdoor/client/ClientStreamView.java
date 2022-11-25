@@ -55,20 +55,27 @@ public class ClientStreamView extends Thread{
         return socketTimeout;
     }
 
+    public void setConnected(boolean connected) {
+        this.connected = connected;
+    }
+
     @Override
     public void run() {
         while(connected) {
+            System.out.println("Inizio ricezione schermo\n");
             try {
                 DatagramPacket data = new DatagramPacket(new byte[(screenHeight * screenWidth) * 2], (screenHeight * screenWidth) * 2);
                 socketView.receive(data);
                 screenView.setScreen(data.getData());
                 screenView.repaint();
+                System.out.println("Schermo ricevuto e disegnato con successo\n");
             } catch(SocketTimeoutException e) {
                socketTimeout = true;
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
+        System.out.println("chiusura\n");
         socketView.close();
     }
 }

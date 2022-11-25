@@ -40,6 +40,10 @@ public class MainClient implements MouseListener, KeyListener, WindowListener, A
             return false;
         }
 
+        if (ip.equals("localhost")) {
+            return true;
+        }
+
         Matcher m = p.matcher(ip);
         return m.matches();
     }
@@ -66,6 +70,7 @@ public class MainClient implements MouseListener, KeyListener, WindowListener, A
             } else {
                 try {
                     commander.sendCommands(clientFrame.getInputField().getText());
+                    System.out.println("COMMAND:" + clientFrame.getInputField().getText() + " sent" + "\n");
                 } catch (IOException ex) {
                     clientFrame.getOutputArea().setText("ERROR:" + ex.getMessage() + "\n");
                 }
@@ -97,8 +102,9 @@ public class MainClient implements MouseListener, KeyListener, WindowListener, A
         }
         try {
             commander.sendMousePosition(e.getX(), e.getY(), button);
+            System.out.println("MOUSE:" + button + e.getY() + "" + e.getX() + " sent" + "\n");
         } catch (IOException ex) {
-            throw new RuntimeException(ex);
+            clientFrame.getOutputArea().setText("ERROR:" + ex.getMessage() + "\n");
         }
     }
 
@@ -126,8 +132,9 @@ public class MainClient implements MouseListener, KeyListener, WindowListener, A
     public void keyPressed(KeyEvent e) {
         try {
             commander.sendKey(e.getKeyCode());
+            System.out.println("KEY:" + e.getKeyCode() + " sent" + "\n");
         } catch (IOException ex) {
-            throw new RuntimeException(ex);
+            clientFrame.getOutputArea().setText("ERROR:" + ex.getMessage() + "\n");
         }
     }
 
