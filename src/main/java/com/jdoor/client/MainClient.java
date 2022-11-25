@@ -56,6 +56,7 @@ public class MainClient implements MouseListener, KeyListener, WindowListener, A
                         clientFrame.getOperationBtn().setText("SEND");
                         clientFrame.getDiconnectBtn().setEnabled(true);
                         clientFrame.getInputLabel().setText("CMD");
+                        commander.start();
                     } catch (IOException ex) {
                         clientFrame.getOutputArea().setText("ERROR:" + ex.getMessage() + "\n");
                     }
