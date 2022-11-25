@@ -70,6 +70,7 @@ public class ClientStreamView extends Thread{
                 System.out.println("Schermo ricevuto e disegnato con successo\n");
             } catch(SocketTimeoutException e) {
                socketTimeout = true;
+                System.out.println("Timeout dello schermo\n");
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
