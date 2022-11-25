@@ -41,6 +41,7 @@ public class ServerThread extends Thread {
         DatagramPacket datagramPacket = new DatagramPacket(buffer, buffer.length, clientAddress, 8081);
         try {
             datagramSocket.send(datagramPacket);
+            System.out.println(clientSocket + ": Sent screen");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -53,9 +54,11 @@ public class ServerThread extends Thread {
 
     @Override
     public void run() {
+        String command = "";
         try {
             while (running) {
-                String command = clientInput.readLine();
+                command = clientInput.readLine();
+                System.out.println("Command: " + command);
 
                 switch (command.charAt(0)) {
                     case 'M':
