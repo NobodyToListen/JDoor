@@ -2,6 +2,7 @@ package com.jdoor.server.mouse;
 
 import java.awt.*;
 import java.awt.event.InputEvent;
+import java.util.Arrays;
 
 public class MouseController {
     private static MouseController currentInstance;
@@ -23,8 +24,12 @@ public class MouseController {
         String rawCords = command.substring(2);
         String[] cords = rawCords.split(";");
 
-        int x = Integer.getInteger(cords[0]);
-        int y = Integer.getInteger(cords[1]);
+        System.out.println(rawCords);
+        System.out.println(Arrays.toString(cords));
+        System.out.println(cords[0]);
+
+        int x = Integer.parseInt(cords[0]);
+        int y = Integer.parseInt(cords[1]);
 
         robot.mouseMove(x, y);
         // MR156;56 Esempio comando.
