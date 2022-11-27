@@ -91,11 +91,6 @@ public class MainClient implements MouseListener, KeyListener, WindowListener, A
 
     @Override
     public void mouseClicked(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mousePressed(MouseEvent e) {
         char button = 'L';
         if(e.getButton() != MouseEvent.BUTTON1) {
             button = 'R';
@@ -106,6 +101,11 @@ public class MainClient implements MouseListener, KeyListener, WindowListener, A
         } catch (IOException ex) {
             clientFrame.getOutputArea().setText("ERROR:" + ex.getMessage() + "\n");
         }
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+
     }
 
     @Override
@@ -150,14 +150,16 @@ public class MainClient implements MouseListener, KeyListener, WindowListener, A
 
     @Override
     public void windowClosing(WindowEvent e) {
-        if(commander != null && commander.isAlive()) {
-            try {
-                commander.closeConnection();
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
+        if(e.getSource() == clientFrame) {
+            if(commander != null && commander.getSocketCommands() != null) {
+                    try {
+                        commander.closeConnection();
+                    } catch (IOException ex) {
+                        throw new RuntimeException(ex);
+                    }
             }
+            System.exit(0);
         }
-        System.exit(0);
     }
 
     @Override

@@ -13,20 +13,14 @@ public class ClientStreamView extends Thread{
     private DatagramSocket socketView;
     private int screenHeight, screenWidth;
     private ScreenView screenView;
-    private boolean socketTimeout;
-    private boolean connected;
+    private ClientCommander commander;
 
-    public ClientStreamView(int port) throws SocketException {
+    public ClientStreamView(int port, ClientCommander commander) throws SocketException {
         socketView = new DatagramSocket(port);
         socketView.setSoTimeout(30000);
-        socketTimeout = false;
-        connected = true;
         screenHeight = 0;
         screenWidth = 0;
-    }
-
-    public void setScreenView(ScreenView screenView) {
-        this.screenView = screenView;
+        this.commander = commander;
     }
 
     public void setScreenDimension(String screenDimension) throws NumberFormatException{
@@ -51,17 +45,13 @@ public class ClientStreamView extends Thread{
         return screenWidth;
     }
 
-    public boolean isSocketTimeout() {
-        return socketTimeout;
-    }
-
-    public void setConnected(boolean connected) {
-        this.connected = connected;
+    public void setScreenView(ScreenView screenView) {
+        this.screenView = screenView;
     }
 
     @Override
     public void run() {
-        while(connected) {
+        while(commander.getSocketCommands() != null) {
             System.out.println("Inizio ricezione schermo\n");
             try {
                 DatagramPacket data = new DatagramPacket(new byte[(screenHeight * screenWidth) * 2], (screenHeight * screenWidth) * 2);
@@ -70,8 +60,7 @@ public class ClientStreamView extends Thread{
                 screenView.repaint();
                 System.out.println("Schermo ricevuto e disegnato con successo\n");
             } catch(SocketTimeoutException e) {
-               socketTimeout = true;
-                System.out.println("Timeout dello schermo\n");
+                commander.doCloseFromFrame();
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
