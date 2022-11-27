@@ -35,15 +35,12 @@ public class ClientCommander extends Thread {
     }
 
     public void sendMousePosition(int mouseX, int mouseY, char button) throws IOException {
-        int streamViewWidth = streamView.getScreenWidth();
-        int cFrameWidth = cFrame.getScreenPanel().getWidth();
-
-        float scaledMouseXf = (float) streamViewWidth / ((float) cFrameWidth / mouseX);
+        float scaledMouseXf = (float) streamView.getScreenWidth() / ((float) cFrame.getScreenPanel().getWidth() / mouseX);
+        float scaledMouseYf = (float) streamView.getScreenHeight()/((float) cFrame.getScreenPanel().getHeight()/mouseY);
         //System.out.println(scaledMouseX);
         int scaledMouseX = Math.round(scaledMouseXf);
-
-        int scaledMouseY = streamView.getScreenHeight()/(cFrame.getScreenPanel().getHeight()/mouseY);
-        System.out.println(streamView.getScreenHeight() + "/(" + cFrame.getScreenPanel().getWidth() + "/" + mouseX + ")= " + scaledMouseX);
+        int scaledMouseY = Math.round(scaledMouseYf);
+        //System.out.println(streamView.getScreenHeight() + "/(" + cFrame.getScreenPanel().getWidth() + "/" + mouseX + ")= " + scaledMouseX);
         String command = "M" + button + String.valueOf(scaledMouseX) + ";" + String.valueOf(scaledMouseY) + "\n";
         System.out.println(command);
         commandsWriter.write(command);
