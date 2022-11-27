@@ -18,7 +18,6 @@ public class ClientFrame extends JFrame{
         setSize(Toolkit.getDefaultToolkit().getScreenSize());
         setContentPane(mainPanel);
         setResizable(false);
-        setFocusable(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
         diconnectBtn.setEnabled(false);

@@ -57,6 +57,7 @@ public class MainClient implements MouseListener, KeyListener, WindowListener, A
                     try {
                         commander = new ClientCommander(ip, TCP_PORT, UDP_PORT,clientFrame);
                         clientFrame.getScreenPanel().addMouseListener(this);
+                        clientFrame.addKeyListener(this);
                         clientFrame.getOperationBtn().setText("SEND");
                         clientFrame.getDiconnectBtn().setEnabled(true);
                         clientFrame.getInputLabel().setText("CMD");
@@ -79,6 +80,7 @@ public class MainClient implements MouseListener, KeyListener, WindowListener, A
             try {
                 commander.closeConnection();
                 clientFrame.getScreenPanel().removeMouseListener(this);
+                clientFrame.removeKeyListener(this);
                 clientFrame.getOperationBtn().setText("CONNECT");
                 clientFrame.getDiconnectBtn().setEnabled(false);
                 clientFrame.getInputLabel().setText("HOST");
@@ -114,12 +116,12 @@ public class MainClient implements MouseListener, KeyListener, WindowListener, A
 
     @Override
     public void mouseEntered(MouseEvent e) {
-        clientFrame.addKeyListener(this);
+        clientFrame.setFocusable(true);
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
-        clientFrame.removeKeyListener(this);
+        clientFrame.setFocusable(false);
     }
 
     @Override
