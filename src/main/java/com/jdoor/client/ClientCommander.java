@@ -21,21 +21,31 @@ public class ClientCommander extends Thread {
         socketCommands = new Socket(InetAddress.getByName(ipAddress), portTCP);
         commandsWriter = new BufferedWriter(new OutputStreamWriter(socketCommands.getOutputStream()));
         resultReader = new BufferedReader(new InputStreamReader(socketCommands.getInputStream()));
-        streamView = new ClientStreamView(portUDP);
+        streamView = new ClientStreamView(portUDP, this);
         this.cFrame = cFrame;
     }
 
     public void closeConnection() throws IOException {
-        streamView.interrupt();
+        sendCloseMessage();
         commandsWriter.close();
         resultReader.close();
         socketCommands.close();
+        socketCommands = null;
+        this.interrupt();
     }
 
     public void sendMousePosition(int mouseX, int mouseY, char button) throws IOException {
-        int scaledMouseX = cFrame.getScreenPanel().getWidth()/(mouseX * streamView.getScreenWidth());
-        int scaledMouseY = cFrame.getScreenPanel().getHeight()/(mouseY * streamView.getScreenHeight());
+        int scaledMouseX = streamView.getScreenWidth()/(cFrame.getScreenPanel().getWidth()/mouseX);
+        int scaledMouseY = streamView.getScreenHeight()/(cFrame.getScreenPanel().getHeight()/mouseY);
         commandsWriter.write("M" + button + String.valueOf(scaledMouseX) + ";" + String.valueOf(scaledMouseY) + "\n");
+    }
+    public void sendCloseMessage() throws IOException {
+        commandsWriter.write("S");
+    }
+    public void doCloseFromFrame() {
+        if(cFrame.getDiconnectBtn().isEnabled()) {
+            cFrame.getDiconnectBtn().doClick();
+        }
     }
 
     public void sendKey(int keyCode) throws IOException {
@@ -52,41 +62,24 @@ public class ClientCommander extends Thread {
 
     @Override
     public void run() {
-        Thread errorChecker = new Thread() {
-            @Override
-            public void run() {
-                while(!streamView.isSocketTimeout()) {}
-                if(socketCommands.isConnected()) {
-                    if(cFrame.getDiconnectBtn().isEnabled()) {
-                        cFrame.getDiconnectBtn().doClick();
-                    } else {
-                        try {
-                            closeConnection();
-                        } catch (IOException e) {
-                            cFrame.getOutputArea().append("Error:" + e.getMessage() + "\n");
-                        }
-                    }
-
-                }
-            }
-        };
-        while(socketCommands.isConnected()) {
-            if((streamView.getScreenHeight() == 0 && streamView.getScreenWidth() == 0) || streamView == null) {
+        while(socketCommands != null) {
+            if(streamView.getScreenHeight() == 0 && streamView.getScreenWidth() == 0) {
                 try {
                     commandsWriter.write("R\n");
                     commandsWriter.flush();
                     streamView.setScreenView((ScreenView) cFrame.getScreenPanel());
                     streamView.setScreenDimension(resultReader.readLine());
                     streamView.start();
-                    errorChecker.start();
+                    System.out.println("Schermo ricevuto con successo\n");
                 } catch (Exception e) {
                     streamView.setScreenDimension(0,0);
+                    System.out.println("problemi nella ricezione delle dimensioni dello schermo\n");
                 }
             } else {
                 try {
                     cFrame.getOutputArea().append(resultReader.readLine() + "\n");
                 } catch (IOException e) {
-                    cFrame.getOutputArea().append("Error:" + e.getMessage() + "\n");
+                    System.out.println("Error:" + e.getMessage() + "\n");
                 }
             }
         }
