@@ -37,10 +37,11 @@ public class ClientCommander extends Thread {
     public void sendMousePosition(int mouseX, int mouseY, char button) throws IOException {
         int scaledMouseX = streamView.getScreenWidth()/(cFrame.getScreenPanel().getWidth()/mouseX);
         int scaledMouseY = streamView.getScreenHeight()/(cFrame.getScreenPanel().getHeight()/mouseY);
+        System.out.println("MouseX"+scaledMouseX + " " + "MouseY" + scaledMouseY);
         commandsWriter.write("M" + button + String.valueOf(scaledMouseX) + ";" + String.valueOf(scaledMouseY) + "\n");
     }
     public void sendCloseMessage() throws IOException {
-        commandsWriter.write("S" + "\n");
+        commandsWriter.write("S\n");
     }
     public void doCloseFromFrame() {
         if(cFrame.getDiconnectBtn().isEnabled()) {
