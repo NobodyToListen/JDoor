@@ -52,13 +52,13 @@ public class ClientStreamView extends Thread{
     @Override
     public void run() {
         while(commander.getSocketCommands() != null) {
-            System.out.println("Inizio ricezione schermo\n");
+            //System.out.println("Inizio ricezione schermo\n");
             try {
                 DatagramPacket data = new DatagramPacket(new byte[(screenHeight * screenWidth) * 2], (screenHeight * screenWidth) * 2);
                 socketView.receive(data);
                 screenView.setScreen(data.getData());
                 screenView.repaint();
-                System.out.println("Schermo ricevuto e disegnato con successo\n");
+                //System.out.println("Schermo ricevuto e disegnato con successo\n");
             } catch(SocketTimeoutException e) {
                 commander.doCloseFromFrame();
             } catch (IOException e) {

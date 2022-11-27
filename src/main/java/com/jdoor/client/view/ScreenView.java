@@ -41,7 +41,7 @@ public class ScreenView extends JPanel{
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         if(screen != null) {
-            System.out.println("Sto disegnando\n");
+            //System.out.println("Sto disegnando\n");
             g.drawImage(screen, 0, 0, getWidth(), getHeight(), null);
         }
     }
