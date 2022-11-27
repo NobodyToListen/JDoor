@@ -88,7 +88,7 @@ public class ScreenCaptureThread extends Thread {
         while (running) {
             // Non ha senso eseguire il codice se non ci sono client collegati.
             if (threads.size() > 0) {
-                System.out.println("OK");
+                //System.out.println("OK");
                 // Ottenere schermata.
                 capture = getScreen();
 
