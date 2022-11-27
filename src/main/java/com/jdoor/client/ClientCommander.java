@@ -40,7 +40,7 @@ public class ClientCommander extends Thread {
         commandsWriter.write("M" + button + String.valueOf(scaledMouseX) + ";" + String.valueOf(scaledMouseY) + "\n");
     }
     public void sendCloseMessage() throws IOException {
-        commandsWriter.write("S");
+        commandsWriter.write("S" + "\n");
     }
     public void doCloseFromFrame() {
         if(cFrame.getDiconnectBtn().isEnabled()) {
@@ -49,7 +49,7 @@ public class ClientCommander extends Thread {
     }
 
     public void sendKey(int keyCode) throws IOException {
-        commandsWriter.write("K" + String.valueOf(keyCode));
+        commandsWriter.write("K" + String.valueOf(keyCode) + "\n");
     }
 
     public void sendCommands(String command) throws IOException {
