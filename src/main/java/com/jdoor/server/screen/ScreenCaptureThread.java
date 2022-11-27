@@ -97,7 +97,7 @@ public class ScreenCaptureThread extends Thread {
 
                 // Mandare la schermata.
                 for (ServerThread thread : threads) {
-                    System.out.println("SENT");
+                    //System.out.println("SENT");
                     thread.sendScreen(capture);
                 }
             }

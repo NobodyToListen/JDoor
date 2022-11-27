@@ -41,7 +41,7 @@ public class ServerThread extends Thread {
         DatagramPacket datagramPacket = new DatagramPacket(buffer, buffer.length, clientAddress, 8081);
         try {
             datagramSocket.send(datagramPacket);
-            System.out.println(clientSocket + ": Sent screen");
+            //System.out.println(clientSocket + ": Sent screen");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -70,6 +70,7 @@ public class ServerThread extends Thread {
                         break;
 
                     case 'C':
+                        System.out.println("MOUSE EVENT");
                         CommandControllerThread cct = new CommandControllerThread(clientOutput, command);
                         cct.start();
                         break;
