@@ -8,7 +8,6 @@ public class MouseController {
     private final Robot robot;
 
     private MouseController() throws AWTException {
-        currentInstance = new MouseController();
         robot = new Robot();
     }
 
