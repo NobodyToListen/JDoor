@@ -8,6 +8,9 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.zip.Deflater;
+
+import static com.jdoor.server.Server.IMAGE_UDP_SIZE;
 
 /**
  * Thread per mandare lo screen delo schermo.
@@ -63,7 +66,15 @@ public class ScreenCaptureThread extends Thread {
 
         buffer = byteArrayOutputStream.toByteArray();
 
-        return buffer;
+        Deflater deflater = new Deflater();
+        deflater.setInput(buffer);
+        deflater.finish();
+
+        byte[] output = new byte[IMAGE_UDP_SIZE];
+        deflater.deflate(output);
+        deflater.end();
+
+        return output;
     }
 
     // Metodo per fermare il thread.

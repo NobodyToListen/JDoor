@@ -6,6 +6,10 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.zip.DataFormatException;
+import java.util.zip.Inflater;
+
+import static com.jdoor.server.Server.IMAGE_UDP_SIZE;
 
 public class ScreenView extends JPanel{
     private BufferedImage screen;
@@ -16,7 +20,21 @@ public class ScreenView extends JPanel{
 
     public void setScreen(byte[] image) throws IOException {
         ByteArrayInputStream imageConverter = new ByteArrayInputStream(image);
-        screen = ImageIO.read(imageConverter);
+        byte[] compressedImage = imageConverter.readAllBytes();
+
+        Inflater inflater = new Inflater();
+        inflater.setInput(compressedImage);
+
+        byte[] originalImage = new byte[IMAGE_UDP_SIZE];
+        try {
+            inflater.inflate(originalImage);
+        } catch (DataFormatException e) {
+            throw new RuntimeException(e);
+        }
+
+        ByteArrayInputStream newImage = new ByteArrayInputStream(originalImage);
+
+        screen = ImageIO.read(newImage);
     }
 
     @Override
