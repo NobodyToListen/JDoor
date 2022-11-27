@@ -117,6 +117,7 @@ public class MainClient implements MouseListener, KeyListener, WindowListener, A
     @Override
     public void mouseEntered(MouseEvent e) {
         clientFrame.setFocusable(true);
+        clientFrame.requestFocusInWindow();
     }
 
     @Override

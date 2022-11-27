@@ -31,7 +31,6 @@ public class ClientCommander extends Thread {
         resultReader.close();
         socketCommands.close();
         socketCommands = null;
-        this.interrupt();
     }
 
     public void sendMousePosition(int mouseX, int mouseY, char button) throws IOException {
@@ -48,6 +47,7 @@ public class ClientCommander extends Thread {
     }
     public void sendCloseMessage() throws IOException {
         commandsWriter.write("S\n");
+        commandsWriter.flush();
     }
     public void doCloseFromFrame() {
         if(cFrame.getDiconnectBtn().isEnabled()) {
@@ -57,10 +57,17 @@ public class ClientCommander extends Thread {
 
     public void sendKey(int keyCode) throws IOException {
         commandsWriter.write("K" + String.valueOf(keyCode) + "\n");
+        commandsWriter.flush();
     }
 
     public void sendCommands(String command) throws IOException {
         commandsWriter.write("C" + command + "\n");
+        commandsWriter.flush();
+    }
+
+    public void sendScreenRequest() throws IOException {
+        commandsWriter.write("R\n");
+        commandsWriter.flush();
     }
 
     public Socket getSocketCommands() {
@@ -72,8 +79,7 @@ public class ClientCommander extends Thread {
         while(socketCommands != null) {
             if(streamView.getScreenHeight() == 0 && streamView.getScreenWidth() == 0) {
                 try {
-                    commandsWriter.write("R\n");
-                    commandsWriter.flush();
+                    sendScreenRequest();
                     streamView.setScreenView((ScreenView) cFrame.getScreenPanel());
                     streamView.setScreenDimension(resultReader.readLine());
                     streamView.start();
