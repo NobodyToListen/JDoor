@@ -97,7 +97,6 @@ public class MainClient implements MouseListener, KeyListener, WindowListener, A
         }
         try {
             commander.sendMousePosition(e.getX(), e.getY(), button);
-            System.out.println("MOUSE:" + button + e.getY() + "" + e.getX() + " sent" + "\n");
         } catch (IOException ex) {
             clientFrame.getOutputArea().setText("ERROR:" + ex.getMessage() + "\n");
         }
