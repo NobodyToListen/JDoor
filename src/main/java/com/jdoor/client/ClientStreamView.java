@@ -33,6 +33,7 @@ public class ClientStreamView extends Thread{
         String[] dim = screenDimension.split("x");
         this.screenWidth = Integer.parseInt(dim[0]);
         this.screenHeight = Integer.parseInt(dim[1]);
+        System.out.println(screenDimension);
     }
     public void setScreenDimension(int screenHeight, int screenWidth) {
         this.screenHeight = screenHeight;
