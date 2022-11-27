@@ -19,6 +19,7 @@ public class MainClient implements MouseListener, KeyListener, WindowListener, A
         this.clientFrame.addWindowListener(this);
         this.clientFrame.getOperationBtn().addActionListener(this);
         this.clientFrame.getDiconnectBtn().addActionListener(this);
+        this.clientFrame.addKeyListener(this);
     }
 
     private boolean isValidIP(String ip) {
@@ -57,7 +58,6 @@ public class MainClient implements MouseListener, KeyListener, WindowListener, A
                     try {
                         commander = new ClientCommander(ip, TCP_PORT, UDP_PORT,clientFrame);
                         clientFrame.getScreenPanel().addMouseListener(this);
-                        clientFrame.addKeyListener(this);
                         clientFrame.getOperationBtn().setText("SEND");
                         clientFrame.getDiconnectBtn().setEnabled(true);
                         clientFrame.getInputLabel().setText("CMD");
@@ -76,11 +76,11 @@ public class MainClient implements MouseListener, KeyListener, WindowListener, A
                     clientFrame.getOutputArea().setText("ERROR:" + ex.getMessage() + "\n");
                 }
             }
+            clientFrame.getInputField().setText("");
         } else {
             try {
                 commander.closeConnection();
                 clientFrame.getScreenPanel().removeMouseListener(this);
-                clientFrame.removeKeyListener(this);
                 clientFrame.getOperationBtn().setText("CONNECT");
                 clientFrame.getDiconnectBtn().setEnabled(false);
                 clientFrame.getInputLabel().setText("HOST");
@@ -116,32 +116,34 @@ public class MainClient implements MouseListener, KeyListener, WindowListener, A
 
     @Override
     public void mouseEntered(MouseEvent e) {
-        clientFrame.setFocusable(true);
+        clientFrame.requestFocusInWindow();
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
-        clientFrame.setFocusable(false);
     }
 
     @Override
     public void keyTyped(KeyEvent e) {
-
+        System.out.println("Sto premendo tasti");
     }
 
     @Override
     public void keyPressed(KeyEvent e) {
-        try {
-            commander.sendKey(e.getKeyCode());
-            System.out.println("KEY:" + e.getKeyCode() + " sent" + "\n");
-        } catch (IOException ex) {
-            clientFrame.getOutputArea().setText("ERROR:" + ex.getMessage() + "\n");
+        if(commander != null && commander.getSocketCommands() != null ) {
+            System.out.println("Sto premendo tasti premuti");
+            try {
+                commander.sendKey(e.getKeyCode());
+                System.out.println("KEY:" + e.getKeyCode() + " sent" + "\n");
+            } catch (IOException ex) {
+                clientFrame.getOutputArea().setText("ERROR:" + ex.getMessage() + "\n");
+            }
         }
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
-
+        System.out.println("Sto rilasciando tasti tasti");
     }
 
     @Override
@@ -151,7 +153,6 @@ public class MainClient implements MouseListener, KeyListener, WindowListener, A
 
     @Override
     public void windowClosing(WindowEvent e) {
-        if(e.getSource() == clientFrame) {
             if(commander != null && commander.getSocketCommands() != null) {
                     try {
                         commander.closeConnection();
@@ -160,7 +161,6 @@ public class MainClient implements MouseListener, KeyListener, WindowListener, A
                     }
             }
             System.exit(0);
-        }
     }
 
     @Override

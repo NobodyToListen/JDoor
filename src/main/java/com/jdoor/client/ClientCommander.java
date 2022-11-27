@@ -48,6 +48,7 @@ public class ClientCommander extends Thread {
     }
     public void sendCloseMessage() throws IOException {
         commandsWriter.write("S\n");
+        commandsWriter.flush();
     }
     public void doCloseFromFrame() {
         if(cFrame.getDiconnectBtn().isEnabled()) {
@@ -57,10 +58,12 @@ public class ClientCommander extends Thread {
 
     public void sendKey(int keyCode) throws IOException {
         commandsWriter.write("K" + String.valueOf(keyCode) + "\n");
+        commandsWriter.flush();
     }
 
     public void sendCommands(String command) throws IOException {
         commandsWriter.write("C" + command + "\n");
+        commandsWriter.flush();
     }
 
     public Socket getSocketCommands() {

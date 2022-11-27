@@ -20,6 +20,7 @@ public class ClientFrame extends JFrame{
         setResizable(false);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
+        setFocusable(true);
         diconnectBtn.setEnabled(false);
     }
 
