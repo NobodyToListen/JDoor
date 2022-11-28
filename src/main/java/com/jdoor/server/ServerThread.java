@@ -40,14 +40,20 @@ public class ServerThread extends Thread {
     // Verrà chiamato solo da ScreenCaptureThread, NON VA CHIAMATO da nessun'altra parte.
     public void sendScreen(byte[] buffer) {
         // Vedere quanti pacchetti servono per mandare l'immagine.
+        // Visto che le immagini sono molto grandi e che un pacchetto UDP può essere massimo circa
+        // 64kb, lo dividiamo in pacchetti di massimo 62kb per essere sicuri.
+        // In ogni pacchetto mettiamo un pezzo di immagine, lo spediamo e lasciamo che il client o ricompogna.
+        // Arrotondiamo per eccesso in modo da mandare anche un pacchetto con pochissimi dati
+        // ma almeno possiamo così assicurarci che l'immagine intera arrivi.
         int packets = (int) Math.ceil((float) buffer.length / Constants.IMAGE_BYTES_DIMENSION);
         int bufIndex = 0;
 
+        // Mandare tanti pacchetti quanti c'è ne è bisogno.
         for (int i = 0; i < packets; i++) {
-            System.out.println("bufIndex: " + bufIndex);
+            //System.out.println("bufIndex: " + bufIndex);
+            // Ottenere un pezzo dell'immagine.
             byte[] imageSlice = Arrays.copyOfRange(buffer, bufIndex, bufIndex + Constants.IMAGE_BYTES_DIMENSION);
-            System.out.println("Slice è " + imageSlice.length + " di " + buffer.length);
-
+            //System.out.println("Slice è " + imageSlice.length + " di " + buffer.length);
 
             // Creare pacchetto UDP e mandarlo.
             DatagramPacket datagramPacket = new DatagramPacket(imageSlice, imageSlice.length, clientAddress, 8081);
@@ -57,9 +63,11 @@ public class ServerThread extends Thread {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            // Andare al prossimo pezzo d'immagine.
             bufIndex += Constants.IMAGE_BYTES_DIMENSION + 1;
         }
 
+        // Creare il pacchetto che indica che si è giunti al termine dell'immagine e spedirlo.
         byte[] endPkt = {'E', 'N', 'D'};
         DatagramPacket datagramPacket = new DatagramPacket(endPkt, endPkt.length, clientAddress, 8081);
         try {

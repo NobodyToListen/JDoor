@@ -63,15 +63,19 @@ public class ClientStreamView extends Thread{
         while (commander.getSocketCommands() != null) {
             //System.out.println("Inizio ricezione schermo\n");
             try {
+                // Creare il buffer per ottenere i dati dell'immagine.
                 byte[] data = new byte[Constants.IMAGE_BYTES_DIMENSION];
                 ByteArrayOutputStream finalImage = new ByteArrayOutputStream();
 
+                // Fino a che non si ha finito di leggere l'immagine, continuiamo a ricevere i pacchetti
+                // UDP e a concatenarli per ottenere l'immagine completa.
                 while (!isImageEnded(data)) {
                     DatagramPacket pkt = new DatagramPacket(data, Constants.IMAGE_BYTES_DIMENSION);
                     socketView.receive(pkt);
                     finalImage.write(pkt.getData());
                 }
 
+                // Impostare la nuova immagine visualizzata.
                 screenView.setScreen(finalImage.toByteArray());
                 screenView.repaint();
                 //System.out.println("Schermo ricevuto e disegnato con successo\n");
