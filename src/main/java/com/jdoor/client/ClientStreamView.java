@@ -1,7 +1,9 @@
 package com.jdoor.client;
 
+import com.jdoor.Constants;
 import com.jdoor.client.view.ScreenView;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -49,14 +51,28 @@ public class ClientStreamView extends Thread{
         this.screenView = screenView;
     }
 
+    private boolean isImageEnded(byte[] data) {
+        if (data == null)
+            return false;
+
+        return data[0] == 'E' && data[1] == 'N' && data[2] == 'D';
+    }
+
     @Override
     public void run() {
-        while(commander.getSocketCommands() != null) {
+        while (commander.getSocketCommands() != null) {
             //System.out.println("Inizio ricezione schermo\n");
             try {
-                DatagramPacket data = new DatagramPacket(new byte[(screenHeight * screenWidth) * 2], (screenHeight * screenWidth) * 2);
-                socketView.receive(data);
-                screenView.setScreen(data.getData());
+                byte[] data = new byte[Constants.IMAGE_BYTES_DIMENSION];
+                ByteArrayOutputStream finalImage = new ByteArrayOutputStream();
+
+                while (!isImageEnded(data)) {
+                    DatagramPacket pkt = new DatagramPacket(data, Constants.IMAGE_BYTES_DIMENSION);
+                    socketView.receive(pkt);
+                    finalImage.write(pkt.getData());
+                }
+
+                screenView.setScreen(finalImage.toByteArray());
                 screenView.repaint();
                 //System.out.println("Schermo ricevuto e disegnato con successo\n");
             } catch(SocketTimeoutException e) {

@@ -1,5 +1,6 @@
 package com.jdoor.server;
 
+import com.jdoor.Constants;
 import com.jdoor.server.commands.CommandControllerThread;
 import com.jdoor.server.keyboard.KeyboardController;
 import com.jdoor.server.mouse.MouseController;
@@ -11,6 +12,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.util.Arrays;
 
 public class ServerThread extends Thread {
     private Socket clientSocket;
@@ -37,11 +39,31 @@ public class ServerThread extends Thread {
     // Metodo per mandare la schermata.
     // Verrà chiamato solo da ScreenCaptureThread, NON VA CHIAMATO da nessun'altra parte.
     public void sendScreen(byte[] buffer) {
-        // Creare pacchetto UDP e mandarlo.
-        DatagramPacket datagramPacket = new DatagramPacket(buffer, buffer.length, clientAddress, 8081);
+        // Vedere quanti pacchetti servono per mandare l'immagine.
+        int packets = (int) Math.ceil((float) buffer.length / Constants.IMAGE_BYTES_DIMENSION);
+        int bufIndex = 0;
+
+        for (int i = 0; i < packets; i++) {
+            System.out.println("bufIndex: " + bufIndex);
+            byte[] imageSlice = Arrays.copyOfRange(buffer, bufIndex, bufIndex + Constants.IMAGE_BYTES_DIMENSION);
+            System.out.println("Slice è " + imageSlice.length + " di " + buffer.length);
+
+
+            // Creare pacchetto UDP e mandarlo.
+            DatagramPacket datagramPacket = new DatagramPacket(imageSlice, imageSlice.length, clientAddress, 8081);
+            try {
+                datagramSocket.send(datagramPacket);
+                //System.out.println(clientSocket + ": Sent screen");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            bufIndex += Constants.IMAGE_BYTES_DIMENSION + 1;
+        }
+
+        byte[] endPkt = {'E', 'N', 'D'};
+        DatagramPacket datagramPacket = new DatagramPacket(endPkt, endPkt.length, clientAddress, 8081);
         try {
             datagramSocket.send(datagramPacket);
-            //System.out.println(clientSocket + ": Sent screen");
         } catch (IOException e) {
             e.printStackTrace();
         }
