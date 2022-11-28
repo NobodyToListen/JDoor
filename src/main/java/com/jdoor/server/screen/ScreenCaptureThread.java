@@ -8,15 +8,12 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.zip.Deflater;
-
-import static com.jdoor.server.Server.IMAGE_UDP_SIZE;
 
 /**
  * Thread per mandare lo screen delo schermo.
  * Ne esiste uno solo che viene creato all'inizio del programma.
  */
-public class ScreenCaptureThread extends Thread {
+public final class ScreenCaptureThread extends Thread {
     private static ScreenCaptureThread currentInstance;
 
     public static String SCREEN_SIZE;
@@ -96,6 +93,7 @@ public class ScreenCaptureThread extends Thread {
 
             // Aspettare 200 millisecondi.
             try {
+                //noinspection BusyWait
                 Thread.sleep(200);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);

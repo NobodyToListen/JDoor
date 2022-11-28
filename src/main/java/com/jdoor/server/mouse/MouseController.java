@@ -4,7 +4,7 @@ import java.awt.*;
 import java.awt.event.InputEvent;
 import java.util.Arrays;
 
-public class MouseController {
+public final class MouseController {
     private static MouseController currentInstance;
     private final Robot robot;
 

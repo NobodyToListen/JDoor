@@ -2,11 +2,8 @@ package com.jdoor.client.view;
 
 import javax.swing.*;
 
-public class MainWindow extends JFrame {
+public final class MainWindow extends JFrame {
     private JPanel mainPanel;
-    private JTextField ipField;
-    private JButton connectBtn;
-    private JPanel screenPanel;
 
     public MainWindow() {
         setContentPane(mainPanel);

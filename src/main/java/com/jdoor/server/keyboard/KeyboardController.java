@@ -1,12 +1,11 @@
 package com.jdoor.server.keyboard;
 
 import java.awt.*;
-import java.awt.event.KeyEvent;
 
-public class KeyboardController {
+public final class KeyboardController {
     private static KeyboardController currentInstance;
 
-    private Robot robot;
+    private final Robot robot;
 
     private KeyboardController() throws AWTException {
         robot = new Robot();

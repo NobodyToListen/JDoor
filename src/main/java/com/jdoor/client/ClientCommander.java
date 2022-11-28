@@ -3,19 +3,16 @@ package com.jdoor.client;
 import com.jdoor.client.view.ClientFrame;
 import com.jdoor.client.view.ScreenView;
 
-import javax.swing.*;
-import java.awt.event.WindowListener;
 import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.net.SocketException;
 
-public class ClientCommander extends Thread {
+public final class ClientCommander extends Thread {
     private Socket socketCommands;
-    private BufferedWriter commandsWriter;
-    private BufferedReader resultReader;
-    private ClientStreamView streamView;
-    private ClientFrame cFrame;
+    private final BufferedWriter commandsWriter;
+    private final BufferedReader resultReader;
+    private final ClientStreamView streamView;
+    private final ClientFrame cFrame;
 
     public ClientCommander(String ipAddress, int portTCP, int portUDP, ClientFrame cFrame) throws IOException {
         socketCommands = new Socket(InetAddress.getByName(ipAddress), portTCP);
@@ -41,7 +38,7 @@ public class ClientCommander extends Thread {
         int scaledMouseX = Math.round(scaledMouseXf);
         int scaledMouseY = Math.round(scaledMouseYf);
         //System.out.println(streamView.getScreenHeight() + "/(" + cFrame.getScreenPanel().getWidth() + "/" + mouseX + ")= " + scaledMouseX);
-        String command = "M" + button + String.valueOf(scaledMouseX) + ";" + String.valueOf(scaledMouseY) + "\n";
+        String command = "M" + button + scaledMouseX + ";" + scaledMouseY + "\n";
         System.out.println(command);
         commandsWriter.write(command);
         commandsWriter.flush();
@@ -50,13 +47,13 @@ public class ClientCommander extends Thread {
         commandsWriter.write("S");
     }
     public void doCloseFromFrame() {
-        if(cFrame.getDiconnectBtn().isEnabled()) {
-            cFrame.getDiconnectBtn().doClick();
+        if(cFrame.getDisconnectBtn().isEnabled()) {
+            cFrame.getDisconnectBtn().doClick();
         }
     }
 
     public void sendKey(int keyCode) throws IOException {
-        commandsWriter.write("K" + String.valueOf(keyCode));
+        commandsWriter.write("K" + keyCode);
     }
 
     public void sendCommands(String command) throws IOException {
@@ -79,7 +76,7 @@ public class ClientCommander extends Thread {
                     streamView.start();
                     System.out.println("Schermo ricevuto con successo\n");
                 } catch (Exception e) {
-                    streamView.setScreenDimension(0,0);
+                    streamView.setScreenDimension(0);
                     System.out.println("problemi nella ricezione delle dimensioni dello schermo\n");
                 }
             } else {

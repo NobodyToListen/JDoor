@@ -14,7 +14,7 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.util.Arrays;
 
-public class ServerThread extends Thread {
+public final class ServerThread extends Thread {
     private Socket clientSocket;
     private final DatagramSocket datagramSocket;
     private final InetAddress clientAddress;
@@ -42,7 +42,7 @@ public class ServerThread extends Thread {
         // Vedere quanti pacchetti servono per mandare l'immagine.
         // Visto che le immagini sono molto grandi e che un pacchetto UDP può essere massimo circa
         // 64kb, lo dividiamo in pacchetti di massimo 62kb per essere sicuri.
-        // In ogni pacchetto mettiamo un pezzo di immagine, lo spediamo e lasciamo che il client o ricompogna.
+        // In ogni pacchetto mettiamo un pezzo d'immagine, lo spediamo e lasciamo che il client o ricomponga.
         // Arrotondiamo per eccesso in modo da mandare anche un pacchetto con pochissimi dati
         // ma almeno possiamo così assicurarci che l'immagine intera arrivi.
         int packets = (int) Math.ceil((float) buffer.length / Constants.IMAGE_BYTES_DIMENSION);
@@ -84,7 +84,7 @@ public class ServerThread extends Thread {
 
     @Override
     public void run() {
-        String command = "";
+        String command;
         try {
             while (running) {
                 command = clientInput.readLine();
@@ -115,7 +115,7 @@ public class ServerThread extends Thread {
                         break;
 
                     default:
-                        System.out.println("Errore comando non riconosicuto: " + command);
+                        System.out.println("Errore comando non riconosciuto: " + command);
                         clientOutput.write("Unknown command: " + command + "\n");
                         clientOutput.flush();
                         break;

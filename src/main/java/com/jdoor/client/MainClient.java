@@ -2,29 +2,26 @@ package com.jdoor.client;
 
 import com.jdoor.client.view.ClientFrame;
 
-import javax.swing.*;
 import java.awt.event.*;
 import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class MainClient implements MouseListener, KeyListener, WindowListener, ActionListener {
-    private ClientFrame clientFrame;
+public final class MainClient implements MouseListener, KeyListener, WindowListener, ActionListener {
+    private final ClientFrame clientFrame;
     private ClientCommander commander;
-    private final int TCP_PORT = 8080;
-    private final int UDP_PORT = 8081;
 
     public MainClient(ClientFrame clientFrame) {
         this.clientFrame = clientFrame;
         this.clientFrame.addWindowListener(this);
         this.clientFrame.getOperationBtn().addActionListener(this);
-        this.clientFrame.getDiconnectBtn().addActionListener(this);
+        this.clientFrame.getDisconnectBtn().addActionListener(this);
     }
 
     private boolean isValidIP(String ip) {
 
         String zeroTo255
-                = "(\\d{1,2}|(0|1)\\"
+                = "(\\d{1,2}|([01])\\"
                 + "d{2}|2[0-4]\\d|25[0-5])";
 
 
@@ -55,10 +52,12 @@ public class MainClient implements MouseListener, KeyListener, WindowListener, A
                 String ip = clientFrame.getInputField().getText();
                 if(isValidIP(ip)) {
                     try {
+                        int TCP_PORT = 8080;
+                        int UDP_PORT = 8081;
                         commander = new ClientCommander(ip, TCP_PORT, UDP_PORT,clientFrame);
                         clientFrame.getScreenPanel().addMouseListener(this);
                         clientFrame.getOperationBtn().setText("SEND");
-                        clientFrame.getDiconnectBtn().setEnabled(true);
+                        clientFrame.getDisconnectBtn().setEnabled(true);
                         clientFrame.getInputLabel().setText("CMD");
                         commander.start();
                     } catch (IOException ex) {
@@ -80,7 +79,7 @@ public class MainClient implements MouseListener, KeyListener, WindowListener, A
                 commander.closeConnection();
                 clientFrame.getScreenPanel().removeMouseListener(this);
                 clientFrame.getOperationBtn().setText("CONNECT");
-                clientFrame.getDiconnectBtn().setEnabled(false);
+                clientFrame.getDisconnectBtn().setEnabled(false);
                 clientFrame.getInputLabel().setText("HOST");
             } catch (IOException ex) {
                 clientFrame.getOutputArea().setText("ERROR:" + ex.getMessage() + "\n");
@@ -103,14 +102,10 @@ public class MainClient implements MouseListener, KeyListener, WindowListener, A
     }
 
     @Override
-    public void mousePressed(MouseEvent e) {
-
-    }
+    public void mousePressed(MouseEvent e) {}
 
     @Override
-    public void mouseReleased(MouseEvent e) {
-
-    }
+    public void mouseReleased(MouseEvent e) {}
 
     @Override
     public void mouseEntered(MouseEvent e) {
@@ -123,9 +118,7 @@ public class MainClient implements MouseListener, KeyListener, WindowListener, A
     }
 
     @Override
-    public void keyTyped(KeyEvent e) {
-
-    }
+    public void keyTyped(KeyEvent e) {}
 
     @Override
     public void keyPressed(KeyEvent e) {
@@ -138,14 +131,10 @@ public class MainClient implements MouseListener, KeyListener, WindowListener, A
     }
 
     @Override
-    public void keyReleased(KeyEvent e) {
-
-    }
+    public void keyReleased(KeyEvent e) {}
 
     @Override
-    public void windowOpened(WindowEvent e) {
-
-    }
+    public void windowOpened(WindowEvent e) {}
 
     @Override
     public void windowClosing(WindowEvent e) {
@@ -162,32 +151,22 @@ public class MainClient implements MouseListener, KeyListener, WindowListener, A
     }
 
     @Override
-    public void windowClosed(WindowEvent e) {
-
-    }
+    public void windowClosed(WindowEvent e) {}
 
     @Override
-    public void windowIconified(WindowEvent e) {
-
-    }
+    public void windowIconified(WindowEvent e) {}
 
     @Override
-    public void windowDeiconified(WindowEvent e) {
-
-    }
+    public void windowDeiconified(WindowEvent e) {}
 
     @Override
-    public void windowActivated(WindowEvent e) {
-
-    }
+    public void windowActivated(WindowEvent e) {}
 
     @Override
-    public void windowDeactivated(WindowEvent e) {
-
-    }
+    public void windowDeactivated(WindowEvent e) {}
 
     public static void main(String[] args) {
         ClientFrame cFrame = new ClientFrame();
-        MainClient main = new MainClient(cFrame);
+        new MainClient(cFrame);
     }
 }

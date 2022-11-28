@@ -2,7 +2,7 @@ package com.jdoor.server.commands;
 
 import java.io.*;
 
-public class CommandControllerThread extends Thread {
+public final class CommandControllerThread extends Thread {
     private final BufferedWriter bw;
     private final String command;
 

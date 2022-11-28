@@ -9,13 +9,12 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
-import java.util.concurrent.TimeoutException;
 
-public class ClientStreamView extends Thread{
-    private DatagramSocket socketView;
+public final class ClientStreamView extends Thread{
+    private final DatagramSocket socketView;
     private int screenHeight, screenWidth;
     private ScreenView screenView;
-    private ClientCommander commander;
+    private final ClientCommander commander;
 
     public ClientStreamView(int port, ClientCommander commander) throws SocketException {
         socketView = new DatagramSocket(port);
@@ -31,12 +30,8 @@ public class ClientStreamView extends Thread{
         this.screenHeight = Integer.parseInt(dim[1]);
         System.out.println(screenDimension);
     }
-    public void setScreenDimension(int screenHeight, int screenWidth) {
+    public void setScreenDimension(int screenHeight) {
         this.screenHeight = screenHeight;
-    }
-
-    public DatagramSocket getSocketView() {
-        return socketView;
     }
 
     public int getScreenHeight() {
