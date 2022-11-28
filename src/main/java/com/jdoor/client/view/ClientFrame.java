@@ -55,4 +55,8 @@ public class ClientFrame extends JFrame{
     public JButton getDiconnectBtn() {
         return diconnectBtn;
     }
+
+    public JTabbedPane getTabbedPane1() {
+        return tabbedPane1;
+    }
 }

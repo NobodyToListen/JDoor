@@ -64,6 +64,10 @@ public class ClientCommander extends Thread {
         commandsWriter.write("C" + command + "\n");
         commandsWriter.flush();
     }
+    public void sendScreenStopStart() throws IOException {
+        commandsWriter.write("L\n");
+        commandsWriter.flush();
+    }
 
     public void sendScreenRequest() throws IOException {
         commandsWriter.write("R\n");

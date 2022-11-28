@@ -21,6 +21,7 @@ public class ServerThread extends Thread {
     private final BufferedWriter clientOutput;
 
     private boolean running;
+    private boolean watching;
 
     public ServerThread(Socket socket) throws IOException {
         clientSocket = socket;
@@ -32,6 +33,7 @@ public class ServerThread extends Thread {
         clientAddress = clientSocket.getInetAddress();
 
         running = true;
+        watching = true;
     }
 
     // Metodo per mandare la schermata.
@@ -50,6 +52,10 @@ public class ServerThread extends Thread {
     // Vedere se il thread è finito.
     public boolean isClosed() {
         return clientSocket == null;
+    }
+
+    public boolean isWatching() {
+        return watching;
     }
 
     @Override
@@ -84,6 +90,13 @@ public class ServerThread extends Thread {
                         KeyboardController.getInstance().pressKeyboard(command);
                         break;
 
+                    case 'L':
+                        if(watching == true) {
+                            watching = false;
+                        } else {
+                            watching = true;
+                        }
+                        break;
                     default:
                         System.out.println("Errore comando non riconosicuto: " + command);
                         clientOutput.write("Unknown command: " + command + "\n");
