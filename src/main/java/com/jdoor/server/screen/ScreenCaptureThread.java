@@ -66,15 +66,7 @@ public class ScreenCaptureThread extends Thread {
 
         buffer = byteArrayOutputStream.toByteArray();
 
-        Deflater deflater = new Deflater();
-        deflater.setInput(buffer);
-        deflater.finish();
-
-        byte[] output = new byte[IMAGE_UDP_SIZE];
-        deflater.deflate(output);
-        deflater.end();
-
-        return output;
+        return buffer;
     }
 
     // Metodo per fermare il thread.

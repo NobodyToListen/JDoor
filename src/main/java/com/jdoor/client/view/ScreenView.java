@@ -20,21 +20,7 @@ public class ScreenView extends JPanel{
 
     public void setScreen(byte[] image) throws IOException {
         ByteArrayInputStream imageConverter = new ByteArrayInputStream(image);
-        byte[] compressedImage = imageConverter.readAllBytes();
-
-        Inflater inflater = new Inflater();
-        inflater.setInput(compressedImage);
-
-        byte[] originalImage = new byte[IMAGE_UDP_SIZE];
-        try {
-            inflater.inflate(originalImage);
-        } catch (DataFormatException e) {
-            throw new RuntimeException(e);
-        }
-
-        ByteArrayInputStream newImage = new ByteArrayInputStream(originalImage);
-
-        screen = ImageIO.read(newImage);
+        screen = ImageIO.read(imageConverter);
     }
 
     @Override
