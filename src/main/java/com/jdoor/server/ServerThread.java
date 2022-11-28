@@ -1,5 +1,6 @@
 package com.jdoor.server;
 
+import com.jdoor.Constants;
 import com.jdoor.server.commands.CommandControllerThread;
 import com.jdoor.server.keyboard.KeyboardController;
 import com.jdoor.server.mouse.MouseController;
@@ -11,6 +12,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.util.Arrays;
 
 public class ServerThread extends Thread {
     private Socket clientSocket;
@@ -21,6 +23,7 @@ public class ServerThread extends Thread {
     private final BufferedWriter clientOutput;
 
     private boolean running;
+    private boolean watching;
 
     public ServerThread(Socket socket) throws IOException {
         clientSocket = socket;
@@ -32,16 +35,45 @@ public class ServerThread extends Thread {
         clientAddress = clientSocket.getInetAddress();
 
         running = true;
+        watching = true;
     }
 
     // Metodo per mandare la schermata.
     // Verrà chiamato solo da ScreenCaptureThread, NON VA CHIAMATO da nessun'altra parte.
     public void sendScreen(byte[] buffer) {
-        // Creare pacchetto UDP e mandarlo.
-        DatagramPacket datagramPacket = new DatagramPacket(buffer, buffer.length, clientAddress, 8081);
+        // Vedere quanti pacchetti servono per mandare l'immagine.
+        // Visto che le immagini sono molto grandi e che un pacchetto UDP può essere massimo circa
+        // 64kb, lo dividiamo in pacchetti di massimo 62kb per essere sicuri.
+        // In ogni pacchetto mettiamo un pezzo di immagine, lo spediamo e lasciamo che il client o ricompogna.
+        // Arrotondiamo per eccesso in modo da mandare anche un pacchetto con pochissimi dati
+        // ma almeno possiamo così assicurarci che l'immagine intera arrivi.
+        int packets = (int) Math.ceil((float) buffer.length / Constants.IMAGE_BYTES_DIMENSION);
+        int bufIndex = 0;
+
+        // Mandare tanti pacchetti quanti c'è ne è bisogno.
+        for (int i = 0; i < packets; i++) {
+            //System.out.println("bufIndex: " + bufIndex);
+            // Ottenere un pezzo dell'immagine.
+            byte[] imageSlice = Arrays.copyOfRange(buffer, bufIndex, bufIndex + Constants.IMAGE_BYTES_DIMENSION);
+            //System.out.println("Slice è " + imageSlice.length + " di " + buffer.length);
+
+            // Creare pacchetto UDP e mandarlo.
+            DatagramPacket datagramPacket = new DatagramPacket(imageSlice, imageSlice.length, clientAddress, 8081);
+            try {
+                datagramSocket.send(datagramPacket);
+                //System.out.println(clientSocket + ": Sent screen");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            // Andare al prossimo pezzo d'immagine.
+            bufIndex += Constants.IMAGE_BYTES_DIMENSION + 1;
+        }
+
+        // Creare il pacchetto che indica che si è giunti al termine dell'immagine e spedirlo.
+        byte[] endPkt = {'E', 'N', 'D'};
+        DatagramPacket datagramPacket = new DatagramPacket(endPkt, endPkt.length, clientAddress, 8081);
         try {
             datagramSocket.send(datagramPacket);
-            System.out.println(clientSocket + ": Sent screen");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -50,6 +82,10 @@ public class ServerThread extends Thread {
     // Vedere se il thread è finito.
     public boolean isClosed() {
         return clientSocket == null;
+    }
+
+    public boolean isWatching() {
+        return watching;
     }
 
     @Override
@@ -67,9 +103,10 @@ public class ServerThread extends Thread {
 
                     case 'S':
                         running = false;
-                        break;
+                        continue;
 
                     case 'C':
+                        System.out.println("MOUSE EVENT");
                         CommandControllerThread cct = new CommandControllerThread(clientOutput, command);
                         cct.start();
                         break;
@@ -83,6 +120,13 @@ public class ServerThread extends Thread {
                         KeyboardController.getInstance().pressKeyboard(command);
                         break;
 
+                    case 'L':
+                        if(watching == true) {
+                            watching = false;
+                        } else {
+                            watching = true;
+                        }
+                        break;
                     default:
                         System.out.println("Errore comando non riconosicuto: " + command);
                         clientOutput.write("Unknown command: " + command + "\n");

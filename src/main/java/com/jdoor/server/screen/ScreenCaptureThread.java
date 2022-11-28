@@ -8,6 +8,9 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.zip.Deflater;
+
+import static com.jdoor.server.Server.IMAGE_UDP_SIZE;
 
 /**
  * Thread per mandare lo screen delo schermo.
@@ -56,7 +59,7 @@ public class ScreenCaptureThread extends Thread {
         byte[] buffer;
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         try {
-            ImageIO.write(image, "png", byteArrayOutputStream);
+            ImageIO.write(image, "jpg", byteArrayOutputStream);
         } catch (IOException ioe) {
             ioe.printStackTrace();
         }
@@ -77,7 +80,7 @@ public class ScreenCaptureThread extends Thread {
         while (running) {
             // Non ha senso eseguire il codice se non ci sono client collegati.
             if (threads.size() > 0) {
-                System.out.println("OK");
+                //System.out.println("OK");
                 // Ottenere schermata.
                 capture = getScreen();
 
@@ -86,14 +89,15 @@ public class ScreenCaptureThread extends Thread {
 
                 // Mandare la schermata.
                 for (ServerThread thread : threads) {
-                    System.out.println("SENT");
-                    thread.sendScreen(capture);
+                    if(thread.isWatching()) {
+                        thread.sendScreen(capture);
+                    }
                 }
             }
 
             // Aspettare 200 millisecondi.
             try {
-                Thread.sleep(200);
+                Thread.sleep(100);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }

@@ -6,6 +6,10 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.zip.DataFormatException;
+import java.util.zip.Inflater;
+
+import static com.jdoor.server.Server.IMAGE_UDP_SIZE;
 
 public class ScreenView extends JPanel{
     private BufferedImage screen;
@@ -23,7 +27,7 @@ public class ScreenView extends JPanel{
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         if(screen != null) {
-            System.out.println("Sto disegnando\n");
+            //System.out.println("Sto disegnando\n");
             g.drawImage(screen, 0, 0, getWidth(), getHeight(), null);
         }
     }
