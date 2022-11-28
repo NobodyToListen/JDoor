@@ -89,7 +89,7 @@ public class ServerThread extends Thread {
 
                     case 'S':
                         running = false;
-                        break;
+                        continue;
 
                     case 'C':
                         System.out.println("MOUSE EVENT");
