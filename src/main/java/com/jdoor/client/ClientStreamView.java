@@ -78,7 +78,7 @@ public class ClientStreamView extends Thread{
             } catch(SocketTimeoutException e) {
                 commander.doCloseFromFrame();
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                // ignore
             }
         }
         System.out.println("chiusura\n");
