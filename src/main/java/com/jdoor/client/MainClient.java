@@ -88,7 +88,7 @@ public class MainClient implements MouseListener, KeyListener, WindowListener, A
                 clientFrame.getOutputArea().setText("ERROR:" + ex.getMessage() + "\n");
             }
         }
-
+        clientFrame.getOutputArea().setText("");
     }
 
     @Override

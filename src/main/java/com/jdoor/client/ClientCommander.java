@@ -85,14 +85,14 @@ public class ClientCommander extends Thread {
                     streamView.start();
                     System.out.println("Schermo ricevuto con successo\n");
                 } catch (Exception e) {
+                    cFrame.getOutputArea().setText("Error:" + e.getMessage() + "\n");
                     streamView.setScreenDimension(0,0);
-                    System.out.println("problemi nella ricezione delle dimensioni dello schermo\n");
                 }
             } else {
                 try {
-                    cFrame.getOutputArea().append(resultReader.readLine() + "\n");
-                } catch (IOException e) {
-                    System.out.println("Error:" + e.getMessage() + "\n");
+                    cFrame.getOutputArea().setText(resultReader.readLine() + "\n");
+                } catch (Exception e) {
+                    cFrame.getOutputArea().setText("Error:" + e.getMessage() + "\n");
                 }
             }
         }
