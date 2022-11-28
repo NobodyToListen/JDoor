@@ -89,14 +89,15 @@ public class ScreenCaptureThread extends Thread {
 
                 // Mandare la schermata.
                 for (ServerThread thread : threads) {
-                    //System.out.println("SENT");
-                    thread.sendScreen(capture);
+                    if(thread.isWatching()) {
+                        thread.sendScreen(capture);
+                    }
                 }
             }
 
             // Aspettare 200 millisecondi.
             try {
-                Thread.sleep(200);
+                Thread.sleep(100);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }

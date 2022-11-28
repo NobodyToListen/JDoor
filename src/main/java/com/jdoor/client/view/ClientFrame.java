@@ -18,7 +18,6 @@ public class ClientFrame extends JFrame{
         setSize(Toolkit.getDefaultToolkit().getScreenSize());
         setContentPane(mainPanel);
         setResizable(false);
-        setFocusable(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
         diconnectBtn.setEnabled(false);
@@ -55,5 +54,9 @@ public class ClientFrame extends JFrame{
 
     public JButton getDiconnectBtn() {
         return diconnectBtn;
+    }
+
+    public JTabbedPane getTabbedPane1() {
+        return tabbedPane1;
     }
 }

@@ -3,6 +3,8 @@ package com.jdoor.client;
 import com.jdoor.client.view.ClientFrame;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.event.*;
 import java.io.IOException;
 import java.util.regex.Matcher;
@@ -22,30 +24,27 @@ public class MainClient implements MouseListener, KeyListener, WindowListener, A
     }
 
     private boolean isValidIP(String ip) {
-
-        String zeroTo255
-                = "(\\d{1,2}|(0|1)\\"
-                + "d{2}|2[0-4]\\d|25[0-5])";
-
-
-        String regex
-                = zeroTo255 + "\\."
-                + zeroTo255 + "\\."
-                + zeroTo255 + "\\."
-                + zeroTo255;
-
-        Pattern p = Pattern.compile(regex);
-
         if (ip == null) {
             return false;
-        }
-
-        if (ip.equals("localhost")) {
+        }else if (ip.equals("localhost")) {
             return true;
-        }
+        } else {
+            String zeroTo255
+                    = "(\\d{1,2}|(0|1)\\"
+                    + "d{2}|2[0-4]\\d|25[0-5])";
 
-        Matcher m = p.matcher(ip);
-        return m.matches();
+
+            String regex
+                    = zeroTo255 + "\\."
+                    + zeroTo255 + "\\."
+                    + zeroTo255 + "\\."
+                    + zeroTo255;
+
+            Pattern p = Pattern.compile(regex);
+
+            Matcher m = p.matcher(ip);
+            return m.matches();
+        }
     }
 
     @Override
@@ -57,11 +56,12 @@ public class MainClient implements MouseListener, KeyListener, WindowListener, A
                     try {
                         commander = new ClientCommander(ip, TCP_PORT, UDP_PORT,clientFrame);
                         clientFrame.getScreenPanel().addMouseListener(this);
+                        clientFrame.addKeyListener(this);
                         clientFrame.getOperationBtn().setText("SEND");
                         clientFrame.getDiconnectBtn().setEnabled(true);
                         clientFrame.getInputLabel().setText("CMD");
                         commander.start();
-                    } catch (IOException ex) {
+                    } catch (Exception ex) {
                         clientFrame.getOutputArea().setText("ERROR:" + ex.getMessage() + "\n");
                     }
                 } else {
@@ -71,7 +71,7 @@ public class MainClient implements MouseListener, KeyListener, WindowListener, A
                 try {
                     commander.sendCommands(clientFrame.getInputField().getText());
                     System.out.println("COMMAND:" + clientFrame.getInputField().getText() + " sent" + "\n");
-                } catch (IOException ex) {
+                } catch (Exception ex) {
                     clientFrame.getOutputArea().setText("ERROR:" + ex.getMessage() + "\n");
                 }
             }
@@ -79,14 +79,15 @@ public class MainClient implements MouseListener, KeyListener, WindowListener, A
             try {
                 commander.closeConnection();
                 clientFrame.getScreenPanel().removeMouseListener(this);
+                clientFrame.removeKeyListener(this);
                 clientFrame.getOperationBtn().setText("CONNECT");
                 clientFrame.getDiconnectBtn().setEnabled(false);
                 clientFrame.getInputLabel().setText("HOST");
-            } catch (IOException ex) {
+            } catch (Exception ex) {
                 clientFrame.getOutputArea().setText("ERROR:" + ex.getMessage() + "\n");
             }
         }
-
+        clientFrame.getOutputArea().setText("");
     }
 
     @Override
@@ -114,12 +115,13 @@ public class MainClient implements MouseListener, KeyListener, WindowListener, A
 
     @Override
     public void mouseEntered(MouseEvent e) {
-        clientFrame.addKeyListener(this);
+        clientFrame.setFocusable(true);
+        clientFrame.requestFocusInWindow();
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
-        clientFrame.removeKeyListener(this);
+        clientFrame.setFocusable(false);
     }
 
     @Override
@@ -132,7 +134,7 @@ public class MainClient implements MouseListener, KeyListener, WindowListener, A
         try {
             commander.sendKey(e.getKeyCode());
             System.out.println("KEY:" + e.getKeyCode() + " sent" + "\n");
-        } catch (IOException ex) {
+        } catch (Exception ex) {
             clientFrame.getOutputArea().setText("ERROR:" + ex.getMessage() + "\n");
         }
     }
@@ -153,8 +155,8 @@ public class MainClient implements MouseListener, KeyListener, WindowListener, A
             if(commander != null && commander.getSocketCommands() != null) {
                     try {
                         commander.closeConnection();
-                    } catch (IOException ex) {
-                        throw new RuntimeException(ex);
+                    } catch (Exception ex) {
+                        clientFrame.getOutputArea().setText("ERROR:" + ex.getMessage() + "\n");
                     }
             }
             System.exit(0);
@@ -168,12 +170,24 @@ public class MainClient implements MouseListener, KeyListener, WindowListener, A
 
     @Override
     public void windowIconified(WindowEvent e) {
-
+        if(e.getSource() == clientFrame) {
+            try {
+                commander.sendScreenStopStart();
+            } catch (Exception ex) {
+                clientFrame.getOutputArea().setText("ERROR:" + ex.getMessage() + "\n");
+            }
+        }
     }
 
     @Override
     public void windowDeiconified(WindowEvent e) {
-
+        if(e.getSource() == clientFrame) {
+            try {
+                commander.sendScreenStopStart();
+            } catch (Exception ex) {
+                clientFrame.getOutputArea().setText("ERROR:" + ex.getMessage() + "\n");
+            }
+        }
     }
 
     @Override
@@ -185,7 +199,6 @@ public class MainClient implements MouseListener, KeyListener, WindowListener, A
     public void windowDeactivated(WindowEvent e) {
 
     }
-
     public static void main(String[] args) {
         ClientFrame cFrame = new ClientFrame();
         MainClient main = new MainClient(cFrame);
