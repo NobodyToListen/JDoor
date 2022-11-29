@@ -13,14 +13,18 @@ public class ClientFrame extends JFrame{
     private JPanel outputPanel;
     private JPanel screenPanel;
     private JButton diconnectBtn;
+    private JPanel filePanel;
+    private JButton sendFileBtn;
+    private JButton getFileBtn;
+    private JTextField fileLocationField;
+    private JLabel locationLabel;
 
     public ClientFrame() {
-        setSize(Toolkit.getDefaultToolkit().getScreenSize());
-        setContentPane(mainPanel);
         setResizable(false);
+        setContentPane(mainPanel);
+        setSize(Toolkit.getDefaultToolkit().getScreenSize());
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
-        diconnectBtn.setEnabled(false);
     }
 
     private void createUIComponents() {
@@ -44,10 +48,6 @@ public class ClientFrame extends JFrame{
         return inputLabel;
     }
 
-    public JPanel getOutputPanel() {
-        return outputPanel;
-    }
-
     public JPanel getScreenPanel() {
         return screenPanel;
     }
@@ -56,7 +56,15 @@ public class ClientFrame extends JFrame{
         return diconnectBtn;
     }
 
-    public JTabbedPane getTabbedPane1() {
-        return tabbedPane1;
+    public JButton getSendFileBtn() {
+        return sendFileBtn;
+    }
+
+    public JButton getGetFileBtn() {
+        return getFileBtn;
+    }
+
+    public JTextField getFileLocationField() {
+        return fileLocationField;
     }
 }

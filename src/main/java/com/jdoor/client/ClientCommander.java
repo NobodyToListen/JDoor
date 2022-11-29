@@ -1,5 +1,7 @@
 package com.jdoor.client;
 
+import com.jdoor.FileGetterThread;
+import com.jdoor.FileSenderThread;
 import com.jdoor.client.view.ClientFrame;
 import com.jdoor.client.view.ScreenView;
 
@@ -14,6 +16,8 @@ public class ClientCommander extends Thread {
     private Socket socketCommands;
     private BufferedWriter commandsWriter;
     private BufferedReader resultReader;
+    private final FileGetterThread fileGetterThread;
+    private final FileSenderThread fileSenderThread;
     private ClientStreamView streamView;
     private ClientFrame cFrame;
 
@@ -21,6 +25,9 @@ public class ClientCommander extends Thread {
         socketCommands = new Socket(InetAddress.getByName(ipAddress), portTCP);
         commandsWriter = new BufferedWriter(new OutputStreamWriter(socketCommands.getOutputStream()));
         resultReader = new BufferedReader(new InputStreamReader(socketCommands.getInputStream()));
+        fileGetterThread = new FileGetterThread(new DataInputStream(socketCommands.getInputStream()));
+        fileSenderThread = new FileSenderThread(new DataOutputStream(socketCommands.getOutputStream()));
+
         streamView = new ClientStreamView(portUDP, this);
         this.cFrame = cFrame;
     }
@@ -44,6 +51,34 @@ public class ClientCommander extends Thread {
         System.out.println(command);
         commandsWriter.write(command);
         commandsWriter.flush();
+    }
+
+    public void sendFile(String filePath) throws IOException {
+        if(!fileSenderThread.isAlive()) {
+            String file = filePath.split("/")[filePath.split("/").length - 1];
+            commandsWriter.write("FS " + file + "\n");
+            commandsWriter.flush();
+            File fileToSend = new File(filePath);
+            if(fileToSend.exists()) {
+                fileSenderThread.setFile(fileToSend);
+                fileSenderThread.start();
+            } else {
+                cFrame.getOutputArea().setText("Error:il file che vuoi mandare non esiste\n");
+            }
+        } else {
+            cFrame.getOutputArea().setText("Error:un file è già in fase di invio,aspetta che finisca\n");
+        }
+    }
+
+    public void getFile(String whereToStoreFile, String filePath) throws IOException {
+        if(!fileGetterThread.isAlive()) {
+            commandsWriter.write("FR " + filePath + "\n");
+            commandsWriter.flush();
+            fileGetterThread.setDefaultFilePath(whereToStoreFile);
+            fileGetterThread.start();
+        } else {
+            cFrame.getOutputArea().setText("Error:un file è già in fase di scaricamento,aspetta che finisca\n");
+        }
     }
     public void sendCloseMessage() throws IOException {
         commandsWriter.write("S\n");

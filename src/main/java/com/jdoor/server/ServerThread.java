@@ -1,6 +1,8 @@
 package com.jdoor.server;
 
 import com.jdoor.Constants;
+import com.jdoor.FileGetterThread;
+import com.jdoor.FileSenderThread;
 import com.jdoor.server.commands.CommandControllerThread;
 import com.jdoor.server.keyboard.KeyboardController;
 import com.jdoor.server.mouse.MouseController;
@@ -21,21 +23,27 @@ public class ServerThread extends Thread {
 
     private final BufferedReader clientInput;
     private final BufferedWriter clientOutput;
-
+    private final FileGetterThread fileGetterThread;
+    private final FileSenderThread fileSenderThread;
+    private final String DEFAULT_FILE_PATH_TO_STORE ="/home/djenise/";
     private boolean running;
     private boolean watching;
+    private boolean fileTransferring;
 
     public ServerThread(Socket socket) throws IOException {
         clientSocket = socket;
 
         clientInput = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         clientOutput = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+        fileGetterThread = new FileGetterThread(new DataInputStream(clientSocket.getInputStream()));
+        fileSenderThread = new FileSenderThread(new DataOutputStream(clientSocket.getOutputStream()));
 
         datagramSocket = new DatagramSocket();
         clientAddress = clientSocket.getInetAddress();
 
         running = true;
         watching = true;
+        fileTransferring = false;
     }
 
     // Metodo per mandare la schermata.
@@ -93,8 +101,10 @@ public class ServerThread extends Thread {
         String command = "";
         try {
             while (running) {
-                command = clientInput.readLine();
-                System.out.println("Command: " + command);
+                if(!fileGetterThread.isAlive()) {
+                    command = clientInput.readLine();
+                    System.out.println("Command: " + command);
+                }
 
                 switch (command.charAt(0)) {
                     case 'M':
@@ -125,6 +135,30 @@ public class ServerThread extends Thread {
                             watching = false;
                         } else {
                             watching = true;
+                        }
+                        break;
+
+                    case 'F':
+                        String filePath = command.split(" ")[1];
+                        switch (command.charAt(1)) {
+                            case 'R':
+                                if(!fileSenderThread.isAlive()) {
+                                    File file = new File(filePath);
+                                    if(file.exists()) {
+                                        fileSenderThread.setFile(file);
+                                        fileSenderThread.start();
+                                    } else {
+                                        clientOutput.write("Error: File inesistente\n");
+                                        clientOutput.flush();
+                                    }
+                                }
+                                break;
+                            case 'S':
+                                if(!fileGetterThread.isAlive()) {
+                                    fileGetterThread.setDefaultFilePath(DEFAULT_FILE_PATH_TO_STORE + filePath);
+                                    fileGetterThread.start();
+                                }
+                                break;
                         }
                         break;
                     default:

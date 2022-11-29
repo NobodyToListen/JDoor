@@ -8,9 +8,6 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.zip.Deflater;
-
-import static com.jdoor.server.Server.IMAGE_UDP_SIZE;
 
 /**
  * Thread per mandare lo screen delo schermo.
@@ -97,7 +94,7 @@ public class ScreenCaptureThread extends Thread {
 
             // Aspettare 200 millisecondi.
             try {
-                Thread.sleep(100);
+                Thread.sleep(200);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
