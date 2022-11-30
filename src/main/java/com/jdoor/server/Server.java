@@ -25,7 +25,6 @@ public class Server {
 
         while (running) {
             Socket client = ss.accept();
-
             System.out.println("Connection from " + client);
 
             ServerThread st = new ServerThread(client);

@@ -1,33 +1,26 @@
 package com.jdoor.client;
 
-import com.jdoor.FileGetterThread;
-import com.jdoor.FileSenderThread;
+import com.jdoor.FileOperationThread;
 import com.jdoor.client.view.ClientFrame;
 import com.jdoor.client.view.ScreenView;
 
-import javax.swing.*;
-import java.awt.event.WindowListener;
 import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.net.SocketException;
 
 public class ClientCommander extends Thread {
     private Socket socketCommands;
-    private BufferedWriter commandsWriter;
-    private BufferedReader resultReader;
-    private final FileGetterThread fileGetterThread;
-    private final FileSenderThread fileSenderThread;
     private ClientStreamView streamView;
-    private ClientFrame cFrame;
+    private final BufferedWriter commandsWriter;
+    private final BufferedReader resultReader;
+    private final FileOperationThread fileOperationThread;
+    private final ClientFrame cFrame;
 
     public ClientCommander(String ipAddress, int portTCP, int portUDP, ClientFrame cFrame) throws IOException {
         socketCommands = new Socket(InetAddress.getByName(ipAddress), portTCP);
         commandsWriter = new BufferedWriter(new OutputStreamWriter(socketCommands.getOutputStream()));
         resultReader = new BufferedReader(new InputStreamReader(socketCommands.getInputStream()));
-        fileGetterThread = new FileGetterThread(new DataInputStream(socketCommands.getInputStream()));
-        fileSenderThread = new FileSenderThread(new DataOutputStream(socketCommands.getOutputStream()));
-
+        fileOperationThread = new FileOperationThread(new DataOutputStream(socketCommands.getOutputStream()), new DataInputStream(socketCommands.getInputStream()));
         streamView = new ClientStreamView(portUDP, this);
         this.cFrame = cFrame;
     }
@@ -43,43 +36,14 @@ public class ClientCommander extends Thread {
     public void sendMousePosition(int mouseX, int mouseY, char button) throws IOException {
         float scaledMouseXf = (float) streamView.getScreenWidth() / ((float) cFrame.getScreenPanel().getWidth() / mouseX);
         float scaledMouseYf = (float) streamView.getScreenHeight()/((float) cFrame.getScreenPanel().getHeight()/mouseY);
-        //System.out.println(scaledMouseX);
         int scaledMouseX = Math.round(scaledMouseXf);
         int scaledMouseY = Math.round(scaledMouseYf);
-        //System.out.println(streamView.getScreenHeight() + "/(" + cFrame.getScreenPanel().getWidth() + "/" + mouseX + ")= " + scaledMouseX);
         String command = "M" + button + String.valueOf(scaledMouseX) + ";" + String.valueOf(scaledMouseY) + "\n";
         System.out.println(command);
         commandsWriter.write(command);
         commandsWriter.flush();
     }
 
-    public void sendFile(String filePath) throws IOException {
-        if(!fileSenderThread.isAlive()) {
-            String file = filePath.split("/")[filePath.split("/").length - 1];
-            commandsWriter.write("FS " + file + "\n");
-            commandsWriter.flush();
-            File fileToSend = new File(filePath);
-            if(fileToSend.exists()) {
-                fileSenderThread.setFile(fileToSend);
-                fileSenderThread.start();
-            } else {
-                cFrame.getOutputArea().setText("Error:il file che vuoi mandare non esiste\n");
-            }
-        } else {
-            cFrame.getOutputArea().setText("Error:un file è già in fase di invio,aspetta che finisca\n");
-        }
-    }
-
-    public void getFile(String whereToStoreFile, String filePath) throws IOException {
-        if(!fileGetterThread.isAlive()) {
-            commandsWriter.write("FR " + filePath + "\n");
-            commandsWriter.flush();
-            fileGetterThread.setDefaultFilePath(whereToStoreFile);
-            fileGetterThread.start();
-        } else {
-            cFrame.getOutputArea().setText("Error:un file è già in fase di scaricamento,aspetta che finisca\n");
-        }
-    }
     public void sendCloseMessage() throws IOException {
         commandsWriter.write("S\n");
         commandsWriter.flush();
@@ -96,8 +60,24 @@ public class ClientCommander extends Thread {
     }
 
     public void sendCommands(String command) throws IOException {
-        commandsWriter.write("C" + command + "\n");
-        commandsWriter.flush();
+        if(command.charAt(0) == 'F' && (command.charAt(1) == 'R' || command.charAt(1) == 'S')) {
+            String[] fileRequest = command.split(" ");
+            switch (command.charAt(1)) {
+                case 'R':
+                    fileOperationThread.setFileToTransfer(new File(fileRequest[1]));
+                    fileOperationThread.setOperation(FileOperationThread.Operations.Get);
+                    break;
+                case 'S':
+                    fileOperationThread.setFileToTransfer(new File(fileRequest[2]));
+                    fileOperationThread.setOperation(FileOperationThread.Operations.Send);
+                    break;
+            }
+
+
+        } else {
+            commandsWriter.write("C" + command + "\n");
+            commandsWriter.flush();
+        }
     }
     public void sendScreenStopStart() throws IOException {
         commandsWriter.write("L\n");
@@ -115,25 +95,29 @@ public class ClientCommander extends Thread {
 
     @Override
     public void run() {
+        String response = "";
         while(socketCommands != null) {
-            if(streamView.getScreenHeight() == 0 && streamView.getScreenWidth() == 0) {
-                try {
-                    sendScreenRequest();
-                    streamView.setScreenView((ScreenView) cFrame.getScreenPanel());
-                    streamView.setScreenDimension(resultReader.readLine());
-                    streamView.start();
-                    System.out.println("Schermo ricevuto con successo\n");
-                } catch (Exception e) {
-                    cFrame.getOutputArea().setText("Error:" + e.getMessage() + "\n");
-                    streamView.setScreenDimension(0,0);
+            try {
+                if(fileOperationThread.isTransferring()) {
+                    response = resultReader.readLine();
                 }
-            } else {
-                try {
-                    cFrame.getOutputArea().setText(resultReader.readLine() + "\n");
-                } catch (Exception e) {
-                    cFrame.getOutputArea().setText("Error:" + e.getMessage() + "\n");
-                }
+            }catch (Exception e) {
+                cFrame.getOutputArea().setText(e.getMessage());
             }
+                if (streamView.getScreenHeight() == 0 && streamView.getScreenWidth() == 0) {
+                    try {
+                        sendScreenRequest();
+                        streamView.setScreenView((ScreenView) cFrame.getScreenPanel());
+                        streamView.setScreenDimension(response);
+                        streamView.start();
+                        fileOperationThread.start();
+                    } catch (IOException e) {
+                        streamView.setScreenDimension(0,0);
+                    }
+                } else {
+                    cFrame.getOutputArea().append(response + "\n");
+                }
+
         }
     }
 }

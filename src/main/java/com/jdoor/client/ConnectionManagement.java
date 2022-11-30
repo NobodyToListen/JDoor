@@ -16,7 +16,6 @@ public class ConnectionManagement implements ActionListener {
     private KeySenderController keySenderController;
     private MouseSenderController mouseSenderController;
     private WindowManagement windowManagement;
-    private FileOperationsController fileOperationsController;
 
     public ConnectionManagement(ClientFrame clientFrame) {
         this.clientFrame = clientFrame;
@@ -40,14 +39,11 @@ public class ConnectionManagement implements ActionListener {
                         keySenderController = new KeySenderController(clientFrame,commander);
                         mouseSenderController = new MouseSenderController(clientFrame,commander);
                         windowManagement = new WindowManagement(clientFrame,commander);
-                        fileOperationsController = new FileOperationsController(clientFrame,commander);
 
                         clientFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
                         clientFrame.getScreenPanel().addMouseListener(mouseSenderController);
                         clientFrame.addKeyListener(keySenderController);
                         clientFrame.addWindowListener(windowManagement);
-                        clientFrame.getGetFileBtn().addActionListener(fileOperationsController);
-                        clientFrame.getSendFileBtn().addActionListener(fileOperationsController);
 
 
                         commander.start();
@@ -75,14 +71,12 @@ public class ConnectionManagement implements ActionListener {
                 clientFrame.getScreenPanel().removeMouseListener(mouseSenderController);
                 clientFrame.removeKeyListener(keySenderController);
                 clientFrame.removeWindowListener(windowManagement);
-                clientFrame.getGetFileBtn().removeActionListener(fileOperationsController);
-                clientFrame.getSendFileBtn().removeActionListener(fileOperationsController);
 
                 clientFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             } catch (Exception ex) {
                 clientFrame.getOutputArea().setText("ERROR:" + ex.getMessage() + "\n");
             }
         }
-        clientFrame.getOutputArea().setText("");
+        clientFrame.getInputField().setText("");
     }
 }

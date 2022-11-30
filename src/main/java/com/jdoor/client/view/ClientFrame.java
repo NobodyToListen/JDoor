@@ -13,11 +13,9 @@ public class ClientFrame extends JFrame{
     private JPanel outputPanel;
     private JPanel screenPanel;
     private JButton diconnectBtn;
-    private JPanel filePanel;
     private JButton sendFileBtn;
     private JButton getFileBtn;
     private JTextField fileLocationField;
-    private JLabel locationLabel;
 
     public ClientFrame() {
         setResizable(false);

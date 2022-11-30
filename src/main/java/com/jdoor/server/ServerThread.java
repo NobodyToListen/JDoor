@@ -1,11 +1,7 @@
 package com.jdoor.server;
 
 import com.jdoor.Constants;
-import com.jdoor.FileGetterThread;
-import com.jdoor.FileSenderThread;
-import com.jdoor.server.commands.CommandControllerThread;
-import com.jdoor.server.keyboard.KeyboardController;
-import com.jdoor.server.mouse.MouseController;
+import com.jdoor.FileOperationThread;
 import com.jdoor.server.screen.ScreenCaptureThread;
 
 import java.awt.*;
@@ -23,9 +19,7 @@ public class ServerThread extends Thread {
 
     private final BufferedReader clientInput;
     private final BufferedWriter clientOutput;
-    private final FileGetterThread fileGetterThread;
-    private final FileSenderThread fileSenderThread;
-    private final String DEFAULT_FILE_PATH_TO_STORE ="/home/djenise/";
+    private final FileOperationThread fileOperationThread;
     private boolean running;
     private boolean watching;
     private boolean fileTransferring;
@@ -35,8 +29,7 @@ public class ServerThread extends Thread {
 
         clientInput = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         clientOutput = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-        fileGetterThread = new FileGetterThread(new DataInputStream(clientSocket.getInputStream()));
-        fileSenderThread = new FileSenderThread(new DataOutputStream(clientSocket.getOutputStream()));
+        fileOperationThread = new FileOperationThread(new DataOutputStream(clientSocket.getOutputStream()), new DataInputStream(clientSocket.getInputStream()));
 
         datagramSocket = new DatagramSocket();
         clientAddress = clientSocket.getInetAddress();
@@ -100,12 +93,12 @@ public class ServerThread extends Thread {
     public void run() {
         String command = "";
         try {
+            fileOperationThread.start();
             while (running) {
-                if(!fileGetterThread.isAlive()) {
+                if(!fileOperationThread.isTransferring()) {
                     command = clientInput.readLine();
                     System.out.println("Command: " + command);
                 }
-
                 switch (command.charAt(0)) {
                     case 'M':
                         MouseController.getInstance().clickMouse(command);
@@ -139,25 +132,15 @@ public class ServerThread extends Thread {
                         break;
 
                     case 'F':
-                        String filePath = command.split(" ")[1];
+                        String[] request = command.split(" ");
+                        File fileToTransfer = new File(request[1]);
+                        fileOperationThread.setFileToTransfer(fileToTransfer);
                         switch (command.charAt(1)) {
                             case 'R':
-                                if(!fileSenderThread.isAlive()) {
-                                    File file = new File(filePath);
-                                    if(file.exists()) {
-                                        fileSenderThread.setFile(file);
-                                        fileSenderThread.start();
-                                    } else {
-                                        clientOutput.write("Error: File inesistente\n");
-                                        clientOutput.flush();
-                                    }
-                                }
+                                fileOperationThread.setOperation(FileOperationThread.Operations.Send);
                                 break;
                             case 'S':
-                                if(!fileGetterThread.isAlive()) {
-                                    fileGetterThread.setDefaultFilePath(DEFAULT_FILE_PATH_TO_STORE + filePath);
-                                    fileGetterThread.start();
-                                }
+                                fileOperationThread.setOperation(FileOperationThread.Operations.Get);
                                 break;
                         }
                         break;
@@ -168,7 +151,7 @@ public class ServerThread extends Thread {
                         break;
                 }
             }
-
+            fileOperationThread.setRunning(false);
             clientSocket.close();
             clientSocket = null; // Indica che il client socket è stato chiuso.
         } catch (IOException | AWTException e) {
