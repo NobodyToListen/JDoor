@@ -108,7 +108,7 @@ public class ClientCommander extends Thread {
                     try {
                         sendScreenRequest();
                         streamView.setScreenView((ScreenView) cFrame.getScreenPanel());
-                        streamView.setScreenDimension(response);
+                        streamView.setScreenDimension(resultReader.readLine());
                         streamView.start();
                         fileOperationThread.start();
                     } catch (IOException e) {

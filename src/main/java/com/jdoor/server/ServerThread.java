@@ -134,6 +134,7 @@ public class ServerThread extends Thread {
                         break;
 
                     case 'F':
+                        System.err.println("STO TRASFERENDO FILE");
                         String[] request = command.split(" ");
                         File fileToTransfer = new File(request[1]);
                         fileOperationThread.setFileToTransfer(fileToTransfer);
