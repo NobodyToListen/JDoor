@@ -5,8 +5,7 @@ import com.jdoor.server.ServerThread;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 
 /**
@@ -22,7 +21,6 @@ public class ScreenCaptureThread extends Thread {
     private final Rectangle screenRectangle;
 
     private final ArrayList<ServerThread> threads;
-
     private boolean running;
 
     private ScreenCaptureThread() throws AWTException {
@@ -56,13 +54,12 @@ public class ScreenCaptureThread extends Thread {
         byte[] buffer;
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         try {
-            ImageIO.write(image, "jpg", byteArrayOutputStream);
+            ImageIO.write(image, "png", byteArrayOutputStream);
         } catch (IOException ioe) {
             ioe.printStackTrace();
         }
-
+        System.err.println("STO PRENDENDO UN'IMMAGINE DI DIMENSIONE: " + byteArrayOutputStream.size());
         buffer = byteArrayOutputStream.toByteArray();
-
         return buffer;
     }
 

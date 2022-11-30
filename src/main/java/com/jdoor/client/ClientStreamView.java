@@ -75,7 +75,7 @@ public class ClientStreamView extends Thread{
                     socketView.receive(pkt);
                     finalImage.write(pkt.getData());
                 }
-                System.err.println("SCHERMO RICEVUTO\n");
+                System.err.println("SCHERMO RICEVUTO" + finalImage.size() + "\n");
                 // Impostare la nuova immagine visualizzata.
                 screenView.setScreen(finalImage.toByteArray());
                 screenView.repaint();

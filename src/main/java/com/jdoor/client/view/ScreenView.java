@@ -17,6 +17,8 @@ public class ScreenView extends JPanel{
     public void setScreen(byte[] image) throws IOException {
         ByteArrayInputStream imageConverter = new ByteArrayInputStream(image);
         screen = ImageIO.read(imageConverter);
+        revalidate();
+        repaint();
     }
 
     @Override
@@ -24,7 +26,7 @@ public class ScreenView extends JPanel{
         super.paintComponent(g);
         if(screen != null) {
             //System.out.println("Sto disegnando\n");
-            g.drawImage(screen, 0, 0, getWidth(), getHeight(), null);
+            g.drawImage(screen, 0, 0, getWidth(), getHeight(), this);
         }
     }
 }

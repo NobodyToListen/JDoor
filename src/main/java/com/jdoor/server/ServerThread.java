@@ -15,6 +15,8 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.util.Arrays;
 
+import static com.jdoor.Constants.UDP_PORT;
+
 public class ServerThread extends Thread {
     private Socket clientSocket;
     private final DatagramSocket datagramSocket;
@@ -61,7 +63,7 @@ public class ServerThread extends Thread {
             //System.out.println("Slice è " + imageSlice.length + " di " + buffer.length);
 
             // Creare pacchetto UDP e mandarlo.
-            DatagramPacket datagramPacket = new DatagramPacket(imageSlice, imageSlice.length, clientAddress, 8081);
+            DatagramPacket datagramPacket = new DatagramPacket(imageSlice, imageSlice.length, clientAddress, UDP_PORT);
             try {
                 datagramSocket.send(datagramPacket);
                 //System.out.println(clientSocket + ": Sent screen");
@@ -74,7 +76,7 @@ public class ServerThread extends Thread {
 
         // Creare il pacchetto che indica che si è giunti al termine dell'immagine e spedirlo.
         byte[] endPkt = {'E', 'N', 'D'};
-        DatagramPacket datagramPacket = new DatagramPacket(endPkt, endPkt.length, clientAddress, 8081);
+        DatagramPacket datagramPacket = new DatagramPacket(endPkt, endPkt.length, clientAddress, UDP_PORT);
         try {
             datagramSocket.send(datagramPacket);
         } catch (IOException e) {

@@ -18,6 +18,7 @@ public class ClientFrame extends JFrame{
         setContentPane(mainPanel);
         setSize(Toolkit.getDefaultToolkit().getScreenSize());
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setTitle("JDOOR");
         setVisible(true);
     }
 
