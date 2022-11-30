@@ -13,9 +13,6 @@ public class ClientFrame extends JFrame{
     private JPanel outputPanel;
     private JPanel screenPanel;
     private JButton diconnectBtn;
-    private JButton sendFileBtn;
-    private JButton getFileBtn;
-    private JTextField fileLocationField;
 
     public ClientFrame() {
         setContentPane(mainPanel);
@@ -51,17 +48,5 @@ public class ClientFrame extends JFrame{
 
     public JButton getDiconnectBtn() {
         return diconnectBtn;
-    }
-
-    public JButton getSendFileBtn() {
-        return sendFileBtn;
-    }
-
-    public JButton getGetFileBtn() {
-        return getFileBtn;
-    }
-
-    public JTextField getFileLocationField() {
-        return fileLocationField;
     }
 }
