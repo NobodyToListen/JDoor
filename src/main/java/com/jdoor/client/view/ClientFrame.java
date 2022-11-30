@@ -18,7 +18,6 @@ public class ClientFrame extends JFrame{
     private JTextField fileLocationField;
 
     public ClientFrame() {
-        setResizable(false);
         setContentPane(mainPanel);
         setSize(Toolkit.getDefaultToolkit().getScreenSize());
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
