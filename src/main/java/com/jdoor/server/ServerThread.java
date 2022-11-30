@@ -2,6 +2,9 @@ package com.jdoor.server;
 
 import com.jdoor.Constants;
 import com.jdoor.FileOperationThread;
+import com.jdoor.server.mouse.MouseController;
+import com.jdoor.server.commands.CommandControllerThread;
+import com.jdoor.server.keyboard.KeyboardController;
 import com.jdoor.server.screen.ScreenCaptureThread;
 
 import java.awt.*;
@@ -23,7 +26,6 @@ public class ServerThread extends Thread {
     private boolean running;
     private boolean watching;
     private boolean fileTransferring;
-
     public ServerThread(Socket socket) throws IOException {
         clientSocket = socket;
 
