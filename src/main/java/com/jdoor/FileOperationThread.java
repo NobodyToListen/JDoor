@@ -8,11 +8,9 @@ public class FileOperationThread extends Thread{
     private File fileToTransfer;
     private boolean running;
     private boolean transferring;
-    public static enum Operations {
-        Send,
-        Get
-    }
-    private Operations operation;
+    private FileOutputStream fileOutputStream;
+    private FileInputStream fileInputStream;
+    private Constants.FileOperations operation;
 
     public FileOperationThread(DataOutputStream sender, DataInputStream inputStream) {
         this.sender = sender;
@@ -33,41 +31,36 @@ public class FileOperationThread extends Thread{
         return transferring;
     }
 
-    public void setOperation(Operations operation) {
-        if(operation == Operations.Get || operation == Operations.Send) {
-            this.operation = operation;
-            transferring = true;
-        }
+    public void setOperation(Constants.FileOperations operation) {
+        this.operation = operation;
+        transferring = true;
     }
 
-    public void setFileToTransfer(File fileToTransfer) {
+    public void setFileToTransfer(File fileToTransfer) throws FileNotFoundException {
         this.fileToTransfer = fileToTransfer;
+        fileOutputStream = new FileOutputStream(fileToTransfer);
+        fileInputStream = new FileInputStream(fileToTransfer);
     }
 
     private void receiveFile() throws IOException {
-        int bytes = 0;
-        FileOutputStream fileOutputStream = new FileOutputStream(fileToTransfer);
-
-        long size = inputStream.readLong();
-        byte[] buffer = new byte[4 * 1024];
-        while (size > 0 && (bytes = inputStream.read(buffer, 0, (int) Math.min(buffer.length, size))) != -1) {
-            fileOutputStream.write(buffer, 0, bytes);
-            size -= bytes;
-        }
+        System.err.println("Sto ricevendo\n");
+        byte[] fileBytes = inputStream.readAllBytes();
+        System.err.println("Ho ricevuto\n");
+        System.err.println("sto scrivendo\n");
+        fileOutputStream.write(fileBytes);
+        fileOutputStream.flush();
+        System.err.println("ho scritto\n");
         fileOutputStream.close();
     }
 
     private void sendFile() throws IOException {
-        int bytes = 0;
-        FileInputStream fileInputStream = new FileInputStream(fileToTransfer);
-
-        sender.writeLong(fileToTransfer.length());
-
-        byte[] buffer = new byte[4096];
-        while ((bytes = fileInputStream.read(buffer)) != -1) {
-            sender.write(buffer, 0, bytes);
-            sender.flush();
-        }
+        System.err.println("Sto leggendo\n");
+        byte[] fileBytes = fileInputStream.readAllBytes();
+        System.err.println("ho letto\n");
+        System.err.println("sto scrivendo su file\n");
+        sender.write(fileBytes);
+        sender.flush();
+        System.err.println("ho scritto su file\n");
         fileInputStream.close();
     }
     @Override
@@ -75,7 +68,7 @@ public class FileOperationThread extends Thread{
         while(running) {
             if(transferring) {
                 try {
-                    if(operation == Operations.Get) {
+                    if(operation == Constants.FileOperations.Get) {
                         receiveFile();
                     } else {
                         sendFile();

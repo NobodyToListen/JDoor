@@ -1,5 +1,6 @@
 package com.jdoor.client;
 
+import com.jdoor.Constants;
 import com.jdoor.FileOperationThread;
 import com.jdoor.client.view.ClientFrame;
 import com.jdoor.client.view.ScreenView;
@@ -60,24 +61,23 @@ public class ClientCommander extends Thread {
     }
 
     public void sendCommands(String command) throws IOException {
-        if(command.charAt(0) == 'F' && (command.charAt(1) == 'R' || command.charAt(1) == 'S')) {
-            String[] fileRequest = command.split(" ");
+        if(command.charAt(0) == 'F' && (command.charAt(1) == 'R' || command.charAt(1) == 'S') && command.charAt(2) == ' ') {
+            File fileToTransfer = new File(command.split(" ")[2]);
             switch (command.charAt(1)) {
                 case 'R':
-                    fileOperationThread.setFileToTransfer(new File(fileRequest[1]));
-                    fileOperationThread.setOperation(FileOperationThread.Operations.Get);
+                    fileOperationThread.setFileToTransfer(fileToTransfer);
+                    fileOperationThread.setOperation(Constants.FileOperations.Get);
                     break;
                 case 'S':
-                    fileOperationThread.setFileToTransfer(new File(fileRequest[2]));
-                    fileOperationThread.setOperation(FileOperationThread.Operations.Send);
+                    fileOperationThread.setFileToTransfer(fileToTransfer);
+                    fileOperationThread.setOperation(Constants.FileOperations.Send);
                     break;
             }
-
-
+            commandsWriter.write(command + "\n");
         } else {
             commandsWriter.write("C" + command + "\n");
-            commandsWriter.flush();
         }
+        commandsWriter.flush();
     }
     public void sendScreenStopStart() throws IOException {
         commandsWriter.write("L\n");
@@ -98,26 +98,20 @@ public class ClientCommander extends Thread {
         String response = "";
         while(socketCommands != null) {
             try {
-                if(fileOperationThread.isTransferring()) {
-                    response = resultReader.readLine();
-                }
-            }catch (Exception e) {
-                cFrame.getOutputArea().setText(e.getMessage());
-            }
                 if (streamView.getScreenHeight() == 0 && streamView.getScreenWidth() == 0) {
-                    try {
-                        sendScreenRequest();
-                        streamView.setScreenView((ScreenView) cFrame.getScreenPanel());
-                        streamView.setScreenDimension(resultReader.readLine());
-                        streamView.start();
-                        fileOperationThread.start();
-                    } catch (IOException e) {
-                        streamView.setScreenDimension(0,0);
-                    }
-                } else {
-                    cFrame.getOutputArea().append(response + "\n");
+                    sendScreenRequest();
+                    streamView.setScreenView((ScreenView) cFrame.getScreenPanel());
+                    streamView.setScreenDimension(resultReader.readLine());
+                    streamView.start();
+                    fileOperationThread.start();
+                } else if(!fileOperationThread.isTransferring()){
+                    cFrame.getOutputArea().append(resultReader.readLine() + "\n");
                 }
-
+            }catch (IOException e) {
+                cFrame.getOutputArea().setText(e.getMessage());
+                socketCommands = null;
+                doCloseFromFrame();
+            }
         }
     }
 }

@@ -58,7 +58,6 @@ public class ScreenCaptureThread extends Thread {
         } catch (IOException ioe) {
             ioe.printStackTrace();
         }
-        System.err.println("STO PRENDENDO UN'IMMAGINE DI DIMENSIONE: " + byteArrayOutputStream.size());
         buffer = byteArrayOutputStream.toByteArray();
         return buffer;
     }

@@ -8,7 +8,10 @@ public class Constants {
     public static final int IMAGE_BYTES_DIMENSION = 1024 * 62;
     public static final int TCP_PORT = 8080;
     public static final int UDP_PORT = 8081;
-    public static final String whereToDownloadFiles = "";
+    public static enum FileOperations {
+        Send,
+        Get
+    }
 
     public static boolean isValidIP(String ip) {
         if (ip == null) {

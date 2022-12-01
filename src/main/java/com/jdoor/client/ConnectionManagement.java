@@ -63,7 +63,9 @@ public class ConnectionManagement implements ActionListener {
             }
         } else {
             try {
-                commander.closeConnection();
+                if(commander.getSocketCommands() != null) {
+                    commander.closeConnection();
+                }
                 clientFrame.getOperationBtn().setText("CONNECT");
                 clientFrame.getDiconnectBtn().setEnabled(false);
                 clientFrame.getInputLabel().setText("HOST");

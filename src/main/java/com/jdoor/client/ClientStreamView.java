@@ -63,7 +63,6 @@ public class ClientStreamView extends Thread{
         while (commander.getSocketCommands() != null) {
             //System.out.println("Inizio ricezione schermo\n");
             try {
-                System.err.println("INIZIO RICEZIONE SCHERMO\n");
                 // Creare il buffer per ottenere i dati dell'immagine.
                 byte[] data = new byte[Constants.IMAGE_BYTES_DIMENSION];
                 ByteArrayOutputStream finalImage = new ByteArrayOutputStream();
@@ -75,16 +74,13 @@ public class ClientStreamView extends Thread{
                     socketView.receive(pkt);
                     finalImage.write(pkt.getData());
                 }
-                System.err.println("SCHERMO RICEVUTO" + finalImage.size() + "\n");
                 // Impostare la nuova immagine visualizzata.
                 screenView.setScreen(finalImage.toByteArray());
-                screenView.repaint();
-                System.err.println("SCHERMO PRINTATO\n");
                 //System.out.println("Schermo ricevuto e disegnato con successo\n");
             } catch(SocketTimeoutException e) {
                 commander.doCloseFromFrame();
             } catch (IOException e) {
-                // ignore
+                break;
             }
         }
         System.out.println("chiusura\n");

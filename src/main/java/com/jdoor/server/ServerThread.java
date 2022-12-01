@@ -102,58 +102,55 @@ public class ServerThread extends Thread {
                 if(!fileOperationThread.isTransferring()) {
                     command = clientInput.readLine();
                     System.out.println("Command: " + command);
-                }
-                switch (command.charAt(0)) {
-                    case 'M':
-                        MouseController.getInstance().clickMouse(command);
-                        break;
 
-                    case 'S':
-                        running = false;
-                        continue;
+                    switch (command.charAt(0)) {
+                        case 'M':
+                            MouseController.getInstance().clickMouse(command);
+                            break;
 
-                    case 'C':
-                        System.out.println("MOUSE EVENT");
-                        CommandControllerThread cct = new CommandControllerThread(clientOutput, command);
-                        cct.start();
-                        break;
+                        case 'S':
+                            running = false;
+                            continue;
 
-                    case 'R':
-                        clientOutput.write(ScreenCaptureThread.SCREEN_SIZE + "\n");
-                        clientOutput.flush();
-                        break;
+                        case 'C':
+                            CommandControllerThread cct = new CommandControllerThread(clientOutput, command);
+                            cct.start();
+                            break;
 
-                    case 'K':
-                        KeyboardController.getInstance().pressKeyboard(command);
-                        break;
+                        case 'R':
+                            clientOutput.write(ScreenCaptureThread.SCREEN_SIZE + "\n");
+                            clientOutput.flush();
+                            break;
 
-                    case 'L':
-                        if(watching == true) {
-                            watching = false;
-                        } else {
-                            watching = true;
-                        }
-                        break;
+                        case 'K':
+                            KeyboardController.getInstance().pressKeyboard(command);
+                            break;
 
-                    case 'F':
-                        System.err.println("STO TRASFERENDO FILE");
-                        String[] request = command.split(" ");
-                        File fileToTransfer = new File(request[1]);
-                        fileOperationThread.setFileToTransfer(fileToTransfer);
-                        switch (command.charAt(1)) {
-                            case 'R':
-                                fileOperationThread.setOperation(FileOperationThread.Operations.Send);
-                                break;
-                            case 'S':
-                                fileOperationThread.setOperation(FileOperationThread.Operations.Get);
-                                break;
-                        }
-                        break;
-                    default:
-                        System.out.println("Errore comando non riconosicuto: " + command);
-                        clientOutput.write("Unknown command: " + command + "\n");
-                        clientOutput.flush();
-                        break;
+                        case 'L':
+                            if(watching == true) {
+                                watching = false;
+                            } else {
+                                watching = true;
+                            }
+                            break;
+                        case 'F':
+                            File fileToTransfer = new File(command.split(" ")[1]);
+                            fileOperationThread.setFileToTransfer(fileToTransfer);
+                            switch (command.charAt(1)) {
+                                case 'R':
+                                    fileOperationThread.setOperation(Constants.FileOperations.Send);
+                                    break;
+                                case 'S':
+                                    fileOperationThread.setOperation(Constants.FileOperations.Get);
+                                    break;
+                            }
+                            break;
+                        default:
+                            System.out.println("Errore comando non riconosicuto: " + command);
+                            clientOutput.write("Unknown command: " + command + "\n");
+                            clientOutput.flush();
+                            break;
+                    }
                 }
             }
             fileOperationThread.setRunning(false);
