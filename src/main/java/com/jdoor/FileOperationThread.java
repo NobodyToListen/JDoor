@@ -8,8 +8,8 @@ public class FileOperationThread extends Thread{
     private File fileToTransfer;
     private boolean running;
     private boolean transferring;
-    private FileOutputStream fileOutputStream;
-    private FileInputStream fileInputStream;
+    private BufferedOutputStream fileOutput;
+    private BufferedInputStream fileInput;
     private Constants.FileOperations operation;
 
     public FileOperationThread(DataOutputStream sender, DataInputStream inputStream) {
@@ -38,30 +38,32 @@ public class FileOperationThread extends Thread{
 
     public void setFileToTransfer(File fileToTransfer) throws FileNotFoundException {
         this.fileToTransfer = fileToTransfer;
-        fileOutputStream = new FileOutputStream(fileToTransfer);
-        fileInputStream = new FileInputStream(fileToTransfer);
+        fileOutput = new BufferedOutputStream(new FileOutputStream(fileToTransfer));
+        fileInput = new BufferedInputStream(new FileInputStream(fileToTransfer));
     }
 
     private void receiveFile() throws IOException {
-        System.err.println("Sto ricevendo\n");
-        byte[] fileBytes = inputStream.readAllBytes();
-        System.err.println("Ho ricevuto\n");
-        System.err.println("sto scrivendo\n");
-        fileOutputStream.write(fileBytes);
-        fileOutputStream.flush();
-        System.err.println("ho scritto\n");
-        fileOutputStream.close();
+        int bytes = 0;
+
+        long size = inputStream.readLong();
+        byte[] buffer = new byte[4 * 1024];
+        while (size > 0 && (bytes = inputStream.read(buffer, 0, (int)Math.min(buffer.length, size))) != -1) {
+            fileOutput.write(buffer, 0, bytes);
+            size -= bytes;
+        }
+        System.out.println("File is Received");
+        fileOutput.close();
     }
 
     private void sendFile() throws IOException {
-        System.err.println("Sto leggendo\n");
-        byte[] fileBytes = fileInputStream.readAllBytes();
-        System.err.println("ho letto\n");
-        System.err.println("sto scrivendo su file\n");
-        sender.write(fileBytes);
-        sender.flush();
-        System.err.println("ho scritto su file\n");
-        fileInputStream.close();
+        int bytes = 0;
+        sender.writeLong(fileToTransfer.length());
+        byte[] buffer = new byte[4 * 1024];
+        while ((bytes = fileInput.read(buffer)) != -1) {
+            sender.write(buffer, 0, bytes);
+            sender.flush();
+        }
+        fileInput.close();
     }
     @Override
     public void run() {

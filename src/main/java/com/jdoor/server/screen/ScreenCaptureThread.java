@@ -90,7 +90,7 @@ public class ScreenCaptureThread extends Thread {
 
             // Aspettare 200 millisecondi.
             try {
-                Thread.sleep(200);
+                Thread.sleep(5);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
