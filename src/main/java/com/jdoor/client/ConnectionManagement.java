@@ -5,8 +5,6 @@ import com.jdoor.client.view.ClientFrame;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import static com.jdoor.Constants.*;
 
@@ -31,7 +29,7 @@ public class ConnectionManagement implements ActionListener {
                 String ip = clientFrame.getInputField().getText();
                 if(isValidIP(ip)) {
                     try {
-                        commander = new ClientCommander(ip, TCP_PORT, UDP_PORT,clientFrame);
+                        commander = new ClientCommander(ip,clientFrame);
                         clientFrame.getOperationBtn().setText("SEND");
                         clientFrame.getDiconnectBtn().setEnabled(true);
                         clientFrame.getInputLabel().setText("CMD");

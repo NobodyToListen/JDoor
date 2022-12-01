@@ -3,26 +3,37 @@ package com.jdoor.client;
 import com.jdoor.Constants;
 import com.jdoor.FileOperationThread;
 import com.jdoor.client.view.ClientFrame;
-import com.jdoor.client.view.ScreenView;
+import com.jdoor.client.view.StreamView;
 
 import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
 
+import static com.jdoor.Constants.*;
+
 public class ClientCommander extends Thread {
     private Socket socketCommands;
-    private ClientStreamView streamView;
+    private ClientScreenView screenView;
+    private ClientWebcamView webcamView;
     private final BufferedWriter commandsWriter;
     private final BufferedReader resultReader;
     private final FileOperationThread fileOperationThread;
     private final ClientFrame cFrame;
 
-    public ClientCommander(String ipAddress, int portTCP, int portUDP, ClientFrame cFrame) throws IOException {
-        socketCommands = new Socket(InetAddress.getByName(ipAddress), portTCP);
+    public ClientCommander(String ipAddress, ClientFrame cFrame) throws IOException {
+        socketCommands = new Socket(InetAddress.getByName(ipAddress), TCP_PORT);
+
+
         commandsWriter = new BufferedWriter(new OutputStreamWriter(socketCommands.getOutputStream()));
         resultReader = new BufferedReader(new InputStreamReader(socketCommands.getInputStream()));
+
+
         fileOperationThread = new FileOperationThread(new DataOutputStream(socketCommands.getOutputStream()), new DataInputStream(socketCommands.getInputStream()));
-        streamView = new ClientStreamView(portUDP, this);
+
+
+        screenView = new ClientScreenView(UDP_SCREEN_PORT, this);
+        webcamView = new ClientWebcamView(UDP_WEBCAM_PORT, this);
+
         this.cFrame = cFrame;
     }
 
@@ -35,8 +46,8 @@ public class ClientCommander extends Thread {
     }
 
     public void sendMousePosition(int mouseX, int mouseY, char button) throws IOException {
-        float scaledMouseXf = (float) streamView.getScreenWidth() / ((float) cFrame.getScreenPanel().getWidth() / mouseX);
-        float scaledMouseYf = (float) streamView.getScreenHeight()/((float) cFrame.getScreenPanel().getHeight()/mouseY);
+        float scaledMouseXf = (float) screenView.getScreenWidth() / ((float) cFrame.getScreenPanel().getWidth() / mouseX);
+        float scaledMouseYf = (float) screenView.getScreenHeight()/((float) cFrame.getScreenPanel().getHeight()/mouseY);
         int scaledMouseX = Math.round(scaledMouseXf);
         int scaledMouseY = Math.round(scaledMouseYf);
         String command = "M" + button + String.valueOf(scaledMouseX) + ";" + String.valueOf(scaledMouseY) + "\n";
@@ -97,11 +108,15 @@ public class ClientCommander extends Thread {
         String response = "";
         while(socketCommands != null) {
             try {
-                if (streamView.getScreenHeight() == 0 && streamView.getScreenWidth() == 0) {
+                if (screenView.getScreenHeight() == 0 && screenView.getScreenWidth() == 0) {
                     sendScreenRequest();
-                    streamView.setScreenView((ScreenView) cFrame.getScreenPanel());
-                    streamView.setScreenDimension(resultReader.readLine());
-                    streamView.start();
+                    screenView.setScreenView((StreamView) cFrame.getScreenPanel());
+                    webcamView.setScreenView((StreamView) cFrame.getWebcamPanel());
+                    screenView.setScreenDimension(resultReader.readLine());
+
+                    screenView.start();
+                    webcamView.start();
+
                     fileOperationThread.start();
                 } else if(!fileOperationThread.isTransferring()){
                     cFrame.getOutputArea().append(resultReader.readLine() + "\n");

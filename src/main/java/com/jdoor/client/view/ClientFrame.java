@@ -13,6 +13,7 @@ public class ClientFrame extends JFrame{
     private JPanel outputPanel;
     private JPanel screenPanel;
     private JButton diconnectBtn;
+    private JPanel webcamPanel;
 
     public ClientFrame() {
         setContentPane(mainPanel);
@@ -24,7 +25,8 @@ public class ClientFrame extends JFrame{
 
     private void createUIComponents() {
         // TODO: place custom component creation code here
-        screenPanel = new ScreenView();
+        screenPanel = new StreamView();
+        webcamPanel = new StreamView();
     }
 
     public JTextArea getOutputArea() {
@@ -47,6 +49,9 @@ public class ClientFrame extends JFrame{
         return screenPanel;
     }
 
+    public JPanel getWebcamPanel() {
+        return webcamPanel;
+    }
     public JButton getDiconnectBtn() {
         return diconnectBtn;
     }

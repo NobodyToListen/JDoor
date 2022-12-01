@@ -15,11 +15,13 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.util.Arrays;
 
-import static com.jdoor.Constants.UDP_PORT;
+import static com.jdoor.Constants.UDP_SCREEN_PORT;
+import static com.jdoor.Constants.UDP_WEBCAM_PORT;
 
 public class ServerThread extends Thread {
     private Socket clientSocket;
-    private final DatagramSocket datagramSocket;
+    private final DatagramSocket datagramScreenSocket;
+    private final DatagramSocket datagramWebcamSocket;
     private final InetAddress clientAddress;
 
     private final BufferedReader clientInput;
@@ -34,7 +36,9 @@ public class ServerThread extends Thread {
         clientOutput = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
         fileOperationThread = new FileOperationThread(new DataOutputStream(clientSocket.getOutputStream()), new DataInputStream(clientSocket.getInputStream()));
 
-        datagramSocket = new DatagramSocket();
+        datagramScreenSocket = new DatagramSocket();
+        datagramWebcamSocket = new DatagramSocket();
+
         clientAddress = clientSocket.getInetAddress();
         fileOperationThread.start();
         running = true;
@@ -61,9 +65,9 @@ public class ServerThread extends Thread {
             //System.out.println("Slice è " + imageSlice.length + " di " + buffer.length);
 
             // Creare pacchetto UDP e mandarlo.
-            DatagramPacket datagramPacket = new DatagramPacket(imageSlice, imageSlice.length, clientAddress, UDP_PORT);
+            DatagramPacket datagramPacket = new DatagramPacket(imageSlice, imageSlice.length, clientAddress, UDP_SCREEN_PORT);
             try {
-                datagramSocket.send(datagramPacket);
+                datagramScreenSocket.send(datagramPacket);
                 //System.out.println(clientSocket + ": Sent screen");
             } catch (IOException e) {
                 e.printStackTrace();
@@ -74,9 +78,42 @@ public class ServerThread extends Thread {
 
         // Creare il pacchetto che indica che si è giunti al termine dell'immagine e spedirlo.
         byte[] endPkt = {'E', 'N', 'D'};
-        DatagramPacket datagramPacket = new DatagramPacket(endPkt, endPkt.length, clientAddress, UDP_PORT);
+        DatagramPacket datagramPacket = new DatagramPacket(endPkt, endPkt.length, clientAddress, UDP_SCREEN_PORT);
         try {
-            datagramSocket.send(datagramPacket);
+            datagramScreenSocket.send(datagramPacket);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void sendWebcam(byte[] buffer) {
+
+        int packets = (int) Math.ceil((float) buffer.length / Constants.IMAGE_BYTES_DIMENSION);
+        int bufIndex = 0;
+
+        for (int i = 0; i < packets; i++) {
+            //System.out.println("bufIndex: " + bufIndex);
+            // Ottenere un pezzo dell'immagine.
+            byte[] imageSlice = Arrays.copyOfRange(buffer, bufIndex, bufIndex + Constants.IMAGE_BYTES_DIMENSION);
+            //System.out.println("Slice è " + imageSlice.length + " di " + buffer.length);
+
+            // Creare pacchetto UDP e mandarlo.
+            DatagramPacket datagramPacket = new DatagramPacket(imageSlice, imageSlice.length, clientAddress, UDP_WEBCAM_PORT);
+            try {
+                datagramWebcamSocket.send(datagramPacket);
+                //System.out.println(clientSocket + ": Sent screen");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            // Andare al prossimo pezzo d'immagine.
+            bufIndex += Constants.IMAGE_BYTES_DIMENSION + 1;
+        }
+
+        // Creare il pacchetto che indica che si è giunti al termine dell'immagine e spedirlo.
+        byte[] endPkt = {'E', 'N', 'D'};
+        DatagramPacket datagramPacket = new DatagramPacket(endPkt, endPkt.length, clientAddress, UDP_WEBCAM_PORT);
+        try {
+            datagramWebcamSocket.send(datagramPacket);
         } catch (IOException e) {
             e.printStackTrace();
         }

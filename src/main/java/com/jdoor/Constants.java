@@ -1,13 +1,15 @@
 package com.jdoor;
 
-import java.nio.file.Paths;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Constants {
     public static final int IMAGE_BYTES_DIMENSION = 1024 * 62;
+    public static final int RESPONSE_TIMEOUT = 60000;
     public static final int TCP_PORT = 8080;
-    public static final int UDP_PORT = 8081;
+    public static final int UDP_SCREEN_PORT = 8081;
+    public static final int UDP_WEBCAM_PORT = 8082;
+    public static final int WEBCAM_CAPTURE_SIZE = 500;
     public static enum FileOperations {
         Send,
         Get

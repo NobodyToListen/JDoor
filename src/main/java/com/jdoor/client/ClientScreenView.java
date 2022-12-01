@@ -1,7 +1,7 @@
 package com.jdoor.client;
 
 import com.jdoor.Constants;
-import com.jdoor.client.view.ScreenView;
+import com.jdoor.client.view.StreamView;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -9,17 +9,18 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
-import java.util.concurrent.TimeoutException;
 
-public class ClientStreamView extends Thread{
+import static com.jdoor.Constants.RESPONSE_TIMEOUT;
+
+public class ClientScreenView extends Thread{
     private DatagramSocket socketView;
     private int screenHeight, screenWidth;
-    private ScreenView screenView;
+    private StreamView streamView;
     private ClientCommander commander;
 
-    public ClientStreamView(int port, ClientCommander commander) throws SocketException {
+    public ClientScreenView(int port, ClientCommander commander) throws SocketException {
         socketView = new DatagramSocket(port);
-        socketView.setSoTimeout(60000);
+        socketView.setSoTimeout(RESPONSE_TIMEOUT);
         screenHeight = 0;
         screenWidth = 0;
         this.commander = commander;
@@ -47,8 +48,8 @@ public class ClientStreamView extends Thread{
         return screenWidth;
     }
 
-    public void setScreenView(ScreenView screenView) {
-        this.screenView = screenView;
+    public void setScreenView(StreamView streamView) {
+        this.streamView = streamView;
     }
 
     private boolean isImageEnded(byte[] data) {
@@ -75,12 +76,12 @@ public class ClientStreamView extends Thread{
                     finalImage.write(pkt.getData());
                 }
                 // Impostare la nuova immagine visualizzata.
-                screenView.setScreen(finalImage.toByteArray());
+                streamView.setScreen(finalImage.toByteArray());
                 //System.out.println("Schermo ricevuto e disegnato con successo\n");
             } catch(SocketTimeoutException e) {
                 commander.doCloseFromFrame();
             } catch (IOException e) {
-                break;
+                streamView.getGraphics().drawString("STREAM PROBLEMS", 0, 0);
             }
         }
         System.out.println("chiusura\n");

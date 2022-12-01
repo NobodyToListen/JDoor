@@ -5,11 +5,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 
-public class ScreenView extends JPanel{
+public class StreamView extends JPanel{
     private BufferedImage screen;
-    public ScreenView() {
+    public StreamView() {
         setBackground(Color.BLACK);
     }
 
@@ -25,7 +26,6 @@ public class ScreenView extends JPanel{
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         if(screen != null) {
-            //System.out.println("Sto disegnando\n");
             g.drawImage(screen, 0, 0, getWidth(), getHeight(), this);
         }
     }
