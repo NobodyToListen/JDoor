@@ -27,7 +27,6 @@ public class ServerThread extends Thread {
     private final FileOperationThread fileOperationThread;
     private boolean running;
     private boolean watching;
-    private boolean fileTransferring;
     public ServerThread(Socket socket) throws IOException {
         clientSocket = socket;
 
@@ -37,10 +36,9 @@ public class ServerThread extends Thread {
 
         datagramSocket = new DatagramSocket();
         clientAddress = clientSocket.getInetAddress();
-
+        fileOperationThread.start();
         running = true;
         watching = true;
-        fileTransferring = false;
     }
 
     // Metodo per mandare la schermata.
@@ -97,7 +95,6 @@ public class ServerThread extends Thread {
     public void run() {
         String command = "";
         try {
-            fileOperationThread.start();
             while (running) {
                 if(!fileOperationThread.isTransferring()) {
                     command = clientInput.readLine();

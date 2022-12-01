@@ -63,13 +63,12 @@ public class ClientCommander extends Thread {
     public void sendCommands(String command) throws IOException {
         if(command.charAt(0) == 'F' && (command.charAt(1) == 'R' || command.charAt(1) == 'S') && command.charAt(2) == ' ') {
             File fileToTransfer = new File(command.split(" ")[2]);
+            fileOperationThread.setFileToTransfer(fileToTransfer);
             switch (command.charAt(1)) {
                 case 'R':
-                    fileOperationThread.setFileToTransfer(fileToTransfer);
                     fileOperationThread.setOperation(Constants.FileOperations.Get);
                     break;
                 case 'S':
-                    fileOperationThread.setFileToTransfer(fileToTransfer);
                     fileOperationThread.setOperation(Constants.FileOperations.Send);
                     break;
             }
