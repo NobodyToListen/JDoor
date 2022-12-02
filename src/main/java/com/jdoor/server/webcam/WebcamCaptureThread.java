@@ -12,7 +12,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import static com.jdoor.Constants.WEBCAM_CAPTURE_SIZE;
+import static com.jdoor.Constants.MINIMUM_WEBCAM_RESOLUTION;
+import static com.jdoor.Constants.UDP_WEBCAM_PORT;
 
 public class WebcamCaptureThread extends Thread{
     private static WebcamCaptureThread currentInstance;
@@ -24,8 +25,7 @@ public class WebcamCaptureThread extends Thread{
 
     private WebcamCaptureThread(){
         webcam = Webcam.getDefault();
-        webcam.setViewSize(new Dimension(176, 144));
-        webcam.open();
+        webcam.setViewSize(new Dimension(MINIMUM_WEBCAM_RESOLUTION[0], MINIMUM_WEBCAM_RESOLUTION[1]));
         threads = new ArrayList<>();
         running = true;
     }
@@ -40,6 +40,10 @@ public class WebcamCaptureThread extends Thread{
     // Aggiungere un client alla lista di client a cui mandare lo schermo.
     public void addClient(ServerThread serverThread) {
         threads.add(serverThread);
+    }
+
+    public Webcam getWebcam() {
+        return webcam;
     }
 
     // Metodo provato per ottenere una schermata.
@@ -64,7 +68,7 @@ public class WebcamCaptureThread extends Thread{
         byte[] capture;
         while (running) {
             // Non ha senso eseguire il codice se non ci sono client collegati.
-            if (threads.size() > 0) {
+            if (threads.size() > 0 && webcam.isOpen()) {
                 //System.out.println("OK");
                 // Ottenere schermata.
                 capture = getScreen();
@@ -75,7 +79,7 @@ public class WebcamCaptureThread extends Thread{
                 // Mandare la schermata.
                 for (ServerThread thread : threads) {
                     if(thread.isWatching()) {
-                        thread.sendWebcam(capture);
+                        thread.sendStream(capture, thread.getDatagramWebcamSocket(),  UDP_WEBCAM_PORT);
                     }
                 }
             }

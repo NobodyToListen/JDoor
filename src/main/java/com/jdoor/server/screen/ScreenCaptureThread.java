@@ -8,6 +8,8 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.ArrayList;
 
+import static com.jdoor.Constants.UDP_SCREEN_PORT;
+
 /**
  * Thread per mandare lo screen delo schermo.
  * Ne esiste uno solo che viene creato all'inizio del programma.
@@ -83,7 +85,7 @@ public class ScreenCaptureThread extends Thread {
                 // Mandare la schermata.
                 for (ServerThread thread : threads) {
                     if(thread.isWatching()) {
-                        thread.sendScreen(capture);
+                        thread.sendStream(capture, thread.getDatagramScreenSocket(), UDP_SCREEN_PORT);
                     }
                 }
             }

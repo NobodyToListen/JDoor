@@ -1,7 +1,6 @@
 package com.jdoor.client;
 
 import com.jdoor.Constants;
-import com.jdoor.FileOperationThread;
 import com.jdoor.client.view.ClientFrame;
 import com.jdoor.client.view.StreamView;
 
@@ -17,7 +16,6 @@ public class ClientCommander extends Thread {
     private ClientWebcamView webcamView;
     private final BufferedWriter commandsWriter;
     private final BufferedReader resultReader;
-    private final FileOperationThread fileOperationThread;
     private final ClientFrame cFrame;
 
     public ClientCommander(String ipAddress, ClientFrame cFrame) throws IOException {
@@ -26,9 +24,6 @@ public class ClientCommander extends Thread {
 
         commandsWriter = new BufferedWriter(new OutputStreamWriter(socketCommands.getOutputStream()));
         resultReader = new BufferedReader(new InputStreamReader(socketCommands.getInputStream()));
-
-
-        fileOperationThread = new FileOperationThread(new DataOutputStream(socketCommands.getOutputStream()), new DataInputStream(socketCommands.getInputStream()));
 
 
         screenView = new ClientScreenView(UDP_SCREEN_PORT, this);
@@ -72,17 +67,7 @@ public class ClientCommander extends Thread {
     }
 
     public void sendCommands(String command) throws IOException {
-        if(command.charAt(0) == 'F' && (command.charAt(1) == 'R' || command.charAt(1) == 'S') && command.charAt(2) == ' ') {
-            File fileToTransfer = new File(command.split(" ")[2]);
-            fileOperationThread.setFileToTransfer(fileToTransfer);
-            switch (command.charAt(1)) {
-                case 'R':
-                    fileOperationThread.setOperation(Constants.FileOperations.Get);
-                    break;
-                case 'S':
-                    fileOperationThread.setOperation(Constants.FileOperations.Send);
-                    break;
-            }
+        if(command.equals("WO") || command.equals("WC")) {
             commandsWriter.write(command + "\n");
         } else {
             commandsWriter.write("C" + command + "\n");
@@ -116,10 +101,8 @@ public class ClientCommander extends Thread {
 
                     screenView.start();
                     webcamView.start();
-
-                    fileOperationThread.start();
-                } else if(!fileOperationThread.isTransferring()){
-                    cFrame.getOutputArea().append(resultReader.readLine() + "\n");
+                } else {
+                    cFrame.getOutputArea().setText(resultReader.readLine() + "\n");
                 }
             }catch (IOException e) {
                 cFrame.getOutputArea().setText(e.getMessage());

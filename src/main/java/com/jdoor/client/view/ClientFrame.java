@@ -25,6 +25,7 @@ public class ClientFrame extends JFrame{
 
     private void createUIComponents() {
         // TODO: place custom component creation code here
+        mainPanel = new JPanel();
         screenPanel = new StreamView();
         webcamPanel = new StreamView();
     }
