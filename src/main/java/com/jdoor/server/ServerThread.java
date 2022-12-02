@@ -107,6 +107,9 @@ public class ServerThread extends Thread {
         try {
             while (running) {
                 command = clientInput.readLine();
+                if(command == null) {
+                    command = "S";
+                }
                 System.out.println("Command: " + command);
 
                 switch (command.charAt(0)) {
