@@ -12,10 +12,10 @@ import java.net.Socket;
  */
 public class ClientCommander extends Thread {
     private Socket socketCommands;
-    private BufferedWriter commandsWriter;
-    private BufferedReader resultReader;
-    private ClientStreamView streamView;
-    private ClientFrame cFrame;
+    private final BufferedWriter commandsWriter;
+    private final BufferedReader resultReader;
+    private final ClientStreamView streamView;
+    private final ClientFrame cFrame;
 
     /**
      * Costruttore del thread.
@@ -23,7 +23,7 @@ public class ClientCommander extends Thread {
      * @param portTCP Porta TCP del server.
      * @param portUDP Posta UDP del server.
      * @param cFrame Frame dello schermo del client.
-     * @throws IOException Nel caso non si riuscisse ad aprire i canali di comuicazione fa client e server.
+     * @throws IOException Nel caso non si riuscisse ad aprire i canali di comunicazione fa client e server.
      */
     public ClientCommander(String ipAddress, int portTCP, int portUDP, ClientFrame cFrame) throws IOException {
         socketCommands = new Socket(InetAddress.getByName(ipAddress), portTCP);
@@ -53,13 +53,14 @@ public class ClientCommander extends Thread {
      * @throws IOException Nel caso non si riesca a mandare la posizione.
      */
     public void sendMousePosition(int mouseX, int mouseY, char button) throws IOException {
+        // Ottenere le posizioni del mouse in base a dove dovrebbe essere nel server.
         float scaledMouseXf = (float) streamView.getScreenWidth() / ((float) cFrame.getScreenPanel().getWidth() / mouseX);
-        float scaledMouseYf = (float) streamView.getScreenHeight()/((float) cFrame.getScreenPanel().getHeight()/mouseY);
-        //System.out.println(scaledMouseX);
+        float scaledMouseYf = (float) streamView.getScreenHeight() / ((float) cFrame.getScreenPanel().getHeight()/mouseY);
+        // Convertirle a intero per eccesso.
         int scaledMouseX = Math.round(scaledMouseXf);
         int scaledMouseY = Math.round(scaledMouseYf);
-        //System.out.println(streamView.getScreenHeight() + "/(" + cFrame.getScreenPanel().getWidth() + "/" + mouseX + ")= " + scaledMouseX);
-        String command = "M" + button + String.valueOf(scaledMouseX) + ";" + String.valueOf(scaledMouseY) + "\n";
+        // Creare il comando e mandare la posizione.
+        String command = "M" + button + scaledMouseX + ";" + scaledMouseY + "\n";
         System.out.println(command);
         commandsWriter.write(command);
         commandsWriter.flush();
@@ -90,7 +91,7 @@ public class ClientCommander extends Thread {
      * @throws IOException Se non si riesce a mandare il codice del tasto.
      */
     public void sendKey(int keyCode) throws IOException {
-        commandsWriter.write("K" + String.valueOf(keyCode) + "\n");
+        commandsWriter.write("K" + keyCode + "\n");
         commandsWriter.flush();
     }
 
