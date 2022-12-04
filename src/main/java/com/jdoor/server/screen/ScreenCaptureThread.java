@@ -69,7 +69,6 @@ public class ScreenCaptureThread extends Thread {
         // Ottenere l'immagine dello schermo col robot.
         BufferedImage image = robot.createScreenCapture(screenRectangle);
 
-        byte[] buffer;
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         try {
             // Scrivere l'immagine in formato JPG nello stream di bytes.
@@ -78,9 +77,7 @@ public class ScreenCaptureThread extends Thread {
             ioe.printStackTrace();
         }
 
-        buffer = byteArrayOutputStream.toByteArray();
-
-        return buffer;
+        return byteArrayOutputStream.toByteArray();
     }
 
     /**
