@@ -6,6 +6,7 @@ import com.jdoor.client.view.ScreenView;
 import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.util.Base64;
 
 /**
  * Thread che permette di mandare comandi al server.
@@ -151,7 +152,8 @@ public class ClientCommander extends Thread {
             } else {
                 // Mostrare risultato di un comando eseguito da shell.
                 try {
-                    cFrame.getOutputArea().setText(resultReader.readLine() + "\n");
+                    String output = new String(Base64.getDecoder().decode(resultReader.readLine()));
+                    cFrame.getOutputArea().setText(output + "\n");
                 } catch (Exception e) {
                     cFrame.getOutputArea().setText("Error:" + e.getMessage() + "\n");
                 }
