@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 /**
- * Thread per mandare lo screen delo schermo.
+ * Thread per mandare lo screen dello schermo.
  * Ne esiste uno solo che viene creato all'inizio del programma.
  */
 public class ScreenCaptureThread extends Thread {
@@ -25,6 +25,10 @@ public class ScreenCaptureThread extends Thread {
 
     private boolean running;
 
+    /**
+     * Costruttore della classe.
+     * @throws AWTException Nel caso non si riesca ad accedere allo schermo (ad esempio in ambiente headless, vedi: <a href="https://stackoverflow.com/questions/13487025/headless-environment-error-in-java-awt-robot-class-with-mac-os">...</a>).
+     */
     private ScreenCaptureThread() throws AWTException {
         robot = new Robot();
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -37,6 +41,11 @@ public class ScreenCaptureThread extends Thread {
         running = true;
     }
 
+    /**
+     * Metodo per ottenere l'istanza principale della classe.
+     * @return L'istanza corrente della classe.
+     * @throws AWTException Nel caso non ri riesca ad accedere allo schermo (vedi costruttore).
+     */
     public static synchronized ScreenCaptureThread getScreenCaptureThread() throws AWTException {
         if (currentInstance == null)
             currentInstance = new ScreenCaptureThread();
@@ -44,18 +53,26 @@ public class ScreenCaptureThread extends Thread {
         return currentInstance;
     }
 
-    // Aggiungere un client alla lista di client a cui mandare lo schermo.
+    /**
+     * Metodo per aggiungere un client alla lista di client a cui mandare lo schermo.
+     * @param serverThread il Thread a cui mandare lo schermo.
+     */
     public void addClient(ServerThread serverThread) {
         threads.add(serverThread);
     }
 
-    // Metodo provato per ottenere una schermata.
+    /**
+     * Metodo per ottenere una schermata del server.
+     * @return Array di byte che rappresenta l'immagine in formato JPG.
+     */
     private byte[] getScreen() {
+        // Ottenere l'immagine dello schermo col robot.
         BufferedImage image = robot.createScreenCapture(screenRectangle);
 
         byte[] buffer;
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         try {
+            // Scrivere l'immagine in formato JPG nello stream di bytes.
             ImageIO.write(image, "jpg", byteArrayOutputStream);
         } catch (IOException ioe) {
             ioe.printStackTrace();
@@ -66,11 +83,16 @@ public class ScreenCaptureThread extends Thread {
         return buffer;
     }
 
-    // Metodo per fermare il thread.
+    /**
+     * Meodo per fermare il thread.
+     */
     public void stopRunning() {
         running = false;
     }
 
+    /**
+     * Metodo principale del thread dove vengono mandate le schermate ai client.
+     */
     @Override
     public void run() {
         byte[] capture;
