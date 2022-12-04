@@ -81,7 +81,7 @@ public class ScreenCaptureThread extends Thread {
     }
 
     /**
-     * Meodo per fermare il thread.
+     * Metodo per fermare il thread.
      */
     public void stopRunning() {
         running = false;
