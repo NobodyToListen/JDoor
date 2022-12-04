@@ -14,6 +14,9 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.util.Arrays;
 
+/**
+ * Thread per gestire ogni client che si connette.
+ */
 public class ServerThread extends Thread {
     private Socket clientSocket;
     private final DatagramSocket datagramSocket;
@@ -25,6 +28,11 @@ public class ServerThread extends Thread {
     private boolean running;
     private boolean watching;
 
+    /**
+     * Costruttore del thread.
+     * @param socket Il socket del client.
+     * @throws IOException Se non si riesce ad aprire i canali di comunicazione fra client e server.
+     */
     public ServerThread(Socket socket) throws IOException {
         clientSocket = socket;
 
@@ -38,13 +46,16 @@ public class ServerThread extends Thread {
         watching = true;
     }
 
-    // Metodo per mandare la schermata.
-    // Verrà chiamato solo da ScreenCaptureThread, NON VA CHIAMATO da nessun'altra parte.
+    /**
+     * Metodo per mandare uno screenshot al client.
+     * Verrà chiamato solo da ScreenCaptureThread, NON VA CHIAMATO da nessun'altra parte.
+     * @param buffer L'array di bytes che viene mandato al client che rappresenta l'immagine.
+     */
     public void sendScreen(byte[] buffer) {
         // Vedere quanti pacchetti servono per mandare l'immagine.
         // Visto che le immagini sono molto grandi e che un pacchetto UDP può essere massimo circa
         // 64kb, lo dividiamo in pacchetti di massimo 62kb per essere sicuri.
-        // In ogni pacchetto mettiamo un pezzo di immagine, lo spediamo e lasciamo che il client o ricompogna.
+        // In ogni pacchetto mettiamo un pezzo d'immagine, lo spediamo e lasciamo che il client o ricomponga.
         // Arrotondiamo per eccesso in modo da mandare anche un pacchetto con pochissimi dati
         // ma almeno possiamo così assicurarci che l'immagine intera arrivi.
         int packets = (int) Math.ceil((float) buffer.length / Constants.IMAGE_BYTES_DIMENSION);
@@ -79,52 +90,71 @@ public class ServerThread extends Thread {
         }
     }
 
-    // Vedere se il thread è finito.
+    /**
+     * Metodo per vedere se il thread ha finito l'esecuzione.
+     * @return true se il thread ha finito l'esecuzione, fase se no.
+     */
     public boolean isClosed() {
         return clientSocket == null;
     }
 
+    /**
+     * Metodo per vedere se il client sta guardando lo schermo del server.
+     * @return true se il client sta guardando lo schermo, false se no.
+     */
     public boolean isWatching() {
         return watching;
     }
 
+    /**
+     * Metodo principale per l'esecuzione dei comandi del client.
+     */
     @Override
     public void run() {
         String command;
         try {
             while (running) {
+                // Ottenere comando.
                 command = clientInput.readLine();
                 System.out.println("Command: " + command);
 
                 switch (command.charAt(0)) {
+                    // Il client ha premuto il mouse da qualche parte.
                     case 'M':
                         MouseController.getInstance().clickMouse(command);
                         break;
 
+                    // Il client si è disconnesso.
                     case 'S':
                         running = false;
                         continue;
 
+                    // Il client ha mandato un comando da eseguire in shell.
                     case 'C':
-                        System.out.println("MOUSE EVENT");
                         CommandControllerThread cct = new CommandControllerThread(clientOutput, command);
                         cct.start();
                         break;
 
+                    // Il client ha richiesto la grandezza dello schermo.
                     case 'R':
                         clientOutput.write(ScreenCaptureThread.SCREEN_SIZE + "\n");
                         clientOutput.flush();
                         break;
 
+                    // Il client ha premuto un tasto sulla tastiera.
                     case 'K':
                         KeyboardController.getInstance().pressKeyboard(command);
                         break;
 
+                    // Il client ha smesso oppure ha ripreso a guardare lo schermo del
+                    // server riducendo oppure riaprendo la finestra.
                     case 'L':
                         watching = !watching;
                         break;
+
+                    // Il comando non è stato riconosciuto, mostriamo un errore.
                     default:
-                        System.out.println("Errore comando non riconosicuto: " + command);
+                        System.out.println("Errore comando non riconosciuto: " + command);
                         clientOutput.write("Unknown command: " + command + "\n");
                         clientOutput.flush();
                         break;
