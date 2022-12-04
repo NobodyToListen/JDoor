@@ -12,7 +12,7 @@ public class ClientFrame extends JFrame{
     private JLabel inputLabel;
     private JPanel outputPanel;
     private JPanel screenPanel;
-    private JButton diconnectBtn;
+    private JButton disconnectBtn;
 
     public ClientFrame() {
         setSize(Toolkit.getDefaultToolkit().getScreenSize());
@@ -20,7 +20,7 @@ public class ClientFrame extends JFrame{
         setResizable(false);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
-        diconnectBtn.setEnabled(false);
+        disconnectBtn.setEnabled(false);
     }
 
     private void createUIComponents() {
@@ -44,19 +44,12 @@ public class ClientFrame extends JFrame{
         return inputLabel;
     }
 
-    public JPanel getOutputPanel() {
-        return outputPanel;
-    }
-
     public JPanel getScreenPanel() {
         return screenPanel;
     }
 
-    public JButton getDiconnectBtn() {
-        return diconnectBtn;
+    public JButton getDisconnectBtn() {
+        return disconnectBtn;
     }
 
-    public JTabbedPane getTabbedPane1() {
-        return tabbedPane1;
-    }
 }

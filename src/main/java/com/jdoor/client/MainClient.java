@@ -2,25 +2,20 @@ package com.jdoor.client;
 
 import com.jdoor.client.view.ClientFrame;
 
-import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import java.awt.event.*;
 import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class MainClient implements MouseListener, KeyListener, WindowListener, ActionListener {
-    private ClientFrame clientFrame;
+    private final ClientFrame clientFrame;
     private ClientCommander commander;
-    private final int TCP_PORT = 8080;
-    private final int UDP_PORT = 8081;
 
     public MainClient(ClientFrame clientFrame) {
         this.clientFrame = clientFrame;
         this.clientFrame.addWindowListener(this);
         this.clientFrame.getOperationBtn().addActionListener(this);
-        this.clientFrame.getDiconnectBtn().addActionListener(this);
+        this.clientFrame.getDisconnectBtn().addActionListener(this);
     }
 
     private boolean isValidIP(String ip) {
@@ -54,11 +49,13 @@ public class MainClient implements MouseListener, KeyListener, WindowListener, A
                 String ip = clientFrame.getInputField().getText();
                 if(isValidIP(ip)) {
                     try {
+                        int TCP_PORT = 8080;
+                        int UDP_PORT = 8081;
                         commander = new ClientCommander(ip, TCP_PORT, UDP_PORT,clientFrame);
                         clientFrame.getScreenPanel().addMouseListener(this);
                         clientFrame.addKeyListener(this);
                         clientFrame.getOperationBtn().setText("SEND");
-                        clientFrame.getDiconnectBtn().setEnabled(true);
+                        clientFrame.getDisconnectBtn().setEnabled(true);
                         clientFrame.getInputLabel().setText("CMD");
                         commander.start();
                     } catch (Exception ex) {
@@ -81,7 +78,7 @@ public class MainClient implements MouseListener, KeyListener, WindowListener, A
                 clientFrame.getScreenPanel().removeMouseListener(this);
                 clientFrame.removeKeyListener(this);
                 clientFrame.getOperationBtn().setText("CONNECT");
-                clientFrame.getDiconnectBtn().setEnabled(false);
+                clientFrame.getDisconnectBtn().setEnabled(false);
                 clientFrame.getInputLabel().setText("HOST");
             } catch (Exception ex) {
                 clientFrame.getOutputArea().setText("ERROR:" + ex.getMessage() + "\n");
@@ -201,6 +198,6 @@ public class MainClient implements MouseListener, KeyListener, WindowListener, A
     }
     public static void main(String[] args) {
         ClientFrame cFrame = new ClientFrame();
-        MainClient main = new MainClient(cFrame);
+        new MainClient(cFrame);
     }
 }

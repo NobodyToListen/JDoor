@@ -8,12 +8,11 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 public class Server {
-    private static boolean running = true;
 
     public static final int IMAGE_UDP_SIZE = 1024 * 62;
     public static void main(String[] args) throws IOException {
         ServerSocket ss = new ServerSocket(8080);
-        ScreenCaptureThread screenCaptureThread = null;
+        ScreenCaptureThread screenCaptureThread;
         // Ottenere thread che manda le schermate.
         try {
             screenCaptureThread = ScreenCaptureThread.getScreenCaptureThread();
@@ -23,6 +22,7 @@ public class Server {
             return;
         }
 
+        boolean running = true;
         while (running) {
             Socket client = ss.accept();
 

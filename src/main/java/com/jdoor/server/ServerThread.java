@@ -90,7 +90,7 @@ public class ServerThread extends Thread {
 
     @Override
     public void run() {
-        String command = "";
+        String command;
         try {
             while (running) {
                 command = clientInput.readLine();
@@ -121,11 +121,7 @@ public class ServerThread extends Thread {
                         break;
 
                     case 'L':
-                        if(watching == true) {
-                            watching = false;
-                        } else {
-                            watching = true;
-                        }
+                        watching = !watching;
                         break;
                     default:
                         System.out.println("Errore comando non riconosicuto: " + command);

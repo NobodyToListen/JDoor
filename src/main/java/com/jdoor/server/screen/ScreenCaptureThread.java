@@ -8,9 +8,6 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.zip.Deflater;
-
-import static com.jdoor.server.Server.IMAGE_UDP_SIZE;
 
 /**
  * Thread per mandare lo screen delo schermo.

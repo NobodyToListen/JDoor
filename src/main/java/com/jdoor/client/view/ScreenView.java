@@ -6,10 +6,6 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.util.zip.DataFormatException;
-import java.util.zip.Inflater;
-
-import static com.jdoor.server.Server.IMAGE_UDP_SIZE;
 
 public class ScreenView extends JPanel{
     private BufferedImage screen;

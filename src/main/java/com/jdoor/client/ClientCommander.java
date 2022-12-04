@@ -3,12 +3,9 @@ package com.jdoor.client;
 import com.jdoor.client.view.ClientFrame;
 import com.jdoor.client.view.ScreenView;
 
-import javax.swing.*;
-import java.awt.event.WindowListener;
 import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.net.SocketException;
 
 public class ClientCommander extends Thread {
     private Socket socketCommands;
@@ -50,8 +47,8 @@ public class ClientCommander extends Thread {
         commandsWriter.flush();
     }
     public void doCloseFromFrame() {
-        if(cFrame.getDiconnectBtn().isEnabled()) {
-            cFrame.getDiconnectBtn().doClick();
+        if(cFrame.getDisconnectBtn().isEnabled()) {
+            cFrame.getDisconnectBtn().doClick();
         }
     }
 
@@ -90,7 +87,7 @@ public class ClientCommander extends Thread {
                     System.out.println("Schermo ricevuto con successo\n");
                 } catch (Exception e) {
                     cFrame.getOutputArea().setText("Error:" + e.getMessage() + "\n");
-                    streamView.setScreenDimension(0,0);
+                    streamView.setScreenDimension(0);
                 }
             } else {
                 try {
