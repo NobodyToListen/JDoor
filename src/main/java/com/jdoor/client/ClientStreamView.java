@@ -10,12 +10,21 @@ import java.net.DatagramSocket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 
+/**
+ * Thread per gestire lo stream dello schermo al client.
+ */
 public class ClientStreamView extends Thread{
     private final DatagramSocket socketView;
     private int screenHeight, screenWidth;
     private ScreenView screenView;
     private final ClientCommander commander;
 
+    /**
+     * Costruttore del thread.
+     * @param port La porta su cui ricevere lo stream.
+     * @param commander Il ClientCommander da usare.
+     * @throws SocketException Se non si riuscisse a creare il socket UDP.
+     */
     public ClientStreamView(int port, ClientCommander commander) throws SocketException {
         socketView = new DatagramSocket(port);
         socketView.setSoTimeout(30000);
@@ -24,12 +33,22 @@ public class ClientStreamView extends Thread{
         this.commander = commander;
     }
 
-    public void setScreenDimension(String screenDimension) throws NumberFormatException{
+    /**
+     * Metodo per impostare la grandezza dello schermo remoto.
+     * @param screenDimension La stringa formattata per la dimensione dello schermo.
+     * @throws NumberFormatException Nel caso i numeri non fossero formattati correttamente.
+     */
+    public void setScreenDimension(String screenDimension) throws NumberFormatException {
         String[] dim = screenDimension.split("x");
         this.screenWidth = Integer.parseInt(dim[0]);
         this.screenHeight = Integer.parseInt(dim[1]);
         System.out.println(screenDimension);
     }
+
+    /**
+     * Metodo per impostare la grandezza dello schermo remoto.
+     * @param screenHeight La larghezza dello schermo.
+     */
     public void setScreenDimension(int screenHeight) {
         this.screenHeight = screenHeight;
     }
@@ -46,6 +65,11 @@ public class ClientStreamView extends Thread{
         this.screenView = screenView;
     }
 
+    /**
+     * Metodo per capire se il frammento UDP che si ha ricevuto indica la fine dell'immagine.
+     * @param data Dati ottenuti dal socket UDP.
+     * @return true se l'immagine ha finito di arrivare, false se no.
+     */
     private boolean isImageEnded(byte[] data) {
         if (data == null)
             return false;
@@ -53,6 +77,9 @@ public class ClientStreamView extends Thread{
         return data[0] == 'E' && data[1] == 'N' && data[2] == 'D';
     }
 
+    /**
+     * Metodo principale del thread dove si riceve l'immagine e la si mostra a schermo.
+     */
     @Override
     public void run() {
         while (commander.getSocketCommands() != null) {
