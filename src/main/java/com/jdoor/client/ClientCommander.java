@@ -75,6 +75,11 @@ public class ClientCommander extends Thread {
         commandsWriter.flush();
     }
     public void sendScreenStopStart() throws IOException {
+        if(screenView.isWatching()) {
+            screenView.setWatching(false);
+        } else {
+            screenView.setWatching(true);
+        }
         commandsWriter.write("L\n");
         commandsWriter.flush();
     }
@@ -98,7 +103,7 @@ public class ClientCommander extends Thread {
                     screenView.setScreenView((StreamView) cFrame.getScreenPanel());
                     webcamView.setScreenView((StreamView) cFrame.getWebcamPanel());
                     screenView.setScreenDimension(resultReader.readLine());
-
+                    screenView.setWatching(true);
                     screenView.start();
                     webcamView.start();
                 } else {

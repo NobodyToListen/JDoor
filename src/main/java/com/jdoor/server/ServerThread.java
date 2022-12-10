@@ -109,6 +109,10 @@ public class ServerThread extends Thread {
                 command = clientInput.readLine();
                 System.out.println("Command: " + command);
 
+                if(command == null) {
+                    command = "S";
+                }
+
                 switch (command.charAt(0)) {
                     case 'M':
                         MouseController.getInstance().clickMouse(command);

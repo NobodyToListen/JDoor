@@ -17,6 +17,7 @@ public class ClientScreenView extends Thread{
     private int screenHeight, screenWidth;
     private StreamView streamView;
     private ClientCommander commander;
+    private boolean watching;
 
     public ClientScreenView(int port, ClientCommander commander) throws SocketException {
         socketView = new DatagramSocket(port);
@@ -52,6 +53,14 @@ public class ClientScreenView extends Thread{
         this.streamView = streamView;
     }
 
+    public boolean isWatching() {
+        return watching;
+    }
+
+    public void setWatching(boolean watching) {
+        this.watching = watching;
+    }
+
     private boolean isImageEnded(byte[] data) {
         if (data == null)
             return false;
@@ -79,7 +88,9 @@ public class ClientScreenView extends Thread{
                 streamView.setScreen(finalImage.toByteArray());
                 //System.out.println("Schermo ricevuto e disegnato con successo\n");
             } catch(SocketTimeoutException e) {
-                commander.doCloseFromFrame();
+                if(watching) {
+                    commander.doCloseFromFrame();
+                }
             } catch (IOException e) {
                 streamView.getGraphics().drawString("STREAM PROBLEMS", 0, 0);
             }

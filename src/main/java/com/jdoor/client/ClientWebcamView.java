@@ -19,7 +19,6 @@ public class ClientWebcamView extends Thread{
 
     public ClientWebcamView(int port, ClientCommander commander) throws SocketException {
         socketWebcamView = new DatagramSocket(port);
-        socketWebcamView.setSoTimeout(RESPONSE_TIMEOUT);
         this.commander = commander;
     }
 
@@ -53,9 +52,6 @@ public class ClientWebcamView extends Thread{
                 }
 
                 streamWebcamView.setScreen(finalImage.toByteArray());
-
-            } catch(SocketTimeoutException e) {
-                commander.doCloseFromFrame();
             } catch (IOException e) {
                 streamWebcamView.getGraphics().drawString("STREAM PROBLEMS", 0, 0);
             }
