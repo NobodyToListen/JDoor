@@ -5,9 +5,10 @@ import com.jdoor.server.ServerThread;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
+
+import static com.jdoor.Constants.UDP_SCREEN_PORT;
 
 /**
  * Thread per mandare lo screen dello schermo.
@@ -22,7 +23,6 @@ public class ScreenCaptureThread extends Thread {
     private final Rectangle screenRectangle;
 
     private final ArrayList<ServerThread> threads;
-
     private boolean running;
 
     /**
@@ -106,14 +106,14 @@ public class ScreenCaptureThread extends Thread {
                 // Mandare la schermata.
                 for (ServerThread thread : threads) {
                     if(thread.isWatching()) {
-                        thread.sendScreen(capture);
+                        thread.sendStream(capture, thread.getDatagramScreenSocket(), UDP_SCREEN_PORT);
                     }
                 }
             }
 
             // Aspettare 200 millisecondi.
             try {
-                Thread.sleep(100);
+                Thread.sleep(5);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }

@@ -1,22 +1,31 @@
 package com.jdoor.client;
 
+import com.jdoor.Constants;
 import com.jdoor.client.view.ClientFrame;
-import com.jdoor.client.view.ScreenView;
+import com.jdoor.client.view.StreamView;
 
 import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
+
+import java.util.Arrays;
 import java.util.Base64;
+
+import static com.jdoor.Constants.*;
+
 
 /**
  * Thread che permette di mandare comandi al server.
  */
 public class ClientCommander extends Thread {
     private Socket socketCommands;
+
     private final BufferedWriter commandsWriter;
     private final BufferedReader resultReader;
-    private final ClientStreamView streamView;
     private final ClientFrame cFrame;
+
+    private ClientScreenView screenView;
+    private ClientWebcamView webcamView;
 
     /**
      * Costruttore del thread.
@@ -26,11 +35,16 @@ public class ClientCommander extends Thread {
      * @param cFrame Frame dello schermo del client.
      * @throws IOException Nel caso non si riuscisse ad aprire i canali di comunicazione fa client e server.
      */
-    public ClientCommander(String ipAddress, int portTCP, int portUDP, ClientFrame cFrame) throws IOException {
-        socketCommands = new Socket(InetAddress.getByName(ipAddress), portTCP);
+    public ClientCommander(String ipAddress, ClientFrame cFrame) throws IOException {
+        socketCommands = new Socket(InetAddress.getByName(ipAddress), TCP_PORT);
+
         commandsWriter = new BufferedWriter(new OutputStreamWriter(socketCommands.getOutputStream()));
         resultReader = new BufferedReader(new InputStreamReader(socketCommands.getInputStream()));
-        streamView = new ClientStreamView(portUDP, this);
+
+
+        screenView = new ClientScreenView(UDP_SCREEN_PORT, this);
+        webcamView = new ClientWebcamView(UDP_WEBCAM_PORT, this);
+
         this.cFrame = cFrame;
     }
 
@@ -55,13 +69,14 @@ public class ClientCommander extends Thread {
      */
     public void sendMousePosition(int mouseX, int mouseY, char button) throws IOException {
         // Ottenere le posizioni del mouse in base a dove dovrebbe essere nel server.
-        float scaledMouseXf = (float) streamView.getScreenWidth() / ((float) cFrame.getScreenPanel().getWidth() / mouseX);
-        float scaledMouseYf = (float) streamView.getScreenHeight() / ((float) cFrame.getScreenPanel().getHeight()/mouseY);
+        float scaledMouseXf = (float) screenView.getScreenWidth() / ((float) cFrame.getScreenPanel().getWidth() / mouseX);
+        float scaledMouseYf = (float) screenView.getScreenHeight() / ((float) cFrame.getScreenPanel().getHeight()/mouseY);
         // Convertirle a intero per eccesso.
         int scaledMouseX = Math.round(scaledMouseXf);
         int scaledMouseY = Math.round(scaledMouseYf);
         // Creare il comando e mandare la posizione.
         String command = "M" + button + scaledMouseX + ";" + scaledMouseY + "\n";
+
         System.out.println(command);
         commandsWriter.write(command);
         commandsWriter.flush();
@@ -102,7 +117,11 @@ public class ClientCommander extends Thread {
      * @throws IOException Nel caso non si riesca a mandare il comando.
      */
     public void sendCommands(String command) throws IOException {
-        commandsWriter.write("C" + command + "\n");
+        if(command.equals("WO") || command.equals("WC")) {
+            commandsWriter.write(command + "\n");
+        } else {
+            commandsWriter.write("C" + command + "\n");
+        }
         commandsWriter.flush();
     }
 
@@ -112,6 +131,11 @@ public class ClientCommander extends Thread {
      * @throws IOException Nel caso non si riesca a mandare il messaggio.
      */
     public void sendScreenStopStart() throws IOException {
+        if(screenView.isWatching()) {
+            screenView.setWatching(false);
+        } else {
+            screenView.setWatching(true);
+        }
         commandsWriter.write("L\n");
         commandsWriter.flush();
     }
@@ -134,29 +158,25 @@ public class ClientCommander extends Thread {
      */
     @Override
     public void run() {
+        String response = "";
         while(socketCommands != null) {
-            // Se non abbiamo le dimensioni dello schermo del server.
-            if(streamView.getScreenHeight() == 0 && streamView.getScreenWidth() == 0) {
-                // Chiediamo le dimensioni dello schermo e avviamo il thread per lo stream dello schermo.
-                // Mostriamo errore nel caso.
-                try {
+            try {
+                if (screenView.getScreenHeight() == 0 && screenView.getScreenWidth() == 0) {
                     sendScreenRequest();
-                    streamView.setScreenView((ScreenView) cFrame.getScreenPanel());
-                    streamView.setScreenDimension(resultReader.readLine());
-                    streamView.start();
-                    System.out.println("Schermo ricevuto con successo\n");
-                } catch (Exception e) {
-                    cFrame.getOutputArea().setText("Error:" + e.getMessage() + "\n");
-                    streamView.setScreenDimension(0);
+                    screenView.setScreenView((StreamView) cFrame.getScreenPanel());
+                    webcamView.setScreenView((StreamView) cFrame.getWebcamPanel());
+                    screenView.setScreenDimension(resultReader.readLine());
+                    screenView.setWatching(true);
+                    screenView.start();
+                    webcamView.start();
+                } else {
+                    String data = new String(Base64.getDecoder().decode(resultReader.readLine()));
+                    cFrame.getOutputArea().setText(data + "\n");
                 }
-            } else {
-                // Mostrare risultato di un comando eseguito da shell.
-                try {
-                    String output = new String(Base64.getDecoder().decode(resultReader.readLine()));
-                    cFrame.getOutputArea().setText(output + "\n");
-                } catch (Exception e) {
-                    cFrame.getOutputArea().setText("Error:" + e.getMessage() + "\n");
-                }
+            }catch (IOException e) {
+                cFrame.getOutputArea().setText(e.getMessage());
+                socketCommands = null;
+                doCloseFromFrame();
             }
         }
     }

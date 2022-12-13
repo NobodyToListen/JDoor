@@ -5,18 +5,16 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 
 /**
  * JPanel per mostrare lo schermo del server.
  */
-public class ScreenView extends JPanel{
-    private BufferedImage screen;
 
-    /**
-     * Costruttore che imposta il colore di default a nero.
-     */
-    public ScreenView() {
+public class StreamView extends JPanel{
+    private BufferedImage screen;
+    public StreamView() {
         setBackground(Color.BLACK);
     }
 
@@ -29,6 +27,8 @@ public class ScreenView extends JPanel{
     public void setScreen(byte[] image) throws IOException {
         ByteArrayInputStream imageConverter = new ByteArrayInputStream(image);
         screen = ImageIO.read(imageConverter);
+        revalidate();
+        repaint();
     }
 
     /**
@@ -39,8 +39,7 @@ public class ScreenView extends JPanel{
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         if(screen != null) {
-            //System.out.println("Sto disegnando\n");
-            g.drawImage(screen, 0, 0, getWidth(), getHeight(), null);
+            g.drawImage(screen, 0, 0, getWidth(), getHeight(), this);
         }
     }
 }

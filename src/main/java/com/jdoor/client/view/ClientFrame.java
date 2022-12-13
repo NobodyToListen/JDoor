@@ -12,20 +12,27 @@ public class ClientFrame extends JFrame{
     private JLabel inputLabel;
     private JPanel outputPanel;
     private JPanel screenPanel;
+
     private JButton disconnectBtn;
 
+    private JPanel webcamPanel;
+
+
     public ClientFrame() {
-        setSize(Toolkit.getDefaultToolkit().getScreenSize());
         setContentPane(mainPanel);
-        setResizable(false);
+        setSize(Toolkit.getDefaultToolkit().getScreenSize());
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setTitle("JDOOR");
         setVisible(true);
+
         disconnectBtn.setEnabled(false);
     }
 
     private void createUIComponents() {
         // TODO: place custom component creation code here
-        screenPanel = new ScreenView();
+        mainPanel = new JPanel();
+        screenPanel = new StreamView();
+        webcamPanel = new StreamView();
     }
 
     public JTextArea getOutputArea() {
@@ -52,4 +59,7 @@ public class ClientFrame extends JFrame{
         return disconnectBtn;
     }
 
+    public JPanel getWebcamPanel() {
+        return webcamPanel;
+    }
 }

