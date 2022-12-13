@@ -13,11 +13,10 @@ import static com.jdoor.Constants.TCP_PORT;
  * Classe del server.
  */
 public class Server {
-    private static boolean running = true;
     public static void main(String[] args) throws IOException {
         ServerSocket ss = new ServerSocket(TCP_PORT);
-        ScreenCaptureThread screenCaptureThread = null;
-        WebcamCaptureThread webcamCaptureThread = null;
+        ScreenCaptureThread screenCaptureThread;
+        WebcamCaptureThread webcamCaptureThread;
 
         // Ottenere thread che manda le schermate.
         try {

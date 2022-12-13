@@ -16,10 +16,10 @@ import static com.jdoor.Constants.RESPONSE_TIMEOUT;
  * Thread per gestire lo stream dello schermo al client.
  */
 public class ClientScreenView extends Thread{
-    private DatagramSocket socketView;
+    private final DatagramSocket socketView;
     private int screenHeight, screenWidth;
     private StreamView streamView;
-    private ClientCommander commander;
+    private final ClientCommander commander;
     private boolean watching;
 
     /**
@@ -46,14 +46,6 @@ public class ClientScreenView extends Thread{
         this.screenWidth = Integer.parseInt(dim[0]);
         this.screenHeight = Integer.parseInt(dim[1]);
         System.out.println(screenDimension);
-    }
-
-    /**
-     * Metodo per impostare la grandezza dello schermo remoto.
-     * @param screenHeight La larghezza dello schermo.
-     */
-    public void setScreenDimension(int screenHeight) {
-        this.screenHeight = screenHeight;
     }
 
     public int getScreenHeight() {

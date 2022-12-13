@@ -1,14 +1,11 @@
 package com.jdoor.client;
 
-import com.jdoor.Constants;
 import com.jdoor.client.view.ClientFrame;
 import com.jdoor.client.view.StreamView;
 
 import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
-
-import java.util.Arrays;
 import java.util.Base64;
 
 import static com.jdoor.Constants.*;
@@ -24,14 +21,12 @@ public class ClientCommander extends Thread {
     private final BufferedReader resultReader;
     private final ClientFrame cFrame;
 
-    private ClientScreenView screenView;
-    private ClientWebcamView webcamView;
+    private final ClientScreenView screenView;
+    private final ClientWebcamView webcamView;
 
     /**
      * Costruttore del thread.
      * @param ipAddress IP del server.
-     * @param portTCP Porta TCP del server.
-     * @param portUDP Posta UDP del server.
      * @param cFrame Frame dello schermo del client.
      * @throws IOException Nel caso non si riuscisse ad aprire i canali di comunicazione fa client e server.
      */
@@ -131,11 +126,7 @@ public class ClientCommander extends Thread {
      * @throws IOException Nel caso non si riesca a mandare il messaggio.
      */
     public void sendScreenStopStart() throws IOException {
-        if(screenView.isWatching()) {
-            screenView.setWatching(false);
-        } else {
-            screenView.setWatching(true);
-        }
+        screenView.setWatching(!screenView.isWatching());
         commandsWriter.write("L\n");
         commandsWriter.flush();
     }
@@ -158,7 +149,6 @@ public class ClientCommander extends Thread {
      */
     @Override
     public void run() {
-        String response = "";
         while(socketCommands != null) {
             try {
                 if (screenView.getScreenHeight() == 0 && screenView.getScreenWidth() == 0) {

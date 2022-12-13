@@ -8,22 +8,15 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
-import java.net.SocketTimeoutException;
-
-import static com.jdoor.Constants.RESPONSE_TIMEOUT;
 
 public class ClientWebcamView extends Thread{
-    private DatagramSocket socketWebcamView;
+    private final DatagramSocket socketWebcamView;
     private StreamView streamWebcamView;
-    private ClientCommander commander;
+    private final ClientCommander commander;
 
     public ClientWebcamView(int port, ClientCommander commander) throws SocketException {
         socketWebcamView = new DatagramSocket(port);
         this.commander = commander;
-    }
-
-    public DatagramSocket getSocketWebcamView() {
-        return socketWebcamView;
     }
 
     public void setScreenView(StreamView streamView) {

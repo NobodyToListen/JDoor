@@ -7,8 +7,8 @@ import java.awt.event.WindowListener;
 
 public class WindowManagement implements WindowListener {
 
-    private ClientFrame clientFrame;
-    private ClientCommander commander;
+    private final ClientFrame clientFrame;
+    private final ClientCommander commander;
 
     public WindowManagement(ClientFrame clientFrame, ClientCommander commander) {
         this.clientFrame = clientFrame;

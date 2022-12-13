@@ -7,8 +7,8 @@ import java.awt.event.MouseListener;
 import java.io.IOException;
 
 public class MouseSenderController implements MouseListener {
-    private ClientFrame clientFrame;
-    private ClientCommander commander;
+    private final ClientFrame clientFrame;
+    private final ClientCommander commander;
 
     public MouseSenderController(ClientFrame clientFrame, ClientCommander commander) {
         this.clientFrame = clientFrame;

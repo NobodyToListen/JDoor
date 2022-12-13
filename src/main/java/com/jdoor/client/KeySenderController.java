@@ -6,8 +6,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 public class KeySenderController implements KeyListener {
-    private ClientFrame clientFrame;
-    private ClientCommander commander;
+    private final ClientFrame clientFrame;
+    private final ClientCommander commander;
 
     public KeySenderController(ClientFrame clientFrame, ClientCommander commander) {
         this.clientFrame = clientFrame;

@@ -9,7 +9,7 @@ import java.awt.event.ActionListener;
 import static com.jdoor.Constants.*;
 
 public class ConnectionManagement implements ActionListener {
-    private ClientFrame clientFrame;
+    private final ClientFrame clientFrame;
     private ClientCommander commander;
     private KeySenderController keySenderController;
     private MouseSenderController mouseSenderController;
