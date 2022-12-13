@@ -9,11 +9,20 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
 
+/**
+ * Thread per la ricezione della webcam.
+ */
 public class ClientWebcamView extends Thread{
     private final DatagramSocket socketWebcamView;
     private StreamView streamWebcamView;
     private final ClientCommander commander;
 
+    /**
+     * Costruttore del Thread.
+     * @param port La port su cui bisogna ascoltare.
+     * @param commander Il ClientCommander.
+     * @throws SocketException Se non si riesce ad aprire il socket UDP sulla porta specificata.
+     */
     public ClientWebcamView(int port, ClientCommander commander) throws SocketException {
         socketWebcamView = new DatagramSocket(port);
         this.commander = commander;
@@ -23,6 +32,11 @@ public class ClientWebcamView extends Thread{
         this.streamWebcamView = streamView;
     }
 
+    /**
+     * Metodo per capire se si è giunti alla fine dell'immagine.
+     * @param data Il frame UDP ricevuto.
+     * @return true se il frame è {'E', 'N', 'D'} o falso se no.
+     */
     private boolean isImageEnded(byte[] data) {
         if (data == null)
             return false;
@@ -30,6 +44,9 @@ public class ClientWebcamView extends Thread{
         return data[0] == 'E' && data[1] == 'N' && data[2] == 'D';
     }
 
+    /**
+     * Metodo di esecuzione principale del Thread.
+     */
     @Override
     public void run() {
         while (commander.getSocketCommands() != null) {

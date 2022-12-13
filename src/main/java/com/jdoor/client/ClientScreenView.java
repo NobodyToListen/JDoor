@@ -15,7 +15,7 @@ import static com.jdoor.Constants.RESPONSE_TIMEOUT;
 /**
  * Thread per gestire lo stream dello schermo al client.
  */
-public class ClientScreenView extends Thread{
+public class ClientScreenView extends Thread {
     private final DatagramSocket socketView;
     private int screenHeight, screenWidth;
     private StreamView streamView;

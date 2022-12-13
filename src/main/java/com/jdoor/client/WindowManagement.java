@@ -5,11 +5,19 @@ import com.jdoor.client.view.ClientFrame;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
+/**
+ * Classe per la gestione della finestra principale.
+ */
 public class WindowManagement implements WindowListener {
 
     private final ClientFrame clientFrame;
     private final ClientCommander commander;
 
+    /**
+     * Costruttore della classe.
+     * @param clientFrame Il frame del client.
+     * @param commander il commander che manderà il comando quando si riduce a icona o si massimizza la finestra.
+     */
     public WindowManagement(ClientFrame clientFrame, ClientCommander commander) {
         this.clientFrame = clientFrame;
         this.commander = commander;

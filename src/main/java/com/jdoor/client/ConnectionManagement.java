@@ -8,6 +8,9 @@ import java.awt.event.ActionListener;
 
 import static com.jdoor.Constants.*;
 
+/**
+ * Classe per la gestione della connessione del client.
+ */
 public class ConnectionManagement implements ActionListener {
     private final ClientFrame clientFrame;
     private ClientCommander commander;
@@ -15,6 +18,10 @@ public class ConnectionManagement implements ActionListener {
     private MouseSenderController mouseSenderController;
     private WindowManagement windowManagement;
 
+    /**
+     * Costruttore
+     * @param clientFrame il frame del client.
+     */
     public ConnectionManagement(ClientFrame clientFrame) {
         this.clientFrame = clientFrame;
         this.clientFrame.getOperationBtn().addActionListener(this);

@@ -3,6 +3,9 @@ package com.jdoor.client.view;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * Frame principale del client.
+ */
 public class ClientFrame extends JFrame{
     private JPanel mainPanel;
     private JTabbedPane tabbedPane1;
@@ -17,7 +20,9 @@ public class ClientFrame extends JFrame{
 
     private JPanel webcamPanel;
 
-
+    /**
+     * Costruttore del frame.
+     */
     public ClientFrame() {
         setContentPane(mainPanel);
         setSize(Toolkit.getDefaultToolkit().getScreenSize());
@@ -28,8 +33,10 @@ public class ClientFrame extends JFrame{
         disconnectBtn.setEnabled(false);
     }
 
+    /**
+     * Metodo usato dalla libreria d'IntelliJ per creare in modo custom i componenti.
+     */
     private void createUIComponents() {
-        // TODO: place custom component creation code here
         mainPanel = new JPanel();
         screenPanel = new StreamView();
         webcamPanel = new StreamView();

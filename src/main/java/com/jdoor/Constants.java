@@ -18,6 +18,11 @@ public class Constants {
     public static final int UDP_WEBCAM_PORT = 8082;
     public static final int[] MINIMUM_WEBCAM_RESOLUTION = {176,144};
 
+    /**
+     * Metodo per controllare se un IP è valido.
+     * @param ip L'IP da controllare.
+     * @return true se è valido, false se no.
+     */
     public static boolean isValidIP(String ip) {
         if (ip == null) {
             return false;

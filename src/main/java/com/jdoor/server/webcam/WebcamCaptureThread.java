@@ -2,19 +2,21 @@ package com.jdoor.server.webcam;
 
 import com.github.sarxos.webcam.Webcam;
 import com.jdoor.server.ServerThread;
-import com.jdoor.server.screen.ScreenCaptureThread;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
 import static com.jdoor.Constants.MINIMUM_WEBCAM_RESOLUTION;
 import static com.jdoor.Constants.UDP_WEBCAM_PORT;
 
+/**
+ * Thread per mandare la videocamera al client.
+ * Ne esisterà uno solo per tutta la durata del programma.
+ */
 public class WebcamCaptureThread extends Thread{
     private static WebcamCaptureThread currentInstance;
 
@@ -23,21 +25,31 @@ public class WebcamCaptureThread extends Thread{
     private final ArrayList<ServerThread> threads;
     private boolean running;
 
-    private WebcamCaptureThread(){
+    /**
+     * Costruttore del thread.
+     */
+    private WebcamCaptureThread() {
         webcam = Webcam.getDefault();
         webcam.setViewSize(new Dimension(MINIMUM_WEBCAM_RESOLUTION[0], MINIMUM_WEBCAM_RESOLUTION[1]));
         threads = new ArrayList<>();
         running = true;
     }
 
-    public static synchronized WebcamCaptureThread getWebcamCaptureThread(){
+    /**
+     * Metodo per inizializzare il singleton.
+     * @return L'istanza corrente del Thread.
+     */
+    public static synchronized WebcamCaptureThread getWebcamCaptureThread() {
         if (currentInstance == null)
             currentInstance = new WebcamCaptureThread();
 
         return currentInstance;
     }
 
-    // Aggiungere un client alla lista di client a cui mandare lo schermo.
+    /**
+     * Metodo per aggiungere un client alla lista di client a cui mandare la webcam.
+     * @param serverThread Il Thread da aggiungere.
+     */
     public void addClient(ServerThread serverThread) {
         threads.add(serverThread);
     }
@@ -46,7 +58,10 @@ public class WebcamCaptureThread extends Thread{
         return webcam;
     }
 
-    // Metodo provato per ottenere una schermata.
+    /**
+     * Metodo per ottenere una schermata dalla webcam.
+     * @return L'array di bytes che rappresenta il JPG della schermata della webcam.
+     */
     private byte[] getScreen() {
         BufferedImage image = webcam.getImage();
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
@@ -60,7 +75,9 @@ public class WebcamCaptureThread extends Thread{
         return byteArrayOutputStream.toByteArray();
     }
 
-    // Metodo per fermare il thread.
+    /**
+     * Metodo per fermare il thread.
+     */
     public void stopRunning() {
         running = false;
     }
@@ -92,7 +109,6 @@ public class WebcamCaptureThread extends Thread{
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
-
         }
     }
 }

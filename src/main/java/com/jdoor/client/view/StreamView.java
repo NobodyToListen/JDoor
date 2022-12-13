@@ -5,19 +5,20 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.IOException;
 
 /**
  * JPanel per mostrare lo schermo del server.
  */
-
-public class StreamView extends JPanel{
+public class StreamView extends JPanel {
     private BufferedImage screen;
+
+    /**
+     * Costruttore del Thread.
+     */
     public StreamView() {
         setBackground(Color.BLACK);
     }
-
 
     /**
      * Metodo per impostare i dati da mostrare a schermo.

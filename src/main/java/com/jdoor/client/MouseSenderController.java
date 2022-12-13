@@ -6,10 +6,18 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.IOException;
 
+/**
+ * Classe per la gestione del click del mouse.
+ */
 public class MouseSenderController implements MouseListener {
     private final ClientFrame clientFrame;
     private final ClientCommander commander;
 
+    /**
+     * Costruttore della classe.
+     * @param clientFrame Il frame del client.
+     * @param commander Il commander che manderà il comando del mouse.
+     */
     public MouseSenderController(ClientFrame clientFrame, ClientCommander commander) {
         this.clientFrame = clientFrame;
         this.commander = commander;
@@ -29,14 +37,10 @@ public class MouseSenderController implements MouseListener {
     }
 
     @Override
-    public void mousePressed(MouseEvent e) {
-
-    }
+    public void mousePressed(MouseEvent e) {}
 
     @Override
-    public void mouseReleased(MouseEvent e) {
-
-    }
+    public void mouseReleased(MouseEvent e) {}
 
     @Override
     public void mouseEntered(MouseEvent e) {
@@ -48,5 +52,4 @@ public class MouseSenderController implements MouseListener {
     public void mouseExited(MouseEvent e) {
         clientFrame.setFocusable(false);
     }
-
 }
