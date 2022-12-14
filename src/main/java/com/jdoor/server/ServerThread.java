@@ -138,34 +138,40 @@ public class ServerThread extends Thread {
                     // Il client ha premuto il mouse da qualche parte.
                     case 'M':
                         MouseController.getInstance().clickMouse(command);
+                        System.out.println("Mouse premuto.");
                         break;
 
                     // Il client si è disconnesso.
                     case 'S':
                         running = false;
+                        System.out.println("Spegnimento.");
                         continue;
 
                     // Il client ha mandato un comando da eseguire in shell.
                     case 'C':
                         CommandControllerThread cct = new CommandControllerThread(clientOutput, command);
                         cct.start();
+                        System.out.println("Comando da eseguire in shell ricevuto, avvio esecuzione.");
                         break;
 
                     // Il client ha richiesto la grandezza dello schermo.
                     case 'R':
                         clientOutput.write(ScreenCaptureThread.SCREEN_SIZE + "\n");
                         clientOutput.flush();
+                        System.out.println("Grandezza dello schermo ricevuta.");
                         break;
 
                     // Il client ha premuto un tasto sulla tastiera.
                     case 'K':
                         KeyboardController.getInstance().pressKeyboard(command);
+                        System.out.println("Tasto premuto.");
                         break;
 
                     // Il client ha smesso oppure ha ripreso a guardare lo schermo del
                     // server riducendo oppure riaprendo la finestra.
                     case 'L':
                         watching = !watching;
+                        System.out.println("Client ha smesso o ripreso a guardare lo schermo del server.");
                         break;
 
 
@@ -174,12 +180,16 @@ public class ServerThread extends Thread {
                         Webcam webcam = WebcamCaptureThread.getWebcamCaptureThread().getWebcam();
                         switch (command.charAt(1)) {
                             case 'O':
-                                if(!webcam.isOpen())
-                                   webcam.open();
+                                if(!webcam.isOpen()) {
+                                    webcam.open();
+                                    System.out.println("Webcam abilitata.");
+                                }
                                 break;
                             case 'C':
-                                if(webcam.isOpen())
+                                if(webcam.isOpen()) {
                                     webcam.close();
+                                    System.out.println("Webcam spenta.");
+                                }
                                 break;
                         }
                         break;
