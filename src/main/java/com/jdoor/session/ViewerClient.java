@@ -69,7 +69,7 @@ public final class ViewerClient implements AutoCloseable {
             throw new IllegalStateException("This viewer client has already been used");
         }
         SSLContext context = PinnedTlsContext.create(pairingLink.fingerprint());
-        SSLSocket candidate = (SSLSocket) context.getSocketFactory().createSocket();
+        SSLSocket candidate = TlsSocketPolicy.createClient(context);
         publishCandidate(candidate);
         try {
             ensureOpenDuringConnect();
@@ -78,7 +78,6 @@ public final class ViewerClient implements AutoCloseable {
             candidate.setTcpNoDelay(true);
             candidate.setKeepAlive(true);
             candidate.setSoTimeout(HANDSHAKE_TIMEOUT_MILLIS);
-            TlsSocketPolicy.applyClient(candidate);
             candidate.startHandshake();
             ensureOpenDuringConnect();
 

@@ -1,8 +1,11 @@
 package com.jdoor.security;
 
+import java.io.IOException;
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
+import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLParameters;
 import javax.net.ssl.SSLSocket;
 
@@ -23,7 +26,9 @@ public final class TlsSocketPolicy {
         socket.setNeedClientAuth(false);
     }
 
-    public static void applyClient(SSLSocket socket) {
+    public static SSLSocket createClient(SSLContext context) throws IOException {
+        SSLSocket socket = (SSLSocket)
+                Objects.requireNonNull(context, "context").getSocketFactory().createSocket();
         Set<String> supported = Arrays.stream(socket.getSupportedProtocols()).collect(Collectors.toUnmodifiableSet());
         String[] enabled =
                 ALLOWED_PROTOCOLS.stream().filter(supported::contains).toArray(String[]::new);
@@ -35,5 +40,6 @@ public final class TlsSocketPolicy {
         SSLParameters parameters = socket.getSSLParameters();
         parameters.setEndpointIdentificationAlgorithm("HTTPS");
         socket.setSSLParameters(parameters);
+        return socket;
     }
 }
