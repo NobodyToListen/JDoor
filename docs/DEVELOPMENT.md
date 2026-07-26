@@ -20,11 +20,12 @@ Useful focused commands:
 java -jar target/jdoor-assist-1.0.0-all.jar --help
 ```
 
-Tests are headless. The integration suite still opens real loopback TLS sockets, pins the
-ephemeral certificate, rejects a wrong token, streams a real JPEG frame, verifies view-only
-behavior, then exercises permission-gated pointer and key messages. Deterministic latch-based
-tests also cover cross-session control races, blocked writes, pre-auth deadlines, candidate
-shutdown, connection cancellation, input coalescing, and token-generation rotation.
+Tests are headless. The integration suite still opens real loopback TLS sockets, verifies the
+advertised endpoint identity, pins the ephemeral certificate, rejects a wrong token, streams a
+real JPEG frame, verifies view-only behavior, then exercises permission-gated pointer and key
+messages. Deterministic latch-based tests also cover cross-session control races, blocked writes,
+pre-auth deadlines, candidate shutdown, connection cancellation, input coalescing, and
+token-generation rotation.
 
 ## Design rules
 

@@ -21,9 +21,11 @@ therefore run headlessly with deterministic fakes while the production UI uses t
 
 ## Session lifecycle
 
-1. The host generates an in-memory P-256 key pair and self-signed certificate.
+1. The host resolves one stable advertised address and generates an in-memory P-256 key pair and
+   self-signed certificate whose SAN is bound to that DNS name or IP address.
 2. A random 128-bit token and the certificate’s SHA-256 fingerprint enter the `jdoor://` link.
-3. The viewer establishes TLS and trusts only the exact certificate fingerprint in that link.
+3. The viewer establishes TLS, requires endpoint identification for the advertised host, and trusts
+   only the exact certificate fingerprint in that link.
 4. The token and visible device name are sent inside TLS.
 5. Pre-authentication sockets are capped per address and closed at an absolute deadline.
 6. The host compares the token in constant time, reserves its exact generation, and prompts

@@ -81,6 +81,7 @@ public final class HostSessionServer implements AutoCloseable {
 
     private volatile SSLServerSocket serverSocket;
     private volatile EphemeralTlsIdentity identity;
+    private volatile String advertisedHost;
     private volatile PairingLink pairingLink;
     private volatile ScheduledFuture<?> pairingRotationTask;
 
@@ -257,7 +258,10 @@ public final class HostSessionServer implements AutoCloseable {
 
         SSLServerSocket socket = null;
         try {
-            EphemeralTlsIdentity newIdentity = EphemeralTlsIdentity.create(clock, random);
+            String resolvedAdvertisedHost = configuration.advertisedHost() == null
+                    ? NetworkAddresses.preferredLanAddress()
+                    : configuration.advertisedHost();
+            EphemeralTlsIdentity newIdentity = EphemeralTlsIdentity.create(clock, random, resolvedAdvertisedHost);
             socket = (SSLServerSocket)
                     newIdentity.serverContext().getServerSocketFactory().createServerSocket();
             socket.setReuseAddress(false);
@@ -267,6 +271,7 @@ public final class HostSessionServer implements AutoCloseable {
             socket.bind(new InetSocketAddress(configuration.bindAddress(), configuration.port()), 16);
 
             identity = newIdentity;
+            advertisedHost = resolvedAdvertisedHost;
             serverSocket = socket;
             running.set(true);
             synchronized (connectionLifecycleLock) {
@@ -668,11 +673,12 @@ public final class HostSessionServer implements AutoCloseable {
         if (credential == null) {
             return false;
         }
-        String advertisedHost = configuration.advertisedHost() == null
-                ? NetworkAddresses.preferredLanAddress()
-                : configuration.advertisedHost();
-        PairingLink next = new PairingLink(
-                advertisedHost, serverSocket.getLocalPort(), credential.token(), identity.fingerprint());
+        String sessionHost = advertisedHost;
+        if (sessionHost == null) {
+            throw new IllegalStateException("Host session does not have an advertised address");
+        }
+        PairingLink next =
+                new PairingLink(sessionHost, serverSocket.getLocalPort(), credential.token(), identity.fingerprint());
         pairingLink = next;
         notifyPairingLinkChanged(next);
 
@@ -706,6 +712,7 @@ public final class HostSessionServer implements AutoCloseable {
         }
         serverSocket = null;
         identity = null;
+        advertisedHost = null;
         pairingLink = null;
     }
 
@@ -849,6 +856,9 @@ public final class HostSessionServer implements AutoCloseable {
         if (rotation != null) {
             rotation.cancel(true);
         }
+        pairingLink = null;
+        advertisedHost = null;
+        identity = null;
         releaseAllInputs();
         frameExecutor.shutdownNow();
         handshakeDeadlineExecutor.shutdownNow();

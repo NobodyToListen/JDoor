@@ -3,6 +3,7 @@ package com.jdoor.security;
 import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;
+import javax.net.ssl.SSLParameters;
 import javax.net.ssl.SSLSocket;
 
 public final class TlsSocketPolicy {
@@ -31,5 +32,8 @@ public final class TlsSocketPolicy {
         }
         socket.setEnabledProtocols(enabled);
         socket.setUseClientMode(true);
+        SSLParameters parameters = socket.getSSLParameters();
+        parameters.setEndpointIdentificationAlgorithm("HTTPS");
+        socket.setSSLParameters(parameters);
     }
 }

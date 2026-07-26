@@ -19,8 +19,9 @@ bounded messages, and remote control disabled by default.
 ## What works
 
 - Direct screen sharing over TLS 1.2/1.3.
-- Ephemeral ECDSA certificate for every host run.
+- Ephemeral ECDSA certificate for every host run, bound to the advertised host through a SAN.
 - Certificate fingerprint embedded in the out-of-band pairing link.
+- Client endpoint identification plus constant-time matching of the exact certificate fingerprint.
 - Random 128-bit, single-use pairing token with a 10-minute lifetime.
 - Local approval showing the viewer name, address, and verification code.
 - View-only sessions by default; the host can enable or revoke input instantly.
@@ -72,7 +73,7 @@ sequenceDiagram
     participant H as Host
     participant V as Viewer
     H->>V: Pairing link via trusted channel
-    V->>H: TLS handshake with certificate pin
+    V->>H: TLS handshake with endpoint identity + certificate pin
     V->>H: Single-use token + visible device name
     H->>H: Local consent prompt
     H-->>V: Approved, view-only session

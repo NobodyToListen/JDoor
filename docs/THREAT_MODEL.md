@@ -28,7 +28,7 @@ human consent, encrypted transport, and an immediate local stop control.
 | Threat | Control |
 |---|---|
 | Passive network capture | TLS 1.2/1.3 |
-| Active man-in-the-middle | Exact SHA-256 certificate pin carried out of band |
+| Active man-in-the-middle | Advertised-host endpoint identification plus exact SHA-256 certificate pin carried out of band |
 | Pairing token guessing | 128 bits of entropy, ten-minute expiry, constant-time comparison, generation-bound reservation, per-address limiting |
 | Replayed link | Single-use token rotated after a session |
 | Unwanted viewer | Local modal approval with device name, address, and verification code |
@@ -59,8 +59,8 @@ JDoor Assist does not provide:
   comparison remain mandatory.
 - A malicious approved viewer can observe the shared screen and, while control is enabled, act
   with the host user’s desktop privileges.
-- TLS identity is ephemeral and self-signed. Pinning authenticates the exact pairing link, not a
-  legal person or long-lived device.
+- TLS identity is ephemeral and self-signed. Its SAN is bound to the stable advertised host, while
+  pinning authenticates the exact pairing link rather than a legal person or long-lived device.
 - The primary-display stream may expose notifications or secrets the host did not intend to
   show. Users should close sensitive material before approval.
 - Audit files inherit the local account’s filesystem protections and are not cryptographically

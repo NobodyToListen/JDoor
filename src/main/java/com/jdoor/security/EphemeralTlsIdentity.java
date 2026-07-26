@@ -18,6 +18,8 @@ import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.asn1.x509.BasicConstraints;
 import org.bouncycastle.asn1.x509.ExtendedKeyUsage;
 import org.bouncycastle.asn1.x509.Extension;
+import org.bouncycastle.asn1.x509.GeneralName;
+import org.bouncycastle.asn1.x509.GeneralNames;
 import org.bouncycastle.asn1.x509.KeyPurposeId;
 import org.bouncycastle.asn1.x509.KeyUsage;
 import org.bouncycastle.cert.X509v3CertificateBuilder;
@@ -31,10 +33,11 @@ public record EphemeralTlsIdentity(
         SSLContext serverContext, X509Certificate certificate, CertificateFingerprint fingerprint, Instant expiresAt) {
     private static final Duration VALIDITY = Duration.ofHours(24);
 
-    public static EphemeralTlsIdentity create(Clock clock, SecureRandom random) {
+    public static EphemeralTlsIdentity create(Clock clock, SecureRandom random, String advertisedHost) {
         try {
             Instant now = clock.instant();
             Instant expiresAt = now.plus(VALIDITY);
+            String serverName = normalizeServerName(advertisedHost);
 
             KeyPairGenerator generator = KeyPairGenerator.getInstance("EC");
             generator.initialize(new ECGenParameterSpec("secp256r1"), random);
@@ -56,6 +59,10 @@ public record EphemeralTlsIdentity(
                     extensionUtils.createSubjectKeyIdentifier(keyPair.getPublic()));
             certificateBuilder.addExtension(Extension.basicConstraints, true, new BasicConstraints(false));
             certificateBuilder.addExtension(Extension.keyUsage, true, new KeyUsage(KeyUsage.digitalSignature));
+            certificateBuilder.addExtension(
+                    Extension.subjectAlternativeName,
+                    false,
+                    new GeneralNames(new GeneralName(subjectAlternativeNameType(serverName), serverName)));
             certificateBuilder.addExtension(
                     Extension.extendedKeyUsage, false, new ExtendedKeyUsage(KeyPurposeId.id_kp_serverAuth));
 
@@ -89,6 +96,40 @@ public record EphemeralTlsIdentity(
         } catch (Exception failure) {
             throw new IllegalStateException("Could not create the ephemeral TLS identity", failure);
         }
+    }
+
+    private static String normalizeServerName(String advertisedHost) {
+        if (advertisedHost == null) {
+            throw new IllegalArgumentException("advertisedHost is required");
+        }
+        String serverName = advertisedHost.strip();
+        if (serverName.startsWith("[") && serverName.endsWith("]")) {
+            serverName = serverName.substring(1, serverName.length() - 1);
+        }
+        if (serverName.isEmpty() || serverName.length() > 253) {
+            throw new IllegalArgumentException("advertisedHost is invalid");
+        }
+        return serverName;
+    }
+
+    private static int subjectAlternativeNameType(String serverName) {
+        return serverName.indexOf(':') >= 0 || isIpv4Literal(serverName) ? GeneralName.iPAddress : GeneralName.dNSName;
+    }
+
+    private static boolean isIpv4Literal(String serverName) {
+        String[] octets = serverName.split("\\.", -1);
+        if (octets.length != 4) {
+            return false;
+        }
+        for (String octet : octets) {
+            if (octet.isEmpty() || octet.length() > 3 || !octet.chars().allMatch(Character::isDigit)) {
+                return false;
+            }
+            if (Integer.parseInt(octet) > 255) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private static char[] randomPassword(SecureRandom random) {
