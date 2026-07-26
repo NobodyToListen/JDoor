@@ -12,7 +12,7 @@ out/
 # Runtime data and logs
 .env
 *.log
-audit/
+/audit/
 
 # Packaged artifacts
 *.jar

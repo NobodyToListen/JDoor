@@ -51,6 +51,14 @@ Protocol version 1 is intentionally small. A compatible addition needs:
 
 Breaking changes require a protocol-version increment and an explicit rejection path.
 
+## CI repository settings
+
+The cross-platform build, CodeQL analysis, SBOM, and release gates work without repository
+configuration. To make dependency review a blocking pull-request check, a repository maintainer
+must enable GitHub's Dependency graph and set the Actions variable
+`DEPENDENCY_REVIEW_ENABLED=true`. The workflow remains gated until both are available so an
+unsupported API cannot hide the build and security checks that do run.
+
 ## Manual desktop smoke test
 
 1. Run two JDoor Assist processes on one machine.

@@ -58,7 +58,9 @@ jobs:
 
   dependency-review:
     name: Dependency review
-    if: github.event_name == 'pull_request'
+    # Enable the repository Dependency graph, then set the Actions variable below to "true".
+    # Keeping the action gated preserves blocking vulnerability failures once the API is available.
+    if: github.event_name == 'pull_request' && vars.DEPENDENCY_REVIEW_ENABLED == 'true'
     runs-on: ubuntu-latest
     permissions:
       contents: read
