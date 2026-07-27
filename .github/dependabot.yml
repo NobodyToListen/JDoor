@@ -25,3 +25,24 @@ updates:
       time: "06:30"
       timezone: Europe/Zurich
     open-pull-requests-limit: 5
+
+  - package-ecosystem: npm
+    directory: /website
+    schedule:
+      interval: weekly
+      day: monday
+      time: "06:15"
+      timezone: Europe/Zurich
+    open-pull-requests-limit: 5
+    groups:
+      cloudflare-tooling:
+        patterns:
+          - "wrangler"
+          - "@cloudflare/*"
+      website-quality:
+        patterns:
+          - "@playwright/*"
+          - "@types/*"
+          - "sharp"
+          - "tsx"
+          - "typescript"
