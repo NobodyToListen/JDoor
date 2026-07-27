@@ -44,7 +44,7 @@
         <bouncycastle.version>1.85</bouncycastle.version>
         <flatlaf.version>3.7.1</flatlaf.version>
         <junit.version>6.1.2</junit.version>
-        <jacoco.version>0.8.13</jacoco.version>
+        <jacoco.version>0.8.15</jacoco.version>
         <cyclonedx.version>2.9.1</cyclonedx.version>
         <spotless.version>3.6.0</spotless.version>
     </properties>
