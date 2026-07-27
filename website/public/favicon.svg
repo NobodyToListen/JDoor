@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">JDoor Assist favicon</title>
+  <desc id="desc">An orange door frame with a green consent node on a dark surface.</desc>
+  <rect width="512" height="512" rx="96" fill="#15191F"/>
+  <rect id="door-frame" x="120" y="80" width="272" height="352" rx="28" fill="none" stroke="#FF6B35" stroke-width="34"/>
+  <path d="M232 97v318" fill="none" stroke="#FF6B35" stroke-width="34"/>
+  <rect id="consent-node" x="316" y="236" width="42" height="42" fill="#45C486"/>
+</svg>

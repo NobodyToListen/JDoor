@@ -2,6 +2,10 @@
 
 Consent-first, encrypted remote assistance for trusted local networks.
 
+[Official website](https://jdoor.ejupilabs.com/) ·
+[Source](https://github.com/NobodyToListen/JDoor) ·
+[Security policy](SECURITY.md)
+
 [![CI](https://github.com/NobodyToListen/JDoor/actions/workflows/ci.yml/badge.svg)](https://github.com/NobodyToListen/JDoor/actions/workflows/ci.yml)
 [![CodeQL](https://github.com/NobodyToListen/JDoor/actions/workflows/codeql.yml/badge.svg)](https://github.com/NobodyToListen/JDoor/actions/workflows/codeql.yml)
 [![Java 21](https://img.shields.io/badge/Java-21-ff6b35.svg)](https://adoptium.net/)

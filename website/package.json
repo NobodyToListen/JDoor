@@ -1,0 +1,36 @@
+{
+  "name": "jdoor-website",
+  "version": "0.1.0",
+  "private": true,
+  "license": "GPL-3.0-only",
+  "type": "module",
+  "packageManager": "npm@11.13.0",
+  "description": "Product website for JDoor Assist.",
+  "engines": {
+    "node": ">=24 <25"
+  },
+  "scripts": {
+    "generate:assets": "node scripts/generate-assets.mjs",
+    "check:assets": "node scripts/generate-assets.mjs --check",
+    "types": "wrangler types worker-configuration.d.ts",
+    "typecheck": "npm run types && tsc --noEmit",
+    "test": "tsx --test worker/*.test.ts test/*.test.mjs",
+    "validate": "node scripts/validate-site.mjs",
+    "preview": "node scripts/preview.mjs",
+    "test:e2e": "playwright test",
+    "audit": "npm audit --audit-level=moderate",
+    "check": "npm run audit && npm run check:assets && npm run typecheck && npm test && npm run validate && npm run test:e2e && wrangler deploy --dry-run",
+    "deploy": "npm run check && wrangler deploy"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.61.1",
+    "@types/node": "24.13.2",
+    "sharp": "0.35.2",
+    "tsx": "4.22.4",
+    "typescript": "6.0.3",
+    "wrangler": "4.114.0"
+  },
+  "overrides": {
+    "sharp": "0.35.2"
+  }
+}

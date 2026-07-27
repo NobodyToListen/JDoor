@@ -1,0 +1,5 @@
+Contact: https://github.com/NobodyToListen/JDoor/security/advisories/new
+Expires: 2027-07-27T23:59:59Z
+Preferred-Languages: en
+Canonical: https://jdoor.ejupilabs.com/.well-known/security.txt
+Policy: https://github.com/NobodyToListen/JDoor/security/policy
