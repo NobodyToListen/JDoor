@@ -61,6 +61,11 @@ test("Cloudflare serves every asset through the security-header Worker", () => {
   assert.match(handler, /Content-Security-Policy/);
   assert.match(handler, /Strict-Transport-Security/);
   assert.doesNotMatch(
+    handler,
+    /^const\s+[A-Z][A-Z0-9_]*\s*=\s*new\s+Response\b/m,
+    "Response instances must be created inside request handlers, not at module scope."
+  );
+  assert.doesNotMatch(
     `${worker}\n${handler}`,
     /passThroughOnException|Math\.random|cloudflare\.com\/client\/v4/
   );
