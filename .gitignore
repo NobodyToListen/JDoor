@@ -1,16 +1,20 @@
-# Compiled class file
+# Build output
+target/
+out/
 *.class
 
-# Log file
+# Local tooling and IDE state
+.idea/
+.serena/
+.vscode/
+*.iml
+
+# Runtime data and logs
+.env
 *.log
+/audit/
 
-# BlueJ files
-*.ctxt
-
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
-
-# Package Files #
+# Packaged artifacts
 *.jar
 *.war
 *.nar
@@ -18,7 +22,12 @@
 *.zip
 *.tar.gz
 *.rar
+*.dmg
+*.msi
+*.exe
+*.deb
+*.AppImage
 
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+# JVM crash reports
 hs_err_pid*
-.idea
+replay_pid*
