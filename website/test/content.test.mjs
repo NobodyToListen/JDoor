@@ -82,3 +82,9 @@ test("layout contracts preserve readable type and touch targets", () => {
   assert.match(styles, /text-wrap:\s*balance/);
   assert.match(styles, /overflow-wrap:\s*anywhere/);
 });
+
+test("mutable shell assets use revisioned URLs", () => {
+  assert.match(html, /href="\/styles\.css\?v=\d+"/);
+  assert.match(html, /src="\/main\.js\?v=\d+"/);
+  assert.match(html, /href="\/site\.webmanifest\?v=\d+"/);
+});

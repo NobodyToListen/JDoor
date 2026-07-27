@@ -66,6 +66,9 @@ assert(styles.includes("@media (forced-colors: active)"), "Styles must support f
 assert(styles.includes("@media (max-width: 720px)"), "Styles must provide a compact layout.");
 assert(runtime.includes('aria-expanded'), "Mobile navigation must keep aria-expanded in sync.");
 assert(!/\bfetch\s*\(/.test(runtime), "Browser runtime must not make network requests.");
+assert(/href="\/styles\.css\?v=\d+"/.test(html), "Homepage stylesheet URL must be revisioned.");
+assert(/src="\/main\.js\?v=\d+"/.test(html), "Homepage runtime URL must be revisioned.");
+assert(/href="\/styles\.css\?v=\d+"/.test(notFound), "404 stylesheet URL must be revisioned.");
 
 assert(favicon.includes('id="door-frame"'), "Favicon must contain the JDoor frame.");
 assert(favicon.includes('id="consent-node"'), "Favicon must contain the consent node.");
