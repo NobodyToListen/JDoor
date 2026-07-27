@@ -1,17 +1,17 @@
 {
-  "sourceSha256": "ecc11f0c614ff6526ef37ef4714752666052b6755635f5c2e9e1e6de9b1d27ad",
+  "sourceSha256": "d062c5fd9aaf5ecd35e4e7ed14cbb7b170c3f2ea7b6657626056605d7dcb2f78",
   "palette": {
-    "background": "#0B0D10",
-    "surface": "#15191F",
-    "text": "#F4F1EA",
-    "action": "#FF6B35",
+    "background": "#F4F1EA",
+    "surface": "#FFFDF8",
+    "text": "#0D100F",
+    "action": "#EF5D32",
     "consent": "#45C486"
   },
   "outputs": {
     "jdoor-180.png": "555b81d1c84affb040c57be9b3d103ecb6cd60a3913443bb6dbadcd5a14e80d5",
     "jdoor-192.png": "389557664b3ea71a8c65ac9c25db2cc7ee6cf356d0b8f89ae386896da9097cf2",
     "jdoor-512.png": "18cd733852ae60c45381b950230924e5254877e69d51e82df640e5b83e367328",
-    "jdoor-preview.png": "599ee908f8226c1c57bcd505e239d684273e06524bd0d1d618bc69a247cfd405"
+    "jdoor-preview.png": "c9701774976b58f4c0d44a703299838a184b7e1cf9b2515a6f76f1f0388e4f19"
   },
   "width": 1200,
   "height": 630

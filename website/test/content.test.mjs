@@ -10,15 +10,18 @@ const [html, styles, wrangler, worker, handler] = await Promise.all([
   readFile(new URL("../worker/handler.ts", import.meta.url), "utf8")
 ]);
 
-test("the product story keeps consent ahead of capability", () => {
-  const consentIndex = html.indexOf('id="principles"');
+test("the product story starts with its origin and keeps permission ahead of capability", () => {
+  const storyIndex = html.indexOf('id="story"');
   const flowIndex = html.indexOf('id="flow"');
+  const trustIndex = html.indexOf('id="trust"');
   const boundaryIndex = html.indexOf('id="boundaries"');
-  assert(consentIndex > 0);
-  assert(consentIndex < flowIndex);
+  assert(storyIndex > 0);
+  assert(storyIndex < flowIndex);
+  assert(flowIndex < trustIndex);
   assert(flowIndex < boundaryIndex);
-  assert.match(html, /Every session\s+begins view-only/);
-  assert.match(html, /control.*host.*enable/isu);
+  assert.match(html, /began as a 2022 school networking project/iu);
+  assert.match(html, /starts view-only by default/iu);
+  assert.match(html, /host enables it for that session/iu);
   assert.match(html, /revoke/iu);
 });
 
@@ -44,6 +47,8 @@ test("security and privacy claims stay within repository evidence", () => {
   }
 
   assert.doesNotMatch(html, /zero risk|unhackable|military-grade|internet-ready|end-to-end encrypted/iu);
+  assert.doesNotMatch(html, /every viewer is verified/iu);
+  assert.match(html, /software checks the endpoint.*host decides the person/isu);
 });
 
 test("Cloudflare serves every asset through the security-header Worker", () => {
