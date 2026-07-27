@@ -26,9 +26,9 @@ assert((html.match(/<h1\b/g) ?? []).length === 1, "Homepage must have exactly on
 assert(html.includes("<main"), "Homepage must have a main landmark.");
 assert(html.includes('href="#main-content"'), "Homepage must provide a skip link.");
 assert(
-  [...html.matchAll(/<section[^>]+id="(principles|flow|security|privacy|boundaries|status)"/g)]
+  [...html.matchAll(/<section[^>]+id="(story|flow|trust|boundaries|status)"/g)]
     .map(([, id]) => id)
-    .join(",") === "principles,flow,security,privacy,boundaries,status",
+    .join(",") === "story,flow,trust,boundaries,status",
   "Homepage sections must follow the product narrative."
 );
 assert(html.includes("Pre-release"), "Homepage must state the pre-release status.");
@@ -52,7 +52,10 @@ const jsonLdMatch = html.match(/<script type="application\/ld\+json">([\s\S]*?)<
 assert(jsonLdMatch, "Homepage must include JSON-LD.");
 const structuredData = JSON.parse(jsonLdMatch[1]);
 assert(structuredData["@type"] === "SoftwareApplication", "JSON-LD must describe a software application.");
-assert(structuredData.name === "JDoor Assist", "JSON-LD has the wrong product name.");
+assert(
+  structuredData.name === "JDoor" && structuredData.alternateName === "JDoor Assist",
+  "JSON-LD has the wrong product name."
+);
 assert(structuredData.softwareVersion === "Pre-release", "JSON-LD must preserve pre-release status.");
 assert(structuredData.codeRepository === "https://github.com/NobodyToListen/JDoor", "JSON-LD has the wrong source repository.");
 

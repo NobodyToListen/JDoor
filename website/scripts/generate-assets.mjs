@@ -37,39 +37,56 @@ function createSocialSource(favicon) {
       .sans { font-family: "Segoe UI", Arial, sans-serif; }
       .mono { font-family: Consolas, monospace; }
     </style>
-    <pattern id="grid" width="56" height="56" patternUnits="userSpaceOnUse">
-      <path d="M56 0H0V56" fill="none" stroke="#F4F1EA" stroke-opacity=".045"/>
+    <pattern id="grid" width="64" height="64" patternUnits="userSpaceOnUse">
+      <path d="M64 0H0V64" fill="none" stroke="#0D100F" stroke-opacity=".055"/>
     </pattern>
   </defs>
-  <rect width="1200" height="630" fill="#0B0D10"/>
+  <rect width="1200" height="630" fill="#F4F1EA"/>
   <rect width="1200" height="630" fill="url(#grid)"/>
-  <rect x="32" y="32" width="1136" height="566" rx="28" fill="none" stroke="#303842"/>
-  <image href="${icon}" x="72" y="65" width="96" height="96"/>
-  <text x="190" y="118" class="sans" font-size="34" font-weight="700" letter-spacing="-1.5" fill="#F4F1EA">JDoor Assist</text>
-  <text x="192" y="145" class="mono" font-size="12" letter-spacing="1.4" fill="#A7AFBA">CONSENT-FIRST REMOTE ASSISTANCE</text>
-  <rect x="72" y="205" width="136" height="30" rx="15" fill="#3A2118" stroke="#FF6B35" stroke-opacity=".55"/>
-  <text x="140" y="225" class="mono" font-size="11" text-anchor="middle" letter-spacing="1.2" fill="#FF9A74">PRE-RELEASE</text>
-  <text x="72" y="322" class="sans" font-size="69" font-weight="700" letter-spacing="-4.2" fill="#F4F1EA">Remote help,</text>
-  <text x="72" y="397" class="sans" font-size="69" font-weight="700" letter-spacing="-4.2" fill="#FF6B35">with consent visible.</text>
-  <text x="76" y="454" class="sans" font-size="21" fill="#A7AFBA">Verified pairing · local approval · view-only by default</text>
-  <line x1="72" y1="520" x2="700" y2="520" stroke="#303842"/>
-  <text x="72" y="556" class="mono" font-size="12" letter-spacing="1.2" fill="#A7AFBA">TRUSTED LOCAL NETWORKS / NO BROWSER SESSION</text>
-  <rect x="754" y="64" width="380" height="502" rx="24" fill="#15191F" stroke="#303842"/>
-  <text x="788" y="103" class="mono" font-size="11" letter-spacing="1.2" fill="#A7AFBA">A SESSION STAYS HUMAN-GATED</text>
-  <line x1="802" y1="154" x2="802" y2="458" stroke="#303842" stroke-width="2"/>
-  <rect x="792" y="150" width="20" height="20" fill="#FF6B35"/>
-  <text x="838" y="166" class="sans" font-size="20" font-weight="700" fill="#F4F1EA">One-time pairing</text>
-  <text x="838" y="190" class="sans" font-size="14" fill="#A7AFBA">Token + exact certificate pin</text>
-  <rect x="792" y="252" width="20" height="20" fill="#FF6B35"/>
-  <text x="838" y="268" class="sans" font-size="20" font-weight="700" fill="#F4F1EA">Code comparison</text>
-  <text x="838" y="292" class="sans" font-size="14" fill="#A7AFBA">Both people verify the same host</text>
-  <rect x="792" y="354" width="20" height="20" fill="#45C486"/>
-  <text x="838" y="370" class="sans" font-size="20" font-weight="700" fill="#F4F1EA">Local approval</text>
-  <text x="838" y="394" class="sans" font-size="14" fill="#A7AFBA">The host decides who enters</text>
-  <rect x="792" y="456" width="20" height="20" fill="#45C486"/>
-  <text x="838" y="472" class="sans" font-size="20" font-weight="700" fill="#F4F1EA">View-only start</text>
-  <text x="838" y="496" class="sans" font-size="14" fill="#A7AFBA">Control stays explicit and revocable</text>
-  <text x="1100" y="543" class="mono" font-size="11" text-anchor="end" letter-spacing="1.1" fill="#66717D">JDOOR.EJUPILABS.COM</text>
+  <rect x="31" y="31" width="1138" height="568" fill="none" stroke="#0D100F"/>
+  <rect x="31" y="31" width="10" height="568" fill="#EF5D32"/>
+
+  <image href="${icon}" x="72" y="67" width="72" height="72"/>
+  <text x="166" y="107" class="sans" font-size="31" font-weight="700" letter-spacing="-1.4" fill="#0D100F">JDoor</text>
+  <text x="168" y="132" class="mono" font-size="11" letter-spacing="1.35" fill="#626761">REMOTE ASSISTANCE / PRE-RELEASE</text>
+
+  <line x1="72" y1="184" x2="690" y2="184" stroke="#0D100F"/>
+  <text x="72" y="212" class="mono" font-size="11" letter-spacing="1.25" fill="#BD4627">A 2022 SCHOOL PROJECT, REBUILT</text>
+  <text x="72" y="297" class="sans" font-size="64" font-weight="700" letter-spacing="-3.8" fill="#0D100F">The person at the screen</text>
+  <text x="72" y="370" class="sans" font-size="64" font-style="italic" letter-spacing="-3.6" fill="#BD4627">stays in charge.</text>
+  <text x="76" y="421" class="sans" font-size="20" fill="#626761">Short-lived pairing · local approval · view-only start</text>
+
+  <line x1="72" y1="500" x2="690" y2="500" stroke="#0D100F" stroke-opacity=".25"/>
+  <text x="72" y="536" class="mono" font-size="11" letter-spacing="1.1" fill="#626761">TRUSTED LAN / TLS 1.2–1.3 / OPEN SOURCE</text>
+  <text x="690" y="536" class="mono" font-size="11" text-anchor="end" letter-spacing="1.1" fill="#626761">JDOOR.EJUPILABS.COM</text>
+
+  <rect x="754" y="68" width="372" height="486" fill="#FFFDF8" stroke="#0D100F"/>
+  <text x="780" y="100" class="mono" font-size="10" letter-spacing="1.15" fill="#626761">ONE REMOTE-SUPPORT SESSION</text>
+  <text x="1100" y="100" class="mono" font-size="10" text-anchor="end" letter-spacing="1.15" fill="#626761">HOST / LOCAL</text>
+  <line x1="754" y1="120" x2="1126" y2="120" stroke="#0D100F"/>
+
+  <text x="782" y="190" class="mono" font-size="10" letter-spacing="1.15" fill="#626761">REMOTE HELPER</text>
+  <text x="782" y="218" class="sans" font-size="21" font-weight="700" fill="#0D100F">asks to</text>
+  <text x="782" y="242" class="sans" font-size="21" font-weight="700" fill="#0D100F">view</text>
+  <text x="782" y="264" class="sans" font-size="12" fill="#626761">link shared privately</text>
+  <text x="782" y="297" class="mono" font-size="10" letter-spacing="1.1" fill="#BD4627">REQUEST</text>
+  <line x1="846" y1="293" x2="890" y2="293" stroke="#EF5D32"/>
+  <path d="M884 287l8 6-8 6" fill="none" stroke="#EF5D32" stroke-width="2"/>
+
+  <rect x="910" y="170" width="166" height="270" fill="#E8E3D9" stroke="#0D100F" stroke-width="7"/>
+  <text x="910" y="156" class="mono" font-size="10" letter-spacing="1.1" fill="#0D100F">HOST DEVICE</text>
+  <text x="1048" y="392" class="mono" font-size="8" text-anchor="middle" letter-spacing=".8" fill="#626761">VIEW</text>
+  <text x="1048" y="405" class="mono" font-size="8" text-anchor="middle" letter-spacing=".8" fill="#626761">ONLY</text>
+  <rect x="910" y="170" width="112" height="270" fill="#0D100F"/>
+  <rect x="1012" y="170" width="10" height="270" fill="#EF5D32"/>
+  <text x="928" y="207" class="mono" font-size="9" letter-spacing="1" fill="#F4F1EA">LOCAL</text>
+  <text x="928" y="224" class="mono" font-size="9" letter-spacing="1" fill="#F4F1EA">DECISION</text>
+  <rect x="992" y="298" width="15" height="15" fill="#45C486"/>
+
+  <line x1="754" y1="468" x2="1126" y2="468" stroke="#0D100F"/>
+  <rect x="780" y="495" width="11" height="11" fill="#45C486"/>
+  <text x="802" y="505" class="mono" font-size="10" letter-spacing="1" fill="#2F8B63">APPROVE HERE</text>
+  <text x="1100" y="505" class="mono" font-size="10" text-anchor="end" letter-spacing="1" fill="#626761">STOP ANY TIME</text>
 </svg>`;
 }
 
@@ -126,10 +143,10 @@ if (CHECK_ONLY) {
       {
         sourceSha256,
         palette: {
-          background: "#0B0D10",
-          surface: "#15191F",
-          text: "#F4F1EA",
-          action: "#FF6B35",
+          background: "#F4F1EA",
+          surface: "#FFFDF8",
+          text: "#0D100F",
+          action: "#EF5D32",
           consent: "#45C486"
         },
         outputs,

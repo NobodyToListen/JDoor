@@ -3,22 +3,22 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#0B0D10" />
-    <meta name="color-scheme" content="dark" />
+    <meta name="theme-color" content="#F4F1EA" />
+    <meta name="color-scheme" content="light" />
     <meta
       name="description"
-      content="JDoor Assist is consent-first, encrypted remote assistance for trusted local networks, with verified pairing, local approval and view-only sessions by default."
+      content="JDoor is a pre-release, open-source desktop tool for helping someone over a trusted local network. Pairing is short-lived, approval happens on the shared computer and every session starts view-only."
     />
     <meta name="author" content="Djenis Ejupi and contributors" />
     <meta name="robots" content="index, follow" />
     <link rel="canonical" href="https://jdoor.ejupilabs.com/" />
 
     <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="JDoor Assist" />
-    <meta property="og:title" content="JDoor Assist — Consent-first remote assistance" />
+    <meta property="og:site_name" content="JDoor" />
+    <meta property="og:title" content="JDoor — Remote assistance with local approval" />
     <meta
       property="og:description"
-      content="Verified pairing, local approval and view-only sessions by default. Built for authorized help on trusted local networks."
+      content="A 2022 school networking project rebuilt around short-lived pairing, local approval and a view-only start."
     />
     <meta property="og:url" content="https://jdoor.ejupilabs.com/" />
     <meta property="og:image" content="https://jdoor.ejupilabs.com/social/jdoor-preview.png" />
@@ -27,18 +27,18 @@
     <meta property="og:image:height" content="630" />
     <meta
       property="og:image:alt"
-      content="JDoor Assist identity beside a four-step consent path: one-time pairing, code comparison, local approval and a view-only start."
+      content="JDoor identity beside an editorial diagram showing a remote helper asking to enter and the local host deciding."
     />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="JDoor Assist — Consent-first remote assistance" />
+    <meta name="twitter:title" content="JDoor — Remote assistance with local approval" />
     <meta
       name="twitter:description"
-      content="Verified pairing, local approval and view-only sessions by default."
+      content="The person sharing the screen approves locally and keeps control of the session."
     />
     <meta name="twitter:image" content="https://jdoor.ejupilabs.com/social/jdoor-preview.png" />
     <meta
       name="twitter:image:alt"
-      content="JDoor Assist identity beside its consent-first session path."
+      content="JDoor identity and a local-approval session boundary."
     />
 
     <script type="application/ld+json">
@@ -46,9 +46,10 @@
         "@context": "https://schema.org",
         "@type": "SoftwareApplication",
         "@id": "https://jdoor.ejupilabs.com/#product",
-        "name": "JDoor Assist",
+        "name": "JDoor",
+        "alternateName": "JDoor Assist",
         "url": "https://jdoor.ejupilabs.com/",
-        "description": "Consent-first, encrypted remote assistance for trusted local networks.",
+        "description": "Pre-release, open-source remote assistance for trusted local networks, with short-lived pairing, local approval and a view-only start.",
         "applicationCategory": "RemoteDesktopApplication",
         "applicationSubCategory": "Authorized remote assistance",
         "operatingSystem": "Desktop systems with Java 21",
@@ -77,7 +78,7 @@
       }
     </script>
 
-    <title>JDoor Assist — Consent-first remote assistance</title>
+    <title>JDoor — Remote assistance with local approval</title>
     <link rel="icon" href="/favicon.svg?v=1" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/icons/jdoor-180.png?v=1" sizes="180x180" />
     <link rel="manifest" href="/site.webmanifest" />
@@ -89,9 +90,10 @@
 
     <header class="site-header" data-header>
       <div class="site-header__inner shell">
-        <a class="brand" href="#top" aria-label="JDoor Assist home">
-          <img src="/favicon.svg" width="36" height="36" alt="" />
-          <span>JDoor <strong>Assist</strong></span>
+        <a class="brand" href="#top" aria-label="JDoor home">
+          <img src="/favicon.svg" width="40" height="40" alt="" />
+          <span class="brand__name">JDoor</span>
+          <span class="brand__descriptor">Remote assistance</span>
         </a>
 
         <nav
@@ -100,10 +102,10 @@
           aria-label="Primary navigation"
           data-site-nav
         >
-          <a href="#principles">Principles</a>
-          <a href="#flow">How it works</a>
-          <a href="#security">Trust model</a>
-          <a href="#boundaries">Boundaries</a>
+          <a href="#story">The project</a>
+          <a href="#flow">A session</a>
+          <a href="#trust">Trust &amp; privacy</a>
+          <a href="#boundaries">Limits</a>
           <a href="#status">Status</a>
         </nav>
 
@@ -136,20 +138,21 @@
           <div class="hero__copy">
             <div class="eyebrow">
               <span class="signal-node signal-node--action" aria-hidden="true"></span>
-              <span>Pre-release / trusted local networks</span>
+              <span>Open-source desktop project</span>
+              <span>Pre-release</span>
             </div>
             <h1 id="hero-title">
-              Remote help that keeps
-              <span>consent visible</span><i aria-hidden="true">.</i>
+              The person at the screen
+              <span>stays in charge.</span>
             </h1>
             <p class="hero__lead">
-              JDoor Assist is a desktop tool for direct, encrypted screen sharing between people
-              who trust each other. Every viewer is verified and approved locally. Every session
-              begins view-only.
+              JDoor began as a 2022 school networking project. Its rebuild replaced invisible
+              remote access with a visible host, short-lived pairing, local approval and a session
+              that starts view-only by default.
             </p>
             <div class="hero__actions">
-              <a class="button button--action" href="#flow">
-                <span>Follow the consent flow</span><span aria-hidden="true">↓</span>
+              <a class="button button--dark" href="#flow">
+                <span>See one session</span><span aria-hidden="true">↓</span>
               </a>
               <a
                 class="text-link"
@@ -157,452 +160,329 @@
                 target="_blank"
                 rel="noreferrer"
               >
-                <span>Review the source</span><span aria-hidden="true">↗</span>
+                <span>Read the source</span><span aria-hidden="true">↗</span>
                 <span class="sr-only">opens in a new tab</span>
               </a>
-            </div>
-            <div class="release-note">
-              <span class="status-dot" aria-hidden="true"></span>
-              <p>
-                <strong>Pre-release.</strong> Source and technical documentation are public;
-                community builds remain unsigned.
-              </p>
             </div>
           </div>
 
           <div
-            class="consent-map"
+            class="door-study"
             role="img"
-            aria-label="A host shares a one-time pairing link with a trusted helper, verifies the same code, approves locally and starts a view-only session."
+            aria-label="A remote helper requests access while the host makes the local decision. The approved session begins view-only and can be stopped at any time."
           >
-            <div class="consent-map__header">
-              <span>Session boundary</span><span>01 / 04</span>
+            <div class="door-study__header">
+              <span>One remote-support session</span>
+              <span>Host / local</span>
             </div>
-            <div class="consent-map__people">
-              <div>
-                <span class="person-icon" aria-hidden="true"></span>
-                <strong>Host</strong>
-                <small>Owns the screen</small>
+            <div class="door-study__stage">
+              <div class="door-study__helper">
+                <span>Remote helper</span>
+                <strong>asks to view</strong>
+                <small>Link shared privately</small>
+                <div class="door-study__request" aria-hidden="true">
+                  <span>Request</span><i></i><b>→</b>
+                </div>
               </div>
-              <div class="consent-map__channel">
-                <span></span>
-                <em>trusted channel</em>
-                <span></span>
-              </div>
-              <div>
-                <span class="person-icon person-icon--helper" aria-hidden="true"></span>
-                <strong>Helper</strong>
-                <small>Requests access</small>
+              <div class="door-study__frame">
+                <span class="door-study__lintel">Host device</span>
+                <div class="door-study__room">
+                  <span>Mode</span>
+                  <strong>View</strong>
+                  <b>only</b>
+                </div>
+                <div class="door-study__leaf">
+                  <span>Local<br />decision</span>
+                  <i aria-hidden="true"></i>
+                </div>
               </div>
             </div>
-            <ol class="consent-map__steps">
-              <li>
-                <span>01</span>
-                <div><strong>Pair once</strong><small>Token + certificate pin</small></div>
-                <i aria-hidden="true"></i>
-              </li>
-              <li>
-                <span>02</span>
-                <div><strong>Compare</strong><small>One visible verification code</small></div>
-                <i aria-hidden="true"></i>
-              </li>
-              <li class="is-consent">
-                <span>03</span>
-                <div><strong>Approve locally</strong><small>The host opens the door</small></div>
-                <i aria-hidden="true"></i>
-              </li>
-              <li class="is-consent">
-                <span>04</span>
-                <div><strong>View first</strong><small>Control remains off</small></div>
-                <i aria-hidden="true"></i>
-              </li>
-            </ol>
-            <div class="consent-map__footer">
-              <span>Visible host</span><span>Immediate stop</span>
+            <div class="door-study__footer">
+              <span><i aria-hidden="true"></i> Approve here</span>
+              <span>Stop or revoke at any time</span>
             </div>
           </div>
         </div>
 
-        <div class="trust-rail shell" aria-label="Core product properties">
-          <span>LOCAL APPROVAL</span>
-          <span>PINNED TLS</span>
-          <span>ONE-TIME PAIRING</span>
-          <span>VIEW-ONLY DEFAULT</span>
-        </div>
       </section>
 
-      <section class="section principles" id="principles" aria-labelledby="principles-title">
-        <div class="section-heading shell">
-          <div class="section-index">
-            <span class="signal-node signal-node--consent" aria-hidden="true"></span>
-            <span>Product principles</span>
-            <span>01 / 06</span>
-          </div>
-          <div class="section-heading__grid">
-            <h2 id="principles-title">Consent is not a prompt. It is the product boundary.</h2>
-            <p>
-              Remote assistance becomes safer when the host can see who is asking, decide what is
-              allowed and end access without negotiation.
-            </p>
-          </div>
+      <section class="section story" id="story" aria-labelledby="story-title">
+        <div class="section-index section-index--light shell">
+          <span><i class="signal-node signal-node--action" aria-hidden="true"></i> The project</span>
         </div>
-
-        <div class="principle-grid shell">
-          <article>
-            <span class="principle-grid__number">01</span>
-            <div class="principle-icon principle-icon--approval" aria-hidden="true">
-              <i></i><i></i>
-            </div>
-            <h3>Approval stays local</h3>
-            <p>
-              The host sees the helper’s device name, network address and verification code
-              before accepting the connection.
+        <div class="story__grid shell">
+          <div class="story__year" aria-hidden="true">
+            <strong>2022</strong>
+            <span>School networking project</span>
+          </div>
+          <div class="story__copy">
+            <h2 id="story-title">
+              It began by connecting two computers. The rebuild changed the question.
+            </h2>
+            <p class="story__lead">
+              JDoor was co-created by Djenis Ejupi and NobodyToListen as a school experiment in
+              networking and remote control. The first version proved the connection could work.
+              Years later, Djenis rebuilt it around a narrower and more useful premise: the person
+              sharing the machine should remain visibly present in every decision.
             </p>
-          </article>
-          <article>
-            <span class="principle-grid__number">02</span>
-            <div class="principle-icon principle-icon--view" aria-hidden="true">
-              <i></i>
-            </div>
-            <h3>Viewing comes first</h3>
-            <p>
-              An approved session shares the primary display but ignores mouse and keyboard input
-              until the host enables control.
+            <dl class="story__before-after">
+              <div>
+                <dt>Then / prove the connection</dt>
+                <dd>
+                  An unauthenticated remote-access prototype focused on moving screen and input
+                  data between two machines.
+                </dd>
+              </div>
+              <div>
+                <dt>Now / define the boundary</dt>
+                <dd>
+                  A short-lived invitation, an exact endpoint check, local approval and permission
+                  that belongs only to the current session.
+                </dd>
+              </div>
+            </dl>
+            <p class="story__credit">
+              The modernization covers product direction, security, UX, testing and release
+              engineering while preserving the project’s shared origin.
             </p>
-          </article>
-          <article>
-            <span class="principle-grid__number">03</span>
-            <div class="principle-icon principle-icon--revoke" aria-hidden="true">
-              <i></i><i></i>
-            </div>
-            <h3>Permission is reversible</h3>
-            <p>
-              Control is scoped to one session. The host can revoke it instantly, releasing every
-              tracked key and pointer state.
-            </p>
-          </article>
-          <article>
-            <span class="principle-grid__number">04</span>
-            <div class="principle-icon principle-icon--visible" aria-hidden="true">
-              <i></i>
-            </div>
-            <h3>Nothing hides</h3>
-            <p>
-              There is no unattended access, persistence, remote shell, stealth mode or
-              background foothold.
-            </p>
-          </article>
+          </div>
         </div>
       </section>
 
       <section class="section flow" id="flow" aria-labelledby="flow-title">
+        <div class="section-index shell">
+          <span><i class="signal-node signal-node--action" aria-hidden="true"></i> A session</span>
+        </div>
         <div class="section-heading shell">
-          <div class="section-index section-index--light">
-            <span class="signal-node signal-node--action" aria-hidden="true"></span>
-            <span>Session flow</span>
-            <span>02 / 06</span>
-          </div>
-          <div class="section-heading__grid">
-            <h2 id="flow-title">Five deliberate steps. No invisible hand-off.</h2>
-            <p>
-              Pairing combines cryptographic checks with a human decision. Neither one substitutes
-              for the other.
-            </p>
-          </div>
+          <h2 id="flow-title">One session, from invitation to screen sharing.</h2>
+          <p>
+            The application checks the route and constrains the protocol. Both people compare the
+            same code; the host makes the final decision.
+          </p>
         </div>
 
         <div class="flow-list shell">
           <article class="flow-step">
             <span class="flow-step__number">01</span>
             <div>
-              <span class="technical-label">HOST / CREATE</span>
-              <h3>Create an ephemeral identity</h3>
+              <span class="technical-label">Host / prepare</span>
+              <h3>Create a short-lived invitation</h3>
             </div>
             <p>
-              The host creates a fresh P-256 certificate, an exact SHA-256 fingerprint and a
+              The host creates a fresh P-256 certificate, its exact SHA-256 fingerprint and a
               random 128-bit token that expires after 10 minutes.
             </p>
           </article>
           <article class="flow-step">
             <span class="flow-step__number">02</span>
             <div>
-              <span class="technical-label">PEOPLE / SHARE</span>
-              <h3>Send one complete link</h3>
+              <span class="technical-label">People / share</span>
+              <h3>Send the complete link privately</h3>
             </div>
             <p>
-              The host shares the one-time <code>jdoor://</code> pairing link through a trusted,
-              out-of-band channel with the intended helper.
+              The host sends the one-time <code>jdoor://</code> link to the intended helper through
+              a separate, trusted channel.
             </p>
           </article>
           <article class="flow-step">
             <span class="flow-step__number">03</span>
             <div>
-              <span class="technical-label">CLIENT / VERIFY</span>
-              <h3>Pin the exact endpoint</h3>
+              <span class="technical-label">Client / check</span>
+              <h3>Check the destination</h3>
             </div>
             <p>
-              The helper’s client checks the advertised host and the exact certificate fingerprint
-              before sending the single-use token inside TLS 1.2/1.3.
+              The helper’s application checks the advertised host and exact certificate
+              fingerprint before presenting the single-use token inside TLS 1.2/1.3.
             </p>
           </article>
-          <article class="flow-step flow-step--consent">
+          <article class="flow-step flow-step--human">
             <span class="flow-step__number">04</span>
             <div>
-              <span class="technical-label">HOST / APPROVE</span>
-              <h3>Compare, then approve</h3>
+              <span class="technical-label">People / decide</span>
+              <h3>Compare the code and approve</h3>
             </div>
             <p>
-              Both people compare the visible code. The host reviews the request and approves it
-              on the machine being shared.
+              Both computers show the same verification code. The host reviews the request and
+              approves it on the machine being shared.
             </p>
           </article>
-          <article class="flow-step flow-step--consent">
+          <article class="flow-step flow-step--human">
             <span class="flow-step__number">05</span>
             <div>
-              <span class="technical-label">SESSION / VIEW</span>
-              <h3>Start view-only</h3>
+              <span class="technical-label">Session / view</span>
+              <h3>Show the screen without control</h3>
             </div>
             <p>
-              Frames begin only after approval. Remote input stays disabled unless the host
-              explicitly enables it for that session.
+              Primary-display frames begin only after approval. Remote input stays disabled unless
+              the host enables it for that session.
             </p>
           </article>
         </div>
 
-        <aside class="browser-boundary shell" aria-label="Website boundary">
-          <div aria-hidden="true">
-            <span></span><span></span><span></span>
-          </div>
+        <aside class="website-boundary shell" aria-label="Website boundary">
+          <span aria-hidden="true">WWW / ≠ / SESSION</span>
           <p>
             <strong>This website does not start or join remote sessions.</strong>
-            It explains the desktop product and links to inspectable source and documentation.
+            It documents the desktop project; nothing entered or clicked here can connect to
+            another computer.
           </p>
         </aside>
       </section>
 
-      <section class="section security" id="security" aria-labelledby="security-title">
+      <section class="section trust" id="trust" aria-labelledby="trust-title">
+        <div class="section-index shell">
+          <span><i class="signal-node signal-node--consent" aria-hidden="true"></i> Trust &amp; privacy</span>
+        </div>
         <div class="section-heading shell">
-          <div class="section-index">
-            <span class="signal-node signal-node--action" aria-hidden="true"></span>
-            <span>Trust model</span>
-            <span>03 / 06</span>
-          </div>
-          <div class="section-heading__grid">
-            <h2 id="security-title">Pairing proves the endpoint. The host decides the person.</h2>
-            <p>
-              JDoor does not outsource trust to an account service. It binds one short-lived link
-              to one TLS identity, then asks the host for visible consent.
-            </p>
-          </div>
+          <h2 id="trust-title">The software checks the endpoint. The host decides the person.</h2>
+          <p>
+            Connection evidence can narrow a request to one machine. Trust in the person—and every
+            permission that follows—remains a local decision.
+          </p>
         </div>
 
-        <div class="security-layout shell">
-          <div class="verification-card" aria-label="Illustration of a verified pairing record">
-            <div class="verification-card__top">
-              <span>PAIRING RECORD</span>
-              <span class="verified-badge"><i aria-hidden="true"></i> VERIFIED LOCALLY</span>
-            </div>
+        <div class="decision-grid shell">
+          <article>
+            <span class="decision-grid__label">Software checks</span>
+            <h3>Connection evidence</h3>
             <dl>
               <div>
-                <dt>ENDPOINT</dt>
-                <dd>ADVERTISED HOST</dd>
+                <dt>Endpoint</dt>
+                <dd>Exact SHA-256 certificate pin for the advertised host</dd>
               </div>
               <div>
-                <dt>CERTIFICATE</dt>
-                <dd>SHA-256 / EXACT PIN</dd>
+                <dt>Invitation</dt>
+                <dd>Random 128-bit token, single-use and short-lived</dd>
               </div>
               <div>
-                <dt>TOKEN</dt>
-                <dd>128-BIT / SINGLE-USE</dd>
-              </div>
-              <div>
-                <dt>APPROVAL</dt>
-                <dd>HOST / LOCAL</dd>
+                <dt>Protocol</dt>
+                <dd>TLS 1.2/1.3 plus explicit type, size and range bounds</dd>
               </div>
             </dl>
-            <div class="verification-code">
-              <span>COMPARE ON BOTH SCREENS</span>
-              <strong>•• •• ••</strong>
-            </div>
-          </div>
-
-          <div class="security-facts">
-            <article>
-              <span>01</span>
+          </article>
+          <article class="decision-grid__human">
+            <span class="decision-grid__label">The host decides</span>
+            <h3>Human permission</h3>
+            <dl>
               <div>
-                <h3>Encrypted transport</h3>
-                <p>TLS 1.2/1.3 protects the direct session from passive network capture.</p>
+                <dt>Person</dt>
+                <dd>Whether the helper behind the checked endpoint is expected</dd>
               </div>
-            </article>
-            <article>
-              <span>02</span>
               <div>
-                <h3>Exact certificate pin</h3>
-                <p>
-                  The fingerprint in the pairing link must match the certificate presented by the
-                  advertised host.
-                </p>
+                <dt>Capability</dt>
+                <dd>Whether to remain view-only or enable mouse and keyboard input</dd>
               </div>
-            </article>
-            <article>
-              <span>03</span>
               <div>
-                <h3>Bounded protocol</h3>
-                <p>
-                  Version, type, size, range and UTF-8 checks reject malformed messages before
-                  they become unbounded work.
-                </p>
+                <dt>End</dt>
+                <dd>When to revoke control or stop the session immediately</dd>
               </div>
-            </article>
-            <article>
-              <span>04</span>
-              <div>
-                <h3>One active viewer</h3>
-                <p>
-                  Pending handshakes, setup time, frame sizes, queues and session state all have
-                  explicit limits.
-                </p>
-              </div>
-            </article>
-          </div>
+            </dl>
+          </article>
         </div>
-      </section>
 
-      <section class="section privacy" id="privacy" aria-labelledby="privacy-title">
-        <div class="section-heading shell">
-          <div class="section-index section-index--light">
-            <span class="signal-node signal-node--consent" aria-hidden="true"></span>
-            <span>Privacy and audit</span>
-            <span>04 / 06</span>
-          </div>
-          <div class="section-heading__grid">
-            <h2 id="privacy-title">Local by design. Accountable without recording the session.</h2>
+        <div class="privacy-ledger shell">
+          <div class="privacy-ledger__intro">
+            <span class="technical-label">Local audit / not a recording</span>
             <p>
-              Screen frames and input events travel only between the approved desktop endpoints.
-              The product has no telemetry, analytics, crash upload, account service or public
-              relay.
+              JDoor has no telemetry, analytics, crash upload, account service or public relay.
+              It keeps a bounded local trail of security events—not a copy of the screen or what
+              was typed.
             </p>
           </div>
-        </div>
-
-        <div class="privacy-layout shell">
-          <div class="privacy-copy">
-            <p class="privacy-copy__lead">
-              The host keeps a bounded record of security events, not a copy of what happened on
-              screen.
-            </p>
-            <div class="privacy-points">
-              <article>
-                <span>STORED LOCALLY</span>
-                <p>Timestamp, event type, remote network address and a short lifecycle description.</p>
-              </article>
-              <article>
-                <span>NEVER LOGGED</span>
-                <p>Pairing tokens, private keys, screen pixels, typed content and raw input events.</p>
-              </article>
-              <article>
-                <span>BOUNDED</span>
-                <p>Each daily JSONL file is capped at 5 MiB, with 30 days of application-managed retention.</p>
-              </article>
+          <dl class="privacy-ledger__rows">
+            <div>
+              <dt>Local trail</dt>
+              <dd>Time, event type, remote address and a short lifecycle description.</dd>
             </div>
-          </div>
-
-          <div class="audit-window" aria-label="Example categories in a local audit log">
-            <div class="audit-window__bar">
-              <span></span><span></span><span></span>
-              <strong>LOCAL AUDIT / JSONL</strong>
+            <div>
+              <dt>Never content</dt>
+              <dd>No tokens, private keys, screen pixels, typed content or raw input events.</dd>
             </div>
-            <div class="audit-window__path">~/.jdoor-assist/audit/</div>
-            <div class="audit-window__entries">
-              <p><span>09:41:02</span><strong>HOST_READY</strong><em>local</em></p>
-              <p><span>09:42:11</span><strong>VIEWER_APPROVED</strong><em>address</em></p>
-              <p><span>09:42:12</span><strong>VIEW_ONLY</strong><em>session</em></p>
-              <p><span>09:47:36</span><strong>CONTROL_REVOKED</strong><em>host</em></p>
-              <p><span>09:48:04</span><strong>SESSION_ENDED</strong><em>clean</em></p>
+            <div>
+              <dt>Retention</dt>
+              <dd>Daily JSONL, capped at 5 MiB and retained by the app for 30 days.</dd>
             </div>
-            <div class="audit-window__footer">
-              <span>NO PIXELS</span><span>NO TOKENS</span><span>NO KEYSTROKES</span>
-            </div>
-          </div>
+          </dl>
         </div>
       </section>
 
       <section class="section boundaries" id="boundaries" aria-labelledby="boundaries-title">
+        <div class="section-index shell">
+          <span><i class="signal-node signal-node--action" aria-hidden="true"></i> Limits</span>
+        </div>
         <div class="section-heading shell">
-          <div class="section-index">
-            <span class="signal-node signal-node--action" aria-hidden="true"></span>
-            <span>Deliberate limits</span>
-            <span>05 / 06</span>
-          </div>
-          <div class="section-heading__grid">
-            <h2 id="boundaries-title">A smaller capability surface is part of the security model.</h2>
-            <p>
-              JDoor is built for one host and one trusted helper on a local network. It does not
-              pretend to be an internet-facing remote-management platform.
-            </p>
-          </div>
+          <h2 id="boundaries-title">The missing features are deliberate.</h2>
+          <p>
+            JDoor is for one person helping another on a trusted local network. It is not an
+            internet-facing remote-management platform, and it does not hide an administration
+            layer behind the support session.
+          </p>
         </div>
 
-        <div class="boundary-grid shell">
-          <div class="boundary-grid__included">
-            <span class="technical-label">IN SCOPE</span>
-            <h3>Authorized, visible support</h3>
+        <div class="scope-grid shell">
+          <article class="scope-grid__included">
+            <span class="technical-label">Designed for</span>
+            <h3>A visible, approved session</h3>
             <ul>
-              <li><span aria-hidden="true">+</span>Direct LAN connection</li>
-              <li><span aria-hidden="true">+</span>One approved viewer</li>
-              <li><span aria-hidden="true">+</span>Primary-display sharing</li>
-              <li><span aria-hidden="true">+</span>Optional, revocable input</li>
-              <li><span aria-hidden="true">+</span>Local, bounded audit events</li>
+              <li><span aria-hidden="true">+</span> Direct connection on a trusted LAN</li>
+              <li><span aria-hidden="true">+</span> One approved viewer</li>
+              <li><span aria-hidden="true">+</span> Primary-display sharing</li>
+              <li><span aria-hidden="true">+</span> Optional, revocable input</li>
+              <li><span aria-hidden="true">+</span> Local, bounded audit events</li>
             </ul>
-          </div>
-          <div class="boundary-grid__excluded">
-            <span class="technical-label">INTENTIONALLY ABSENT</span>
-            <h3>No hidden administration layer</h3>
+          </article>
+          <article class="scope-grid__excluded">
+            <span class="technical-label">Not part of JDoor</span>
+            <h3>Administration in the background</h3>
             <ul>
-              <li><span aria-hidden="true">−</span>Unattended access or persistence</li>
-              <li><span aria-hidden="true">−</span>Remote shell or privilege escalation</li>
-              <li><span aria-hidden="true">−</span>File or clipboard transfer</li>
-              <li><span aria-hidden="true">−</span>Webcam, microphone or stealth capture</li>
-              <li><span aria-hidden="true">−</span>Public relay, accounts or NAT traversal</li>
+              <li><span aria-hidden="true">−</span> Unattended access or persistence</li>
+              <li><span aria-hidden="true">−</span> Remote shell or privilege escalation</li>
+              <li><span aria-hidden="true">−</span> File or clipboard transfer</li>
+              <li><span aria-hidden="true">−</span> Webcam, microphone or stealth capture</li>
+              <li><span aria-hidden="true">−</span> Public relay, accounts or NAT traversal</li>
             </ul>
-          </div>
+          </article>
         </div>
 
-        <p class="network-warning shell">
-          <strong>Network boundary:</strong> do not expose the default port directly to the
-          internet. JDoor currently assumes a trusted local network and an out-of-band channel for
-          the complete pairing link.
-        </p>
+        <div class="boundary-notes shell">
+          <p>
+            <strong>Network boundary.</strong> Use JDoor only on a trusted LAN, share the complete
+            pairing link through a separate trusted channel and do not expose port 8443 directly
+            to the internet.
+          </p>
+          <p>
+            <strong>Residual risk.</strong> An approved helper can see the shared display and, while
+            the host enables control, act through the host’s existing user session.
+          </p>
+        </div>
       </section>
 
       <section class="section status" id="status" aria-labelledby="status-title">
         <div class="status__inner shell">
           <div class="section-index section-index--light">
-            <span class="signal-node signal-node--consent" aria-hidden="true"></span>
-            <span>Project status</span>
-            <span>06 / 06</span>
+            <span><i class="signal-node signal-node--action" aria-hidden="true"></i> Current status</span>
           </div>
 
           <div class="status__content">
             <div>
-              <span class="status-label"><i aria-hidden="true"></i> PRE-RELEASE</span>
-              <h2 id="status-title">Inspect the work before you trust the tool.</h2>
+              <span class="status-label"><i aria-hidden="true"></i> Pre-release</span>
+              <h2 id="status-title">JDoor is currently a pre-release codebase.</h2>
             </div>
             <div class="status__copy">
               <p>
-                JDoor Assist is not presented here as a finished public download. The source,
-                threat model, architecture and privacy boundaries are available for review.
-                Community builds are currently unsigned and may trigger an unverified-publisher
-                warning.
+                The source, architecture, threat model and privacy documentation are available for
+                inspection. Community builds are unsigned and may trigger an unverified-publisher
+                warning. If you are evaluating the project, begin with the threat model and build
+                the desktop application locally.
               </p>
               <div class="status__actions">
                 <a
-                  class="button button--consent"
+                  class="button button--action"
                   href="https://github.com/NobodyToListen/JDoor"
                   target="_blank"
                   rel="noreferrer"
                 >
-                  <span>Review source on GitHub</span><span aria-hidden="true">↗</span>
+                  <span>Inspect the repository</span><span aria-hidden="true">↗</span>
                   <span class="sr-only">opens in a new tab</span>
                 </a>
                 <a
@@ -611,7 +491,7 @@
                   target="_blank"
                   rel="noreferrer"
                 >
-                  <span>Build from source</span><span aria-hidden="true">↗</span>
+                  <span>Build it locally</span><span aria-hidden="true">↗</span>
                   <span class="sr-only">opens in a new tab</span>
                 </a>
               </div>
@@ -657,20 +537,21 @@
         <div class="site-footer__brand">
           <a class="brand brand--footer" href="#top" aria-label="Back to top">
             <img src="/favicon.svg" width="52" height="52" alt="" />
-            <span>JDoor <strong>Assist</strong></span>
+            <span class="brand__name">JDoor</span>
           </a>
-          <p>Consent-first remote assistance for trusted local networks.</p>
+          <p>Open-source remote assistance for trusted local networks.</p>
         </div>
         <div class="site-footer__meta">
           <p>
-            The original 2022 school project was co-created by Djenis Ejupi and
+            JDoor began as a 2022 school project co-created by Djenis Ejupi and
             <a href="https://github.com/NobodyToListen" target="_blank" rel="noreferrer">
               NobodyToListen<span class="sr-only">; opens in a new tab</span>
             </a>.
-            Its consent-first product and security modernization was led by Djenis.
+            Djenis led the later product, security, UX, testing and release modernization.
           </p>
           <p>
             GPL-3.0 · <a href="https://ejupilabs.com/">Ejupi Labs</a> ·
+            <a href="https://github.com/NobodyToListen/JDoor">Source on GitHub</a> ·
             <a href="#top">Back to top ↑</a>
           </p>
         </div>

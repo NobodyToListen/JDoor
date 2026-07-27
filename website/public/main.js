@@ -47,3 +47,30 @@ const desktop = window.matchMedia("(min-width: 961px)");
 desktop.addEventListener("change", (event) => {
   if (event.matches) setMenuOpen(false);
 });
+
+const sectionLinks = [...document.querySelectorAll("[data-site-nav] a[href^='#']")];
+const sectionById = new Map(
+  sectionLinks.map((link) => [link.getAttribute("href")?.slice(1), link])
+);
+
+if ("IntersectionObserver" in window) {
+  const sectionObserver = new IntersectionObserver(
+    (entries) => {
+      const visible = entries
+        .filter((entry) => entry.isIntersecting)
+        .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+      if (!visible) return;
+
+      for (const link of sectionLinks) {
+        link.removeAttribute("aria-current");
+      }
+      sectionById.get(visible.target.id)?.setAttribute("aria-current", "location");
+    },
+    { rootMargin: "-18% 0px -64% 0px", threshold: [0, 0.2, 0.5] }
+  );
+
+  for (const id of sectionById.keys()) {
+    const section = document.getElementById(id);
+    if (section) sectionObserver.observe(section);
+  }
+}

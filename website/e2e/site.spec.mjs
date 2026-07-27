@@ -3,15 +3,23 @@ import { expect, test } from "@playwright/test";
 test("homepage presents the consent model without a fake web session", async ({ page }) => {
   await page.goto("/");
 
-  await expect(page.locator("h1")).toContainText("Remote help");
-  await expect(page.locator(".status-label")).toContainText("PRE-RELEASE");
+  await expect(page.locator("h1")).toContainText("stays in charge");
+  await expect(page.locator(".status-label")).toContainText(/pre-release/i);
   await expect(page.locator("#flow .flow-step")).toHaveCount(5);
-  await expect(page.getByRole("link", { name: /Review the source/i })).toHaveAttribute(
+  await expect(page.getByRole("link", { name: /Read the source/i })).toHaveAttribute(
     "href",
     "https://github.com/NobodyToListen/JDoor"
   );
   await expect(page.getByRole("button", { name: /start|join|connect/i })).toHaveCount(0);
   await expect(page.locator("form")).toHaveCount(0);
+});
+
+test("the origin and trust boundary are stated without overstating identity checks", async ({ page }) => {
+  await page.goto("/");
+
+  await expect(page.locator("#story")).toContainText(/2022[\s\S]*school networking project/i);
+  await expect(page.locator("#trust h2")).toContainText(/software checks the endpoint/i);
+  await expect(page.locator("body")).not.toContainText("Every viewer is verified");
 });
 
 test("source and evidence links have useful accessible names", async ({ page }) => {
