@@ -42,7 +42,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.compiler.release>21</maven.compiler.release>
         <bouncycastle.version>1.85</bouncycastle.version>
-        <flatlaf.version>3.7.1</flatlaf.version>
+        <flatlaf.version>3.7.2</flatlaf.version>
         <junit.version>6.1.2</junit.version>
         <jacoco.version>0.8.15</jacoco.version>
         <cyclonedx.version>2.9.2</cyclonedx.version>
