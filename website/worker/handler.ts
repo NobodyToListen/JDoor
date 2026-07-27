@@ -11,13 +11,15 @@ const SECURITY_HEADERS = Object.freeze({
   "X-Frame-Options": "DENY"
 });
 
-const METHOD_NOT_ALLOWED = new Response("Method not allowed", {
-  status: 405,
-  headers: {
-    "Allow": "GET, HEAD",
-    "Content-Type": "text/plain; charset=utf-8"
-  }
-});
+function methodNotAllowedResponse(): Response {
+  return new Response("Method not allowed", {
+    status: 405,
+    headers: {
+      "Allow": "GET, HEAD",
+      "Content-Type": "text/plain; charset=utf-8"
+    }
+  });
+}
 
 function cachePolicy(request: Request, response: Response): string {
   if (response.status >= 400) return "no-store";
@@ -53,7 +55,7 @@ export function hardenResponse(request: Request, response: Response): Response {
 
 export async function handleRequest(request: Request, env: Pick<Env, "ASSETS">): Promise<Response> {
   if (request.method !== "GET" && request.method !== "HEAD") {
-    return hardenResponse(request, METHOD_NOT_ALLOWED.clone());
+    return hardenResponse(request, methodNotAllowedResponse());
   }
 
   const assetResponse = await env.ASSETS.fetch(request);
