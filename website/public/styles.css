@@ -727,10 +727,108 @@ code {
   line-height: 1.65;
 }
 
+/* Product evidence */
+
+.interface-proof {
+  margin-top: var(--section-space);
+  overflow: hidden;
+  background:
+    linear-gradient(rgba(244, 241, 234, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(244, 241, 234, 0.025) 1px, transparent 1px),
+    var(--ink);
+  background-size: 5rem 5rem;
+  color: var(--paper);
+}
+
+.interface-proof::before {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: clamp(5rem, 10vw, 9rem);
+  height: clamp(5rem, 10vw, 9rem);
+  background: var(--orange);
+  content: "";
+}
+
+.interface-proof .section-index,
+.interface-proof .section-heading {
+  position: relative;
+  z-index: 1;
+}
+
+.interface-proof .section-index > span:last-child {
+  margin-left: auto;
+}
+
+.interface-proof .section-heading h2 {
+  max-width: 13ch;
+}
+
+.interface-proof .section-heading > p {
+  color: rgba(244, 241, 234, 0.74);
+}
+
+.interface-proof__stage {
+  position: relative;
+  min-height: clamp(38rem, 57vw, 46rem);
+  margin-top: clamp(3.5rem, 6vw, 6rem);
+}
+
+.interface-shot {
+  overflow: hidden;
+  margin: 0;
+  border: 1px solid rgba(244, 241, 234, 0.28);
+  background: #090b0d;
+  box-shadow: 1rem 1rem 0 rgba(239, 93, 50, 0.18);
+}
+
+.interface-shot picture,
+.interface-shot img {
+  display: block;
+  width: 100%;
+}
+
+.interface-shot img {
+  height: auto;
+}
+
+.interface-shot figcaption {
+  display: grid;
+  grid-template-columns: minmax(8rem, 0.45fr) minmax(0, 1.55fr);
+  gap: 1.5rem;
+  align-items: start;
+  padding: 1.1rem 1.2rem;
+  border-top: 1px solid rgba(244, 241, 234, 0.22);
+}
+
+.interface-shot figcaption span {
+  color: var(--orange);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.interface-shot figcaption p {
+  color: rgba(244, 241, 234, 0.72);
+}
+
+.interface-shot--launcher {
+  width: min(76%, 56rem);
+}
+
+.interface-shot--approval {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: min(57%, 38rem);
+  border-color: var(--orange);
+  box-shadow: -1rem 1rem 0 rgba(239, 93, 50, 0.22);
+}
+
 /* Story */
 
 .story {
-  margin-top: var(--section-space);
   background:
     linear-gradient(rgba(244, 241, 234, 0.025) 1px, transparent 1px),
     linear-gradient(90deg, rgba(244, 241, 234, 0.025) 1px, transparent 1px),
@@ -951,11 +1049,11 @@ code {
 }
 
 .trust .section-index {
-  color: rgba(13, 16, 15, 0.68);
+  color: rgba(13, 16, 15, 0.86);
 }
 
 .trust .section-heading > p {
-  color: rgba(13, 16, 15, 0.72);
+  color: rgba(13, 16, 15, 0.86);
 }
 
 .decision-grid {
@@ -1524,6 +1622,44 @@ code {
   }
 }
 
+@media (min-width: 981px) and (max-height: 820px) {
+  .hero {
+    padding-top: 2.5rem;
+  }
+
+  .hero h1 {
+    margin-top: 2rem;
+    font-size: clamp(3.9rem, 5.8vw, 5.45rem);
+  }
+
+  .hero__lead {
+    margin-top: 1.5rem;
+    font-size: 1.02rem;
+    line-height: 1.55;
+  }
+
+  .hero__actions {
+    margin-top: 1.75rem;
+  }
+
+  .door-study__stage {
+    min-height: 25rem;
+    padding: 2rem;
+  }
+
+  .door-study__helper {
+    min-height: 16rem;
+  }
+
+  .door-study__request {
+    margin-top: 2rem;
+  }
+
+  .door-study__frame {
+    min-height: 20rem;
+  }
+}
+
 @media (max-width: 980px) {
   .hero__inner {
     grid-template-columns: 1fr;
@@ -1557,6 +1693,18 @@ code {
 
   .section-heading h2 {
     max-width: 17ch;
+  }
+
+  .interface-proof__stage {
+    display: grid;
+    min-height: 0;
+    gap: 2rem;
+  }
+
+  .interface-shot--launcher,
+  .interface-shot--approval {
+    position: static;
+    width: 100%;
   }
 
   .story__year {
@@ -1622,6 +1770,7 @@ code {
 
   body,
   .hero,
+  .interface-proof,
   .story,
   .flow,
   .trust,
@@ -1675,6 +1824,15 @@ code {
     width: fit-content;
   }
 
+  .interface-proof .section-index {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .interface-proof .section-index > span:last-child {
+    margin-left: 0;
+  }
+
   .door-study {
     box-shadow: 0.55rem 0.55rem 0 rgba(13, 16, 15, 0.08);
   }
@@ -1711,7 +1869,7 @@ code {
     overflow-wrap: break-word;
   }
 
-  .story {
+  .interface-proof {
     margin-top: 3.5rem;
   }
 
@@ -1836,6 +1994,11 @@ code {
 }
 
 @media (max-width: 420px) {
+  .interface-shot figcaption {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+
   .eyebrow {
     align-items: flex-start;
     flex-wrap: wrap;

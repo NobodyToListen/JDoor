@@ -8,7 +8,22 @@ function assert(condition, message) {
   if (!condition) throw new Error(message);
 }
 
-const [html, notFound, styles, runtime, favicon, manifestRaw, robots, sitemap, security, preview] =
+const [
+  html,
+  notFound,
+  styles,
+  runtime,
+  favicon,
+  manifestRaw,
+  robots,
+  sitemap,
+  security,
+  preview,
+  launcherWebp,
+  launcherAvif,
+  approvalWebp,
+  approvalAvif
+] =
   await Promise.all([
     readFile(resolve(PUBLIC_DIRECTORY, "index.html"), "utf8"),
     readFile(resolve(PUBLIC_DIRECTORY, "404.html"), "utf8"),
@@ -19,19 +34,27 @@ const [html, notFound, styles, runtime, favicon, manifestRaw, robots, sitemap, s
     readFile(resolve(PUBLIC_DIRECTORY, "robots.txt"), "utf8"),
     readFile(resolve(PUBLIC_DIRECTORY, "sitemap.xml"), "utf8"),
     readFile(resolve(PUBLIC_DIRECTORY, ".well-known", "security.txt"), "utf8"),
-    readFile(resolve(PUBLIC_DIRECTORY, "social", "jdoor-preview.png"))
+    readFile(resolve(PUBLIC_DIRECTORY, "social", "jdoor-preview.png")),
+    readFile(resolve(PUBLIC_DIRECTORY, "media", "jdoor-launcher.webp")),
+    readFile(resolve(PUBLIC_DIRECTORY, "media", "jdoor-launcher.avif")),
+    readFile(resolve(PUBLIC_DIRECTORY, "media", "jdoor-local-approval.webp")),
+    readFile(resolve(PUBLIC_DIRECTORY, "media", "jdoor-local-approval.avif"))
   ]);
 
 assert((html.match(/<h1\b/g) ?? []).length === 1, "Homepage must have exactly one h1.");
 assert(html.includes("<main"), "Homepage must have a main landmark.");
 assert(html.includes('href="#main-content"'), "Homepage must provide a skip link.");
 assert(
-  [...html.matchAll(/<section[^>]+id="(story|flow|trust|boundaries|status)"/g)]
+  [...html.matchAll(/<section[^>]+id="(interface|story|flow|trust|boundaries|status)"/g)]
     .map(([, id]) => id)
-    .join(",") === "story,flow,trust,boundaries,status",
+    .join(",") === "interface,flow,story,trust,boundaries,status",
   "Homepage sections must follow the product narrative."
 );
-assert(html.includes("Pre-release"), "Homepage must state the pre-release status.");
+assert(html.includes("Source 1.0.0"), "Homepage must state the current source version.");
+assert(
+  /no signed\s+installer or tagged GitHub release/i.test(html),
+  "Homepage must distinguish source versioning from packaged distribution."
+);
 assert(/view-only(?: sessions)? by default/i.test(html), "Homepage must state the view-only default.");
 assert(html.includes("This website does not start or join remote sessions"), "Homepage must reject a browser demo implication.");
 assert(html.includes("128-bit") && html.includes("10 minutes"), "Homepage must preserve pairing-token evidence.");
@@ -56,7 +79,7 @@ assert(
   structuredData.name === "JDoor" && structuredData.alternateName === "JDoor Assist",
   "JSON-LD has the wrong product name."
 );
-assert(structuredData.softwareVersion === "Pre-release", "JSON-LD must preserve pre-release status.");
+assert(structuredData.softwareVersion === "1.0.0", "JSON-LD must preserve the source version.");
 assert(structuredData.codeRepository === "https://github.com/NobodyToListen/JDoor", "JSON-LD has the wrong source repository.");
 
 assert(notFound.includes('content="noindex, follow"'), "404 page must be noindex.");
@@ -91,5 +114,21 @@ assert(Boolean(expires) && Date.parse(expires) > Date.now(), "security.txt must 
 
 assert(preview.subarray(1, 4).toString("ascii") === "PNG", "Social preview must be a PNG.");
 assert(preview.readUInt32BE(16) === 1200 && preview.readUInt32BE(20) === 630, "Social preview must be 1200 × 630.");
+for (const [name, asset] of [
+  ["launcher", launcherWebp],
+  ["local approval", approvalWebp]
+]) {
+  assert(
+    asset.subarray(0, 4).toString("ascii") === "RIFF" &&
+      asset.subarray(8, 12).toString("ascii") === "WEBP",
+    `${name} fallback must be WebP.`
+  );
+}
+for (const [name, asset] of [
+  ["launcher", launcherAvif],
+  ["local approval", approvalAvif]
+]) {
+  assert(asset.subarray(4, 12).toString("ascii").includes("ftyp"), `${name} primary asset must be AVIF.`);
+}
 
 console.log("Validated JDoor product narrative, accessibility, metadata, static assets and security disclosures.");

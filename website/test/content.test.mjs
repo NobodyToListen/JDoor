@@ -10,19 +10,39 @@ const [html, styles, wrangler, worker, handler] = await Promise.all([
   readFile(new URL("../worker/handler.ts", import.meta.url), "utf8")
 ]);
 
-test("the product story starts with its origin and keeps permission ahead of capability", () => {
+test("the product narrative leads with evidence and keeps permission ahead of origin", () => {
+  const interfaceIndex = html.indexOf('id="interface"');
   const storyIndex = html.indexOf('id="story"');
   const flowIndex = html.indexOf('id="flow"');
   const trustIndex = html.indexOf('id="trust"');
   const boundaryIndex = html.indexOf('id="boundaries"');
+  assert(interfaceIndex > 0);
   assert(storyIndex > 0);
-  assert(storyIndex < flowIndex);
-  assert(flowIndex < trustIndex);
+  assert(interfaceIndex < flowIndex);
+  assert(flowIndex < storyIndex);
+  assert(storyIndex < trustIndex);
   assert(flowIndex < boundaryIndex);
-  assert.match(html, /began as a 2022 school networking project/iu);
-  assert.match(html, /starts view-only by default/iu);
+  assert.match(html, /co-created by Djenis Ejupi and NobodyToListen as a school experiment/iu);
+  assert.match(html, /view-only sessions by default/iu);
   assert.match(html, /host enables it for that session/iu);
   assert.match(html, /revoke/iu);
+});
+
+test("real product surfaces support the consent narrative", () => {
+  assert.match(html, /jdoor-launcher\.avif/);
+  assert.match(html, /jdoor-launcher\.webp/);
+  assert.match(html, /jdoor-local-approval\.avif/);
+  assert.match(html, /jdoor-local-approval\.webp/);
+  assert.match(html, /actual desktop surfaces from the 1\.0\.0 codebase/iu);
+  assert.match(html, /endpoint is redacted here/iu);
+  assert.doesNotMatch(html, /192\.168\.\d+\.\d+/);
+});
+
+test("the published source status is precise about distribution", () => {
+  assert.match(html, /Source 1\.0\.0/);
+  assert.match(html, /softwareVersion": "1\.0\.0"/);
+  assert.match(html, /no signed\s+installer or tagged GitHub release/iu);
+  assert.doesNotMatch(html, /pre-release/iu);
 });
 
 test("the site is documentation, not a remote-control surface", () => {

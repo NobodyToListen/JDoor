@@ -1,7 +1,7 @@
 {
   "name": "JDoor Assist",
   "short_name": "JDoor",
-  "description": "Pre-release remote assistance with short-lived pairing, local approval and a view-only start.",
+  "description": "Remote assistance with short-lived pairing, local approval and a view-only start.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",

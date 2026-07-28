@@ -4,7 +4,7 @@ test("homepage presents the consent model without a fake web session", async ({ 
   await page.goto("/");
 
   await expect(page.locator("h1")).toContainText("stays in charge");
-  await expect(page.locator(".status-label")).toContainText(/pre-release/i);
+  await expect(page.locator(".status-label")).toContainText(/source 1\.0\.0/i);
   await expect(page.locator("#flow .flow-step")).toHaveCount(5);
   await expect(page.getByRole("link", { name: /Read the source/i })).toHaveAttribute(
     "href",
@@ -20,6 +20,22 @@ test("the origin and trust boundary are stated without overstating identity chec
   await expect(page.locator("#story")).toContainText(/2022[\s\S]*school networking project/i);
   await expect(page.locator("#trust h2")).toContainText(/software checks the endpoint/i);
   await expect(page.locator("body")).not.toContainText("Every viewer is verified");
+});
+
+test("authentic product surfaces load with useful context", async ({ page }) => {
+  await page.goto("/#interface");
+
+  const images = page.locator("#interface img");
+  await expect(images).toHaveCount(2);
+  await expect(images.nth(0)).toHaveAttribute("alt", /launcher on Windows/i);
+  await expect(images.nth(1)).toHaveAttribute("alt", /local approval dialog/i);
+  await expect
+    .poll(() => images.evaluateAll((items) => items.every((image) => image.complete && image.naturalWidth > 0)))
+    .toBe(true);
+  await expect(page.locator("#interface figcaption")).toContainText([
+    "Two roles, one visible boundary",
+    "The endpoint is redacted here"
+  ]);
 });
 
 test("source and evidence links have useful accessible names", async ({ page }) => {
@@ -47,6 +63,39 @@ test("mobile navigation opens, focuses its first item and closes with Escape", a
   await expect(toggle).toHaveAttribute("aria-expanded", "false");
   await expect(navigation).not.toHaveAttribute("data-open", "");
   await expect(toggle).toBeFocused();
+});
+
+test("desktop navigation state resets at the same breakpoint used by the layout", async ({ page, isMobile }) => {
+  test.skip(isMobile, "Resizable desktop context");
+  await page.setViewportSize({ width: 1000, height: 800 });
+  await page.goto("/");
+
+  const toggle = page.locator("[data-menu-toggle]");
+  const navigation = page.locator("[data-site-nav]");
+  await toggle.click();
+  await expect(toggle).toHaveAttribute("aria-expanded", "true");
+  await expect(navigation).toHaveAttribute("data-open", "");
+
+  await page.setViewportSize({ width: 1200, height: 800 });
+  await expect(toggle).toHaveAttribute("aria-expanded", "false");
+  await expect(navigation).not.toHaveAttribute("data-open", "");
+});
+
+test("the complete hero fits a common laptop viewport", async ({ page, isMobile }) => {
+  test.skip(isMobile, "Desktop composition");
+  await page.setViewportSize({ width: 1280, height: 720 });
+  await page.goto("/");
+
+  const bounds = await page.locator(".hero").evaluate(() => {
+    const actions = document.querySelector(".hero__actions")?.getBoundingClientRect();
+    const study = document.querySelector(".door-study")?.getBoundingClientRect();
+    return {
+      actionsBottom: actions?.bottom ?? Number.POSITIVE_INFINITY,
+      studyBottom: study?.bottom ?? Number.POSITIVE_INFINITY
+    };
+  });
+  expect(bounds.actionsBottom).toBeLessThanOrEqual(720);
+  expect(bounds.studyBottom).toBeLessThanOrEqual(720);
 });
 
 test("all key viewport widths avoid horizontal overflow", async ({ page }) => {
