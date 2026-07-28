@@ -6,6 +6,7 @@ const PUBLIC_DIRECTORY = resolve(import.meta.dirname, "..", "public");
 const portArgument = process.argv.indexOf("--port");
 const PORT = portArgument >= 0 ? Number(process.argv[portArgument + 1]) : 4175;
 const MIME_TYPES = new Map([
+  [".avif", "image/avif"],
   [".css", "text/css; charset=utf-8"],
   [".html", "text/html; charset=utf-8"],
   [".js", "text/javascript; charset=utf-8"],
@@ -13,6 +14,7 @@ const MIME_TYPES = new Map([
   [".png", "image/png"],
   [".svg", "image/svg+xml; charset=utf-8"],
   [".txt", "text/plain; charset=utf-8"],
+  [".webp", "image/webp"],
   [".webmanifest", "application/manifest+json; charset=utf-8"],
   [".xml", "application/xml; charset=utf-8"]
 ]);

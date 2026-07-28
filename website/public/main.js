@@ -43,7 +43,7 @@ document.addEventListener("click", (event) => {
   }
 });
 
-const desktop = window.matchMedia("(min-width: 961px)");
+const desktop = window.matchMedia("(min-width: 1121px)");
 desktop.addEventListener("change", (event) => {
   if (event.matches) setMenuOpen(false);
 });

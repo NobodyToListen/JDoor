@@ -7,7 +7,7 @@
     <meta name="color-scheme" content="light" />
     <meta
       name="description"
-      content="JDoor is a pre-release, open-source desktop tool for helping someone over a trusted local network. Pairing is short-lived, approval happens on the shared computer and every session starts view-only."
+      content="JDoor is open-source remote assistance for trusted local networks. Pairing is short-lived, approval happens on the shared computer and every session starts view-only."
     />
     <meta name="author" content="Djenis Ejupi and contributors" />
     <meta name="robots" content="index, follow" />
@@ -18,7 +18,7 @@
     <meta property="og:title" content="JDoor — Remote assistance with local approval" />
     <meta
       property="og:description"
-      content="A 2022 school networking project rebuilt around short-lived pairing, local approval and a view-only start."
+      content="Open-source remote assistance with a short-lived invitation, local approval and a view-only start."
     />
     <meta property="og:url" content="https://jdoor.ejupilabs.com/" />
     <meta property="og:image" content="https://jdoor.ejupilabs.com/social/jdoor-preview.png?v=2" />
@@ -49,11 +49,10 @@
         "name": "JDoor",
         "alternateName": "JDoor Assist",
         "url": "https://jdoor.ejupilabs.com/",
-        "description": "Pre-release, open-source remote assistance for trusted local networks, with short-lived pairing, local approval and a view-only start.",
+        "description": "Open-source remote assistance for trusted local networks, with short-lived pairing, local approval and a view-only start.",
         "applicationCategory": "RemoteDesktopApplication",
         "applicationSubCategory": "Authorized remote assistance",
-        "operatingSystem": "Desktop systems with Java 21",
-        "softwareVersion": "Pre-release",
+        "softwareVersion": "1.0.0",
         "isAccessibleForFree": true,
         "license": "https://www.gnu.org/licenses/gpl-3.0.html",
         "codeRepository": "https://github.com/NobodyToListen/JDoor",
@@ -81,9 +80,9 @@
     <title>JDoor — Remote assistance with local approval</title>
     <link rel="icon" href="/favicon.svg?v=2" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/icons/jdoor-180.png?v=1" sizes="180x180" />
-    <link rel="manifest" href="/site.webmanifest?v=2" />
-    <link rel="stylesheet" href="/styles.css?v=2" />
-    <script src="/main.js?v=2" defer></script>
+    <link rel="manifest" href="/site.webmanifest?v=3" />
+    <link rel="stylesheet" href="/styles.css?v=3" />
+    <script src="/main.js?v=3" defer></script>
   </head>
   <body>
     <a class="skip-link" href="#main-content">Skip to content</a>
@@ -102,7 +101,7 @@
           aria-label="Primary navigation"
           data-site-nav
         >
-          <a href="#story">The project</a>
+          <a href="#interface">Interface</a>
           <a href="#flow">A session</a>
           <a href="#trust">Trust &amp; privacy</a>
           <a href="#boundaries">Limits</a>
@@ -139,16 +138,16 @@
             <div class="eyebrow">
               <span class="signal-node signal-node--action" aria-hidden="true"></span>
               <span>Open-source desktop project</span>
-              <span>Pre-release</span>
+              <span>Source 1.0.0</span>
             </div>
             <h1 id="hero-title">
               The person at the screen
               <span>stays in charge.</span>
             </h1>
             <p class="hero__lead">
-              JDoor began as a 2022 school networking project. Its rebuild replaced invisible
-              remote access with a visible host, short-lived pairing, local approval and a session
-              that starts view-only by default.
+              JDoor is remote assistance for trusted local networks. A short-lived invitation
+              reaches the named host; the person at that screen approves locally, starts
+              view-only and can stop the session at any time.
             </p>
             <div class="hero__actions">
               <a class="button button--dark" href="#flow">
@@ -206,46 +205,54 @@
 
       </section>
 
-      <section class="section story" id="story" aria-labelledby="story-title">
+      <section class="section interface-proof" id="interface" aria-labelledby="interface-title">
         <div class="section-index section-index--light shell">
-          <span><i class="signal-node signal-node--action" aria-hidden="true"></i> The project</span>
+          <span><i class="signal-node signal-node--action" aria-hidden="true"></i> The real interface</span>
+          <span>Source 1.0.0 / Windows 11</span>
         </div>
-        <div class="story__grid shell">
-          <div class="story__year" aria-hidden="true">
-            <strong>2022</strong>
-            <span>School networking project</span>
-          </div>
-          <div class="story__copy">
-            <h2 id="story-title">
-              It began by connecting two computers. The rebuild changed the question.
-            </h2>
-            <p class="story__lead">
-              JDoor was co-created by Djenis Ejupi and NobodyToListen as a school experiment in
-              networking and remote control. The first version proved the connection could work.
-              Years later, Djenis rebuilt it around a narrower and more useful premise: the person
-              sharing the machine should remain visibly present in every decision.
-            </p>
-            <dl class="story__before-after">
-              <div>
-                <dt>Then / prove the connection</dt>
-                <dd>
-                  An unauthenticated remote-access prototype focused on moving screen and input
-                  data between two machines.
-                </dd>
-              </div>
-              <div>
-                <dt>Now / define the boundary</dt>
-                <dd>
-                  A short-lived invitation, an exact endpoint check, local approval and permission
-                  that belongs only to the current session.
-                </dd>
-              </div>
-            </dl>
-            <p class="story__credit">
-              The modernization covers product direction, security, UX, testing and release
-              engineering while preserving the project’s shared origin.
-            </p>
-          </div>
+        <div class="section-heading shell">
+          <h2 id="interface-title">Consent is the main interaction, not a promise in the margins.</h2>
+          <p>
+            These are actual desktop surfaces from the 1.0.0 codebase. The launcher separates the
+            two roles before a connection begins; the shared computer names the viewer, shows the
+            matching code and asks locally before revealing the screen.
+          </p>
+        </div>
+
+        <div class="interface-proof__stage shell">
+          <figure class="interface-shot interface-shot--launcher">
+            <picture>
+              <source srcset="/media/jdoor-launcher.avif" type="image/avif" />
+              <img
+                src="/media/jdoor-launcher.webp"
+                width="909"
+                height="615"
+                loading="lazy"
+                alt="JDoor Assist 1.0.0 launcher on Windows with separate Share this screen and Join a session actions."
+              />
+            </picture>
+            <figcaption>
+              <span>01 / Launcher</span>
+              <p>Two roles, one visible boundary before anything connects.</p>
+            </figcaption>
+          </figure>
+
+          <figure class="interface-shot interface-shot--approval">
+            <picture>
+              <source srcset="/media/jdoor-local-approval.avif" type="image/avif" />
+              <img
+                src="/media/jdoor-local-approval.webp"
+                width="692"
+                height="251"
+                loading="lazy"
+                alt="JDoor local approval dialog showing a Trusted helper request, a matching verification code and text that approval does not enable control."
+              />
+            </picture>
+            <figcaption>
+              <span>02 / Local approval</span>
+              <p>The endpoint is redacted here; the matching code and permission boundary remain visible.</p>
+            </figcaption>
+          </figure>
         </div>
       </section>
 
@@ -329,6 +336,49 @@
         </aside>
       </section>
 
+      <section class="section story" id="story" aria-labelledby="story-title">
+        <div class="section-index section-index--light shell">
+          <span><i class="signal-node signal-node--action" aria-hidden="true"></i> The project</span>
+        </div>
+        <div class="story__grid shell">
+          <div class="story__year" aria-hidden="true">
+            <strong>2022</strong>
+            <span>School networking project</span>
+          </div>
+          <div class="story__copy">
+            <h2 id="story-title">
+              It began by connecting two computers. The rebuild changed the question.
+            </h2>
+            <p class="story__lead">
+              JDoor was co-created by Djenis Ejupi and NobodyToListen as a school experiment in
+              networking and remote control. The first version proved the connection could work.
+              Years later, Djenis rebuilt it around a narrower and more useful premise: the person
+              sharing the machine should remain visibly present in every decision.
+            </p>
+            <dl class="story__before-after">
+              <div>
+                <dt>Then / prove the connection</dt>
+                <dd>
+                  An unauthenticated remote-access prototype focused on moving screen and input
+                  data between two machines.
+                </dd>
+              </div>
+              <div>
+                <dt>Now / define the boundary</dt>
+                <dd>
+                  A short-lived invitation, an exact endpoint check, local approval and permission
+                  that belongs only to the current session.
+                </dd>
+              </div>
+            </dl>
+            <p class="story__credit">
+              The modernization covers product direction, security, UX, testing and release
+              engineering while preserving the project’s shared origin.
+            </p>
+          </div>
+        </div>
+      </section>
+
       <section class="section trust" id="trust" aria-labelledby="trust-title">
         <div class="section-index shell">
           <span><i class="signal-node signal-node--consent" aria-hidden="true"></i> Trust &amp; privacy</span>
@@ -336,8 +386,9 @@
         <div class="section-heading shell">
           <h2 id="trust-title">The software checks the endpoint. The host decides the person.</h2>
           <p>
-            Connection evidence can narrow a request to one machine. Trust in the person—and every
-            permission that follows—remains a local decision.
+            Connection evidence narrows a request to the endpoint named in that invitation for the
+            current host run. Trust in the person—and every permission that follows—remains a
+            local decision.
           </p>
         </div>
 
@@ -465,15 +516,15 @@
 
           <div class="status__content">
             <div>
-              <span class="status-label"><i aria-hidden="true"></i> Pre-release</span>
-              <h2 id="status-title">JDoor is currently a pre-release codebase.</h2>
+              <span class="status-label"><i aria-hidden="true"></i> Source 1.0.0</span>
+              <h2 id="status-title">The code is versioned. Distribution is still manual.</h2>
             </div>
             <div class="status__copy">
               <p>
-                The source, architecture, threat model and privacy documentation are available for
-                inspection. Community builds are unsigned and may trigger an unverified-publisher
-                warning. If you are evaluating the project, begin with the threat model and build
-                the desktop application locally.
+                The repository identifies the current source as 1.0.0 and publishes its
+                architecture, threat model, privacy documentation and tests. There is no signed
+                installer or tagged GitHub release yet, so begin with the threat model and build
+                locally. Community builds may trigger an unverified-publisher warning.
               </p>
               <div class="status__actions">
                 <a
@@ -543,11 +594,10 @@
         </div>
         <div class="site-footer__meta">
           <p>
-            JDoor began as a 2022 school project co-created by Djenis Ejupi and
+            Originally co-created in 2022 by Djenis Ejupi and
             <a href="https://github.com/NobodyToListen" target="_blank" rel="noreferrer">
               NobodyToListen<span class="sr-only">; opens in a new tab</span>
-            </a>.
-            Djenis led the later product, security, UX, testing and release modernization.
+            </a>; later product, security, UX, testing and release modernization led by Djenis.
           </p>
           <p>
             GPL-3.0 · <a href="https://ejupilabs.com/">Ejupi Labs</a> ·
