@@ -22,6 +22,25 @@ test("the origin and trust boundary are stated without overstating identity chec
   await expect(page.locator("body")).not.toContainText("Every viewer is verified");
 });
 
+test("design decisions expose alternatives and accepted costs", async ({ page }) => {
+  await page.goto("/#decisions");
+
+  await expect(page.locator("#decisions article")).toHaveCount(4);
+  await expect(page.locator("#decisions dt", { hasText: "Instead of" })).toHaveCount(4);
+  await expect(page.locator("#decisions dt", { hasText: "Accepted cost" })).toHaveCount(4);
+  await expect(page.locator("#decisions")).toContainText("Java 21 + Swing");
+  await expect(page.locator("#decisions")).toContainText("Direct trusted-LAN connection");
+});
+
+test("fit guidance names real situations and when to choose another product", async ({ page }) => {
+  await page.goto("/#boundaries");
+
+  await expect(page.locator("#boundaries")).toContainText("Helping family");
+  await expect(page.locator("#boundaries")).toContainText("classroom or lab");
+  await expect(page.locator("#boundaries")).toContainText("small office");
+  await expect(page.locator("#boundaries")).toContainText("Choose something else");
+});
+
 test("authentic product surfaces load with useful context", async ({ page }) => {
   await page.goto("/#interface");
 
@@ -58,11 +77,20 @@ test("mobile navigation opens, focuses its first item and closes with Escape", a
   await expect(toggle).toHaveAttribute("aria-expanded", "true");
   await expect(navigation).toHaveAttribute("data-open", "");
   await expect(navigation.getByRole("link").first()).toBeFocused();
+  await expect(page.locator("#main-content")).toHaveJSProperty("inert", true);
+  await expect(page.locator("html")).toHaveAttribute("data-menu-open", "");
+
+  await page.keyboard.press("Shift+Tab");
+  await expect(toggle).toBeFocused();
+  await page.keyboard.press("Tab");
+  await expect(navigation.getByRole("link").first()).toBeFocused();
 
   await page.keyboard.press("Escape");
   await expect(toggle).toHaveAttribute("aria-expanded", "false");
   await expect(navigation).not.toHaveAttribute("data-open", "");
   await expect(toggle).toBeFocused();
+  await expect(page.locator("#main-content")).toHaveJSProperty("inert", false);
+  await expect(page.locator("html")).not.toHaveAttribute("data-menu-open", "");
 });
 
 test("desktop navigation state resets at the same breakpoint used by the layout", async ({ page, isMobile }) => {
@@ -79,6 +107,18 @@ test("desktop navigation state resets at the same breakpoint used by the layout"
   await page.setViewportSize({ width: 1200, height: 800 });
   await expect(toggle).toHaveAttribute("aria-expanded", "false");
   await expect(navigation).not.toHaveAttribute("data-open", "");
+});
+
+test("section navigation transfers focus to the destination heading", async ({ page }) => {
+  await page.goto("/");
+
+  const link = page.locator('[data-site-nav] a[href="#decisions"]');
+  if (await page.locator("[data-menu-toggle]").isVisible()) {
+    await page.locator("[data-menu-toggle]").click();
+  }
+  await link.click();
+  await expect(page.locator("#decisions-title")).toBeFocused();
+  await expect(page).toHaveURL(/#decisions$/);
 });
 
 test("the complete hero fits a common laptop viewport", async ({ page, isMobile }) => {

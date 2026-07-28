@@ -1,5 +1,5 @@
 {
-  "sourceSha256": "d062c5fd9aaf5ecd35e4e7ed14cbb7b170c3f2ea7b6657626056605d7dcb2f78",
+  "sourceSha256": "29d7cfe8cf2bbbc758b3408d8fdd53e8b2b6cf7e5a33c7ea2da4c5257df27341",
   "palette": {
     "background": "#F4F1EA",
     "surface": "#FFFDF8",
@@ -11,7 +11,7 @@
     "jdoor-180.png": "555b81d1c84affb040c57be9b3d103ecb6cd60a3913443bb6dbadcd5a14e80d5",
     "jdoor-192.png": "389557664b3ea71a8c65ac9c25db2cc7ee6cf356d0b8f89ae386896da9097cf2",
     "jdoor-512.png": "18cd733852ae60c45381b950230924e5254877e69d51e82df640e5b83e367328",
-    "jdoor-preview.png": "c9701774976b58f4c0d44a703299838a184b7e1cf9b2515a6f76f1f0388e4f19"
+    "jdoor-preview.png": "2cbee2be4bd6d6c433fc5ef646d4a4ddae326832da1da5a78cbb509adfe2b03c"
   },
   "width": 1200,
   "height": 630

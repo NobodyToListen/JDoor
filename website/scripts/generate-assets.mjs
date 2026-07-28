@@ -48,7 +48,7 @@ function createSocialSource(favicon) {
 
   <image href="${icon}" x="72" y="67" width="72" height="72"/>
   <text x="166" y="107" class="sans" font-size="31" font-weight="700" letter-spacing="-1.4" fill="#0D100F">JDoor</text>
-  <text x="168" y="132" class="mono" font-size="11" letter-spacing="1.35" fill="#626761">REMOTE ASSISTANCE / PRE-RELEASE</text>
+  <text x="168" y="132" class="mono" font-size="11" letter-spacing="1.35" fill="#626761">REMOTE ASSISTANCE / SOURCE 1.0.0</text>
 
   <line x1="72" y1="184" x2="690" y2="184" stroke="#0D100F"/>
   <text x="72" y="212" class="mono" font-size="11" letter-spacing="1.25" fill="#BD4627">A 2022 SCHOOL PROJECT, REBUILT</text>
