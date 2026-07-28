@@ -21,7 +21,7 @@
       content="Open-source remote assistance with a short-lived invitation, local approval and a view-only start."
     />
     <meta property="og:url" content="https://jdoor.ejupilabs.com/" />
-    <meta property="og:image" content="https://jdoor.ejupilabs.com/social/jdoor-preview.png?v=2" />
+    <meta property="og:image" content="https://jdoor.ejupilabs.com/social/jdoor-preview.png?v=3" />
     <meta property="og:image:type" content="image/png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
@@ -35,7 +35,7 @@
       name="twitter:description"
       content="The person sharing the screen approves locally and keeps control of the session."
     />
-    <meta name="twitter:image" content="https://jdoor.ejupilabs.com/social/jdoor-preview.png?v=2" />
+    <meta name="twitter:image" content="https://jdoor.ejupilabs.com/social/jdoor-preview.png?v=3" />
     <meta
       name="twitter:image:alt"
       content="JDoor identity and a local-approval session boundary."
@@ -81,8 +81,8 @@
     <link rel="icon" href="/favicon.svg?v=2" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/icons/jdoor-180.png?v=1" sizes="180x180" />
     <link rel="manifest" href="/site.webmanifest?v=3" />
-    <link rel="stylesheet" href="/styles.css?v=3" />
-    <script src="/main.js?v=3" defer></script>
+    <link rel="stylesheet" href="/styles.css?v=4" />
+    <script src="/main.js?v=4" defer></script>
   </head>
   <body>
     <a class="skip-link" href="#main-content">Skip to content</a>
@@ -101,9 +101,9 @@
           aria-label="Primary navigation"
           data-site-nav
         >
-          <a href="#interface">Interface</a>
+          <a href="#interface">Product</a>
           <a href="#flow">A session</a>
-          <a href="#trust">Trust &amp; privacy</a>
+          <a href="#decisions">Why these choices</a>
           <a href="#boundaries">Limits</a>
           <a href="#status">Status</a>
         </nav>
@@ -379,6 +379,111 @@
         </div>
       </section>
 
+      <section class="section decisions" id="decisions" aria-labelledby="decisions-title">
+        <div class="section-index shell">
+          <span><i class="signal-node signal-node--action" aria-hidden="true"></i> Design decisions</span>
+          <span>Choice / alternative / accepted cost</span>
+        </div>
+        <div class="section-heading shell">
+          <h2 id="decisions-title">The product stays small because its choices are narrow.</h2>
+          <p>
+            JDoor is not a reduced version of a remote-management suite. Its architecture follows
+            one situation: two people, one approved support session and a trusted local network.
+            Each omission protects that boundary, while introducing a cost we accept explicitly.
+          </p>
+        </div>
+
+        <div class="architecture-ledger shell">
+          <article>
+            <div class="architecture-ledger__heading">
+              <span>01 / Desktop runtime</span>
+              <h3>Java 21 + Swing</h3>
+            </div>
+            <p>
+              One desktop process owns the interface, screen capture, transport and input policy.
+              Java provides mature TLS and concurrency while Swing keeps the approval surface
+              independent of a browser runtime.
+            </p>
+            <dl>
+              <div>
+                <dt>Instead of</dt>
+                <dd>A browser product or Electron shell plus a privileged native bridge</dd>
+              </div>
+              <div>
+                <dt>Accepted cost</dt>
+                <dd>Packaging, signing and operating-system permissions still need platform-specific work</dd>
+              </div>
+            </dl>
+          </article>
+
+          <article>
+            <div class="architecture-ledger__heading">
+              <span>02 / Network shape</span>
+              <h3>Direct trusted-LAN connection</h3>
+            </div>
+            <p>
+              A direct route avoids creating a relay, account database or permanent control
+              plane for an occasional support session. The network boundary remains visible to
+              both people.
+            </p>
+            <dl>
+              <div>
+                <dt>Instead of</dt>
+                <dd>A public relay with accounts, device enrolment and centralized trust</dd>
+              </div>
+              <div>
+                <dt>Accepted cost</dt>
+                <dd>No NAT traversal and no support session across unrelated networks</dd>
+              </div>
+            </dl>
+          </article>
+
+          <article>
+            <div class="architecture-ledger__heading">
+              <span>03 / Session identity</span>
+              <h3>Ephemeral TLS + exact pin</h3>
+            </div>
+            <p>
+              Every host run creates a fresh P-256 identity. The invitation binds the advertised
+              host, exact certificate fingerprint and one-time token; the matching code gives
+              both people something human-readable to compare.
+            </p>
+            <dl>
+              <div>
+                <dt>Instead of</dt>
+                <dd>Persistent product accounts or a long-lived private certificate authority</dd>
+              </div>
+              <div>
+                <dt>Accepted cost</dt>
+                <dd>The complete link needs a trusted channel, and the pin identifies the endpoint—not the person</dd>
+              </div>
+            </dl>
+          </article>
+
+          <article>
+            <div class="architecture-ledger__heading">
+              <span>04 / Capability surface</span>
+              <h3>Bounded protocol, view first</h3>
+            </div>
+            <p>
+              Screen frames and optional input use an explicit, size-limited protocol. Viewing
+              and control are separate permissions, so approval never silently grants the more
+              powerful capability.
+            </p>
+            <dl>
+              <div>
+                <dt>Instead of</dt>
+                <dd>A general-purpose RDP, VNC or remote-administration feature set</dd>
+              </div>
+              <div>
+                <dt>Accepted cost</dt>
+                <dd>No file transfer, clipboard, audio, multi-display or unattended access</dd>
+              </div>
+            </dl>
+          </article>
+        </div>
+      </section>
+
       <section class="section trust" id="trust" aria-labelledby="trust-title">
         <div class="section-index shell">
           <span><i class="signal-node signal-node--consent" aria-hidden="true"></i> Trust &amp; privacy</span>
@@ -462,35 +567,35 @@
           <span><i class="signal-node signal-node--action" aria-hidden="true"></i> Limits</span>
         </div>
         <div class="section-heading shell">
-          <h2 id="boundaries-title">The missing features are deliberate.</h2>
+          <h2 id="boundaries-title">Useful when both people are present. Wrong when they are not.</h2>
           <p>
-            JDoor is for one person helping another on a trusted local network. It is not an
-            internet-facing remote-management platform, and it does not hide an administration
-            layer behind the support session.
+            JDoor fits a family member, classroom, lab or small office where the helper and host
+            can coordinate on the same trusted network. If the job needs background
+            administration or an Internet service, choose a product designed for that job.
           </p>
         </div>
 
         <div class="scope-grid shell">
           <article class="scope-grid__included">
-            <span class="technical-label">Designed for</span>
-            <h3>A visible, approved session</h3>
+            <span class="technical-label">A good fit</span>
+            <h3>Short support with the owner present</h3>
             <ul>
-              <li><span aria-hidden="true">+</span> Direct connection on a trusted LAN</li>
-              <li><span aria-hidden="true">+</span> One approved viewer</li>
-              <li><span aria-hidden="true">+</span> Primary-display sharing</li>
-              <li><span aria-hidden="true">+</span> Optional, revocable input</li>
-              <li><span aria-hidden="true">+</span> Local, bounded audit events</li>
+              <li><span aria-hidden="true">+</span> Helping family on the same trusted home network</li>
+              <li><span aria-hidden="true">+</span> Guiding a student at a classroom or lab workstation</li>
+              <li><span aria-hidden="true">+</span> Troubleshooting with a colleague in a small office</li>
+              <li><span aria-hidden="true">+</span> One approved viewer and optional, revocable input</li>
+              <li><span aria-hidden="true">+</span> A short local audit trail of the session lifecycle</li>
             </ul>
           </article>
           <article class="scope-grid__excluded">
-            <span class="technical-label">Not part of JDoor</span>
-            <h3>Administration in the background</h3>
+            <span class="technical-label">Choose something else</span>
+            <h3>Persistent or Internet-scale administration</h3>
             <ul>
-              <li><span aria-hidden="true">−</span> Unattended access or persistence</li>
-              <li><span aria-hidden="true">−</span> Remote shell or privilege escalation</li>
-              <li><span aria-hidden="true">−</span> File or clipboard transfer</li>
-              <li><span aria-hidden="true">−</span> Webcam, microphone or stealth capture</li>
-              <li><span aria-hidden="true">−</span> Public relay, accounts or NAT traversal</li>
+              <li><span aria-hidden="true">−</span> Support across the Internet or through NAT</li>
+              <li><span aria-hidden="true">−</span> Unattended access, persistence or fleet management</li>
+              <li><span aria-hidden="true">−</span> Remote shell, privilege escalation or background policy</li>
+              <li><span aria-hidden="true">−</span> File, clipboard, webcam or microphone transfer</li>
+              <li><span aria-hidden="true">−</span> Public relay, accounts or centralized device enrolment</li>
             </ul>
           </article>
         </div>
@@ -544,6 +649,12 @@
                 >
                   <span>Build it locally</span><span aria-hidden="true">↗</span>
                   <span class="sr-only">opens in a new tab</span>
+                </a>
+                <a
+                  class="text-link text-link--light"
+                  href="https://blog.ejupilabs.com/case-studies/jdoor-security-lab/"
+                >
+                  <span>Read the case study</span><span aria-hidden="true">↗</span>
                 </a>
               </div>
             </div>
@@ -601,6 +712,7 @@
           </p>
           <p>
             GPL-3.0 · <a href="https://ejupilabs.com/">Ejupi Labs</a> ·
+            <a href="https://blog.ejupilabs.com/case-studies/jdoor-security-lab/">Case study</a> ·
             <a href="https://github.com/NobodyToListen/JDoor">Source on GitHub</a> ·
             <a href="#top">Back to top ↑</a>
           </p>

@@ -35,6 +35,10 @@ html {
   text-size-adjust: 100%;
 }
 
+html[data-menu-open] {
+  overflow: hidden;
+}
+
 body {
   margin: 0;
   overflow-x: hidden;
@@ -1039,6 +1043,91 @@ code {
 
 /* Trust */
 
+.decisions {
+  background:
+    linear-gradient(rgba(13, 16, 15, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(13, 16, 15, 0.025) 1px, transparent 1px),
+    var(--paper);
+  background-size: 5rem 5rem;
+}
+
+.decisions .section-index {
+  justify-content: space-between;
+}
+
+.architecture-ledger {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: clamp(3rem, 5vw, 4.75rem);
+  border-top: 1px solid var(--ink);
+  border-left: 1px solid var(--ink);
+}
+
+.architecture-ledger > article {
+  display: grid;
+  min-width: 0;
+  grid-template-rows: auto auto 1fr;
+  gap: 1.5rem;
+  padding: clamp(1.5rem, 3vw, 2.75rem);
+  border-right: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+  background: rgba(255, 253, 248, 0.72);
+}
+
+.architecture-ledger__heading > span {
+  display: block;
+  margin-bottom: 1.35rem;
+  color: var(--orange-deep);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.075em;
+  text-transform: uppercase;
+}
+
+.architecture-ledger h3 {
+  max-width: 14ch;
+  font-size: clamp(2.1rem, 3.2vw, 3.35rem);
+  font-weight: 520;
+  letter-spacing: -0.06em;
+  line-height: 0.96;
+}
+
+.architecture-ledger > article > p {
+  max-width: 40rem;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.architecture-ledger dl {
+  align-self: end;
+  border-top: 1px solid var(--line);
+}
+
+.architecture-ledger dl > div {
+  display: grid;
+  grid-template-columns: 7rem minmax(0, 1fr);
+  gap: 1rem;
+  padding-block: 0.9rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.architecture-ledger dl > div:last-child {
+  border-bottom: 0;
+}
+
+.architecture-ledger dt {
+  color: var(--orange-deep);
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.architecture-ledger dd {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
 .trust {
   background:
     linear-gradient(rgba(13, 16, 15, 0.055) 1px, transparent 1px),
@@ -1716,7 +1805,8 @@ code {
   }
 
   .decision-grid,
-  .scope-grid {
+  .scope-grid,
+  .architecture-ledger {
     grid-template-columns: 1fr;
   }
 
@@ -1729,6 +1819,11 @@ code {
   .privacy-ledger__intro {
     grid-template-columns: 1fr;
     gap: 1rem;
+  }
+
+  .decisions .section-index {
+    align-items: flex-start;
+    flex-direction: column;
   }
 
   .flow-step {
@@ -1903,7 +1998,8 @@ code {
   }
 
   .decision-grid h3,
-  .scope-grid h3 {
+  .scope-grid h3,
+  .architecture-ledger h3 {
     font-size: clamp(2.2rem, 10vw, 3.2rem);
   }
 
@@ -1932,6 +2028,15 @@ code {
 
   .scope-grid article {
     padding: 1.25rem;
+  }
+
+  .architecture-ledger > article {
+    padding: 1.25rem;
+  }
+
+  .architecture-ledger dl > div {
+    grid-template-columns: 5.75rem minmax(0, 1fr);
+    gap: 0.75rem;
   }
 
   .scope-grid h3 {

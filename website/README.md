@@ -3,7 +3,7 @@
 The official project website for [JDoor](https://jdoor.ejupilabs.com/). Its editorial structure
 connects the project’s 2022 school origin to the later security and product rebuild, then explains
 one session, the division between software checks and human approval, deliberate limits and the
-current pre-release status. It never presents a browser-based remote session.
+current source-versus-distribution status. It never presents a browser-based remote session.
 
 ## Architecture
 

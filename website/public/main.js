@@ -1,6 +1,11 @@
 const toggle = document.querySelector("[data-menu-toggle]");
 const navigation = document.querySelector("[data-site-nav]");
 const header = document.querySelector("[data-header]");
+const backgroundTargets = [
+  document.querySelector(".skip-link"),
+  document.querySelector("#main-content"),
+  document.querySelector(".site-footer")
+].filter((target) => target instanceof HTMLElement);
 
 function setMenuOpen(open, { restoreFocus = false } = {}) {
   if (!(toggle instanceof HTMLButtonElement) || !(navigation instanceof HTMLElement)) return;
@@ -8,6 +13,10 @@ function setMenuOpen(open, { restoreFocus = false } = {}) {
   toggle.setAttribute("aria-expanded", String(open));
   toggle.setAttribute("aria-label", open ? "Close navigation" : "Open navigation");
   navigation.toggleAttribute("data-open", open);
+  document.documentElement.toggleAttribute("data-menu-open", open);
+  for (const target of backgroundTargets) {
+    target.inert = open;
+  }
 
   if (open) {
     setTimeout(() => navigation.querySelector("a")?.focus(), 0);
@@ -21,15 +30,56 @@ toggle?.addEventListener("click", () => {
 });
 
 navigation?.addEventListener("click", (event) => {
-  if (event.target instanceof Element && event.target.closest("a")) {
+  const link = event.target instanceof Element ? event.target.closest("a") : null;
+  if (!(link instanceof HTMLAnchorElement)) return;
+
+  const href = link.getAttribute("href");
+  if (!href?.startsWith("#")) {
     setMenuOpen(false);
+    return;
+  }
+
+  const section = document.getElementById(href.slice(1));
+  const headingId = section?.getAttribute("aria-labelledby");
+  const heading = headingId ? document.getElementById(headingId) : null;
+  if (!(section instanceof HTMLElement) || !(heading instanceof HTMLElement)) {
+    setMenuOpen(false);
+    return;
+  }
+
+  event.preventDefault();
+  window.history.pushState(null, "", href);
+  setMenuOpen(false);
+  section.scrollIntoView({ block: "start" });
+  const temporaryTabIndex = !heading.hasAttribute("tabindex");
+  if (temporaryTabIndex) heading.setAttribute("tabindex", "-1");
+  heading.focus({ preventScroll: true });
+  if (temporaryTabIndex) {
+    heading.addEventListener("blur", () => heading.removeAttribute("tabindex"), { once: true });
   }
 });
 
 document.addEventListener("keydown", (event) => {
-  if (event.key === "Escape" && toggle?.getAttribute("aria-expanded") === "true") {
+  if (toggle?.getAttribute("aria-expanded") !== "true") return;
+
+  if (event.key === "Escape") {
     event.preventDefault();
     setMenuOpen(false, { restoreFocus: true });
+    return;
+  }
+
+  if (event.key === "Tab" && navigation instanceof HTMLElement && toggle instanceof HTMLButtonElement) {
+    const links = [...navigation.querySelectorAll("a[href]")];
+    const firstLink = links[0];
+    if (!(firstLink instanceof HTMLAnchorElement)) return;
+
+    if (event.shiftKey && document.activeElement === firstLink) {
+      event.preventDefault();
+      toggle.focus();
+    } else if (!event.shiftKey && document.activeElement === toggle) {
+      event.preventDefault();
+      firstLink.focus();
+    }
   }
 });
 

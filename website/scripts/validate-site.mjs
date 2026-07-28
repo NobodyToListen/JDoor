@@ -45,9 +45,9 @@ assert((html.match(/<h1\b/g) ?? []).length === 1, "Homepage must have exactly on
 assert(html.includes("<main"), "Homepage must have a main landmark.");
 assert(html.includes('href="#main-content"'), "Homepage must provide a skip link.");
 assert(
-  [...html.matchAll(/<section[^>]+id="(interface|story|flow|trust|boundaries|status)"/g)]
+  [...html.matchAll(/<section[^>]+id="(interface|story|flow|decisions|trust|boundaries|status)"/g)]
     .map(([, id]) => id)
-    .join(",") === "interface,flow,story,trust,boundaries,status",
+    .join(",") === "interface,flow,story,decisions,trust,boundaries,status",
   "Homepage sections must follow the product narrative."
 );
 assert(html.includes("Source 1.0.0"), "Homepage must state the current source version.");
@@ -61,6 +61,21 @@ assert(html.includes("128-bit") && html.includes("10 minutes"), "Homepage must p
 assert(html.includes("TLS 1.2/1.3"), "Homepage must preserve the transport claim.");
 assert(html.includes("5 MiB") && html.includes("30 days"), "Homepage must preserve the audit limits.");
 assert(html.includes("NobodyToListen"), "Homepage must preserve original project attribution.");
+assert(
+  (html.match(/<dt>Instead of<\/dt>/g) ?? []).length === 4 &&
+    (html.match(/<dt>Accepted cost<\/dt>/g) ?? []).length === 4,
+  "Homepage must explain four technology choices through alternatives and accepted costs."
+);
+assert(
+  html.includes("Helping family on the same trusted home network") &&
+    html.includes("classroom or lab workstation") &&
+    html.includes("colleague in a small office"),
+  "Homepage must give concrete examples of situations where JDoor fits."
+);
+assert(
+  html.includes("https://blog.ejupilabs.com/case-studies/jdoor-security-lab/"),
+  "Homepage must link to the engineering case study."
+);
 assert(!/<form\b/i.test(html), "Homepage must not imply a server-backed form.");
 assert(!/<script[^>]+src="https?:/i.test(html), "Homepage must not load third-party scripts.");
 assert(!/<link[^>]+href="https?:[^>]+stylesheet/i.test(html), "Homepage must not load third-party styles.");
@@ -88,6 +103,13 @@ assert(styles.includes("@media (prefers-reduced-motion: reduce)"), "Styles must 
 assert(styles.includes("@media (forced-colors: active)"), "Styles must support forced colors.");
 assert(styles.includes("@media (max-width: 720px)"), "Styles must provide a compact layout.");
 assert(runtime.includes('aria-expanded'), "Mobile navigation must keep aria-expanded in sync.");
+assert(
+  runtime.includes("target.inert = open") &&
+    runtime.includes('event.key === "Tab"') &&
+    runtime.includes('heading.focus({ preventScroll: true })') &&
+    styles.includes("html[data-menu-open]"),
+  "Navigation must trap focus, disable background interaction, lock scrolling and focus destinations."
+);
 assert(!/\bfetch\s*\(/.test(runtime), "Browser runtime must not make network requests.");
 assert(/href="\/styles\.css\?v=\d+"/.test(html), "Homepage stylesheet URL must be revisioned.");
 assert(/src="\/main\.js\?v=\d+"/.test(html), "Homepage runtime URL must be revisioned.");
