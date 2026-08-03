@@ -46,7 +46,7 @@
         <junit.version>6.1.2</junit.version>
         <jacoco.version>0.8.15</jacoco.version>
         <cyclonedx.version>2.9.2</cyclonedx.version>
-        <spotless.version>3.8.0</spotless.version>
+        <spotless.version>3.9.0</spotless.version>
     </properties>
 
     <dependencies>
