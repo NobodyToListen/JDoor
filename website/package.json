@@ -23,10 +23,10 @@
     "deploy": "npm run check && wrangler deploy"
   },
   "devDependencies": {
-    "@playwright/test": "1.62.0",
-    "@types/node": "26.1.2",
+    "@playwright/test": "1.62.1",
+    "@types/node": "26.2.0",
     "sharp": "0.35.3",
-    "tsx": "4.23.1",
+    "tsx": "4.23.12",
     "typescript": "7.0.2",
     "wrangler": "4.114.0"
   },
